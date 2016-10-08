@@ -1,0 +1,43 @@
+Leo
+53___45
+5___7___8
+0___1___1___0
+Pilbåge___Drakfjällsbrynja___Magisk ring
+Kamp___Skicklighet___Trolldom
+0___11___11
+2424___23
+Strategi___Mystisk kraft___Projicera själ
+Hypnos___Tillkvicknande___Lindring___Kyla___Trollkraft
+1___2___1___2___1
+Läkekonst___Bedömning
+65___65
+7___5___7
+0___0___2___0
+Bra svärd___Tung rustning___Blodkristall
+Kamp___Dunkel konst
+0___21
+2374___22
+
+Se framtiden___Mörk attack___Tillkvicknande___Förvrida framtiden___Kyla
+1___1___2___2___2
+Dubbel attack
+67___64
+6___8___7
+0___0___3___0
+Mystisk dolk___Brynja___Svart mantel
+Skicklighet___Själskunskap
+0___20
+2280___21
+Fågel___Gorilla
+
+
+
+3___4___5___0
+skog___x___berg___Z___Slottet
+1___2___3___4___5___6___7___8___9___10___11___12___13___14___15___16
+Stentiger___x
+0___1___2___3___9
+Fråga om äventyr___Nu ska du få stryk!___Fråga om Elaka häxan___Fråga om monster___Ta avsked
+Svärd___Kniv___Svärd___Salva___Kniv___Salva___Salva___Salva___Salva___Kniv___Mystisk sten___Mystisk sten___Tand___Läkört___Mystisk dolk___Kniv___Skyddande ädelsten___Läkört___Lätt rustning___Grön mantel
+a
+114

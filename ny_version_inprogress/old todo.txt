@@ -1,0 +1,61 @@
+göra leveltrösklar högre -done!
+testa leveltrösklar ---
+
+försvåra fiender ytterligare -done?
+
+gjort om förmågor och magier till set i fight så det kan finnas dubletter utan att de visas. -done!
+fixa förutbestämmande -done!
+
+fiender skugglandskap -done!
+fiender mörkt vatten -done!
+Vildsvinet och grisen -done!
+drops: tand (för att förbättra mästarsvärdet), drakfjällsbrynja, 
+magisk ring, lyckosmycke(skattletande), fiskstål (för att förbättra mästarsvärdet),
+fiskspjut, tandkniv, -done!
+
+hemlig lära -done!
+
+fixa ordningen på stinkvidundret -done!
+
+fixa OP i fightfunks som kan OPa alla fiender, så kan de återanvändas fast svårare i vanliga världen. 
+Alla stats +3 och sen *2. Mods*2. Hp*4.
+OP kan läggas in i fiende.drop så man kan få bättre drops av dem. -done!
+
+göra fiender lite lättare?---
+
+bossar i grottan---
+
+öka exp i bergen---
+minska lvlkurvan---
+förbättra se framtiden---
+nerfa rustning något---
+öka häxans mkr / gör så hon har förvrida framtiden istället för ändra?---
+slowprinta häxan---
+slowprinta när man får alri---
+nerfa fienderna i skuggvärlden---
+nerfa vildsvinet?---
+öka grisens mkr---
+skriv ut effekter i status?---
+(skriv ut blankrad i slutet av difstat?)---
+lägg mer sleep efter vildsvinet---
+gör så man kan vila sig i stugan.---
+ändra dialoger efter progress (alri---,ett hus/alkemist---,slottet---,smeden---,gården---, tornet---)
+fixa exp på OP---
+blankrad på stank---
+fixa så man hamnar rätt om man har 2 eller 4 i progress.---
+Öka varaktighet på Hypnos---
+Öka kostnad på lindring---
+Lägg till sleep i slottet innan Gurgen---
+Slowprinta alla unika händelser---
+
+
+minska varaktighet på förvrida framtiden---
+trollkraft -> trollstyrka---
+förbättra helning---
+minska sleep men lägg till slowprint efter vildsvinet---
+samma i källaren---
+slowprint funkar inte i terminalen!---
+mer sleep i slottet på slutet---
+blankrad efter joshki---
+försvåra riddarna---
+tänka över OP-svårighetsgrad---
