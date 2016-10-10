@@ -3,7 +3,7 @@ import os
 import time
 
 import klasser as kls
-from fightfunks import fight as fightfunc
+from fightfunks2 import fight as fightfunc
 from lvlup import lvlup
 from funktioner import difstat, plusformaga, listval, slowprint, uniquelist
 from collections import OrderedDict

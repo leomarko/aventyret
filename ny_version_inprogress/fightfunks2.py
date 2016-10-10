@@ -48,14 +48,17 @@ def randomenc(plats):
 def helning(figur, target, mod, mod2=0.2, plus=0):
     if isinstance(target, list):
         for s in target:
-            helning = int(figur.mkr*(mod+random()) + s.liv*mod2 + plus)
+            helning = int(figur.stats['mkr']*(mod+random()) + s.liv*mod2 + plus)
             difstat(s,'hp',helning)
     else:
-        helning = int(figur.mkr*(mod+random()) + target.liv*mod2 + plus)
+        helning = int(figur.stats['mkr']*(mod+random()) + target.liv*mod2 + plus)
         difstat(target,'hp',helning)
                 
 def f_meny(lista):
-    n = listval(lista+['Ångra'])
+    try:
+        n = listval(lista+['Ångra'])
+    except(TypeError):
+        n = listval([f.namn for f in lista]+['Ångra'])
     if n == len(lista): #gå tillbaka
         return False
     return lista[n]
@@ -66,12 +69,12 @@ def magi_meny(magier, mkr, dubbel=False):
         spell = listval([m[0]+': '+str(m[1])+' magikraft' for m in tillgangliga]+['Ångra'])
     else:
         spell = listval([m[0]+': '+str(m[1])+' magikraft' for m in tillgangliga]+['(Ingen)'])
-    if obj == len(tillgangliga):
+    if spell == len(tillgangliga):
         return False
-    return magier[spell]
+    return tillgangliga[spell]
     
 def fmal_meny(inventory, aktiva_s, aktiva_f):
-    fightprylar=[sak for sak in [f for f in inventory if isinstance(f,kls.EngangsForemal)] if sak.fight]
+    fightprylar=[sak for sak in [f for f in inventory if isinstance(f,EngangsForemal)] if sak.fight]
     ordered = uniquelist(fightprylar)
     antal = OrderedDict()
     for f in ordered:
@@ -122,11 +125,11 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 statusstrings.append(sta)
             return statusstrings   
         if bedomning:
-            print('Bedömning   '+'\n            '.join(statusstrings(aktiva_f))
+            print('Bedömning   '+'\n            '.join(statusstrings(aktiva_f)))
         else:
-            print('Status   '+'\n         '.join(statusstrings(aktiva_s))
+            print('Status   '+'\n         '.join(statusstrings(aktiva_s)))
         
-    def uppdatera_effekter(e, annan_ekvivalent=False, ifmsg=''):
+    def uppdatera_effekter(e, annan_ekvivalent=False, ifmsg='', use=True):
         e.sluttid += tick
         duplikat = False
         for effekt in effekter:
@@ -135,7 +138,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 if not annan_ekvivalent:
                     effekter.remove(effekt)
                 break
-        if not duplikat:
+        if use and not duplikat:
             e.use()
         if not annan_ekvivalent or not duplikat:
             effekter.append(e)
@@ -188,28 +191,29 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
     def borta(figur,bort=True):
         lista = aktivlista(figur)
         if bort:
-            borteffekter(spelare)
-            lista.remove(spelare)
+            borteffekter(figur)
+            lista.remove(figur)
         else:
-            lista.append(spelare)
+            lista.append(figur)
 
     def attackmagi(figur,target,mod,plus=0):
         if isinstance(target, list):
             for f in target:
-                skada = int(figur.mkr*(mod+random()) + plus - f.mods[2]*2)
+                skada = int(figur.stats['mkr']*(mod+random()) + plus - f.mods[2]*2)
                 taskada(f,skada)
         else:
-            skada = int(figur.mkr*(mod+random()) + plus - target.mods[2]*2)
+            skada = int(figur.stats['mkr']*(mod+random()) + plus - target.mods[2]*2)
             taskada(target,skada)
         return skada
 
     def attack(a, b, nyckelord=''):
         ggr = 1
+        spelare = False
         if isinstance(a,Spelare):
             spelare = True
             
         #dubbel            
-        if nyckelord == 'dubbel' | 'dubbelcritical':
+        if 'dubbel' in nyckelord:
             if not spelare or a.stats['smi']*0.07 + 2.3*random()  >  2:
                 ggr = 2
         #loop
@@ -229,7 +233,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     skada = skada
                     
                 #slutskada
-                if nyckelord == 'critical' | 'dubbelcritical':
+                if 'critical' in nyckelord:
                     if not spelare or randint(0,4) == 4:
                         skada = int(skada*(2.5 + random() + random()))
                         if spelare:
@@ -337,8 +341,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 mode = figur.mode()
 
                 if mode == 'attack' or mode == 'critical' or mode == 'dubbel':
-                    target=randint(0,len(aktiva_s)-1)
-                    attack(figur, aktiva_s[target], mode)
+                    target = aktiva_s[randint(0,len(aktiva_s)-1)]
+                    attack(figur, target, mode)
 
                 elif mode == 'other':
                     figur.other()
@@ -360,19 +364,19 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Förtärande mörker':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        skada = attackmagi(figur, target, randint(3,5)+figur.hp*0.02)
-                        taskada(figur, int(skada*0.3)
+                        skada=int(figur.stats['mkr']*(randint(4,6)+figur.hp*0.02))
+                        taskada(target,skada)
+                        taskada(figur, int(skada*0.3))
                             
                     elif mode == 'Förvrida framtiden':
-                        print(figur.namnB+' använder '+mode+'...')
                         for f in aktiva_f:
                             e=Effekt('Förutbestämmande',difstat,f,(3,4),(3,-4),int(figur.stats['mkr']*random()*0.4) + 5 )
                             uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=f.namn+' manipulerar redan tiden')
                             
                     elif mode == 'Hypnos':
-                        target = randint(0,len(aktiva_s)-1)
+                        target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         if figur.stats['mkr']*0.007+0.5+random()>1:
-                            e=Effekt('Hypnos',difstat,aktiva_s[target],(0,6,10,-3),(0,-6,10,-3),randint(5,12))
+                            e=Effekt('Hypnos',difstat,target,(0,6,10,-3),(0,-6,10,-3),randint(5,12))
                             uppdatera_effekter(e)
                         else:
                             print('...men hypnosen misslyckas.')
@@ -383,7 +387,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             
                     elif mode == 'Smärta':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        attackmagi(figur, target, 2, target.liv*0.1)
+                        attackmagi(figur, target, 2, plus=target.liv*(0.5+random()*0.5))
                         if target in aktiva_s: 
                             difstat(target,0,1)
 
@@ -396,7 +400,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             uppdatera_effekter(e)
                
                     elif mode == 'Trollsmäll':
-                        target=randint(0,len(aktiva_s)-1)
+                        target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 8, 40*random())
 
                     elif mode == 'Trollstoft':
@@ -425,7 +429,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
         for figur in aktiva_s:
             if tick % figur.klocka() == 0:
                 turer = 1
-                while turer > 1:
+                while turer > 0: #LOOP FÖR VARJE TUR
                     if aktiva_f == []:   
                         break
                     print(figur.namn+'s tur')
@@ -436,7 +440,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         figur.stats['mkr'] += 1
                         print('Mystisk kraft: '+figur.namn+' får 1 magikraft.')
                         
-                    while True:
+                    while True: #LOOP TILLS MAN BESTÄMT HANDLING
                         statusrad()
                         if any('Bedömning' in formagor for formagor in (s.special for s in aktiva_s)):
                             statusrad(bedomning=True)
@@ -444,9 +448,9 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         mode = fightval(figur)[listval(fightval(figur))]
 
                         #ATTACK
-                        if mode==0:
+                        if mode == 'Attackera':
                             target = f_meny(aktiva_f)
-                            if not target:
+                            if not target: #gå tillbaka
                                 continue
                             kw = ''
                             if 'Dubbel attack' in figur.special:
@@ -454,20 +458,17 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             if 'Lyckoträff' in figur.special:
                                 kw += 'critical'
                             attack(figur,target,nyckelord=kw)
-                            k_o(aktiva_f, effekter)
                             break
 
                         #FÖRMÅGA
-                        elif fightval(figur, inventory)[mode]=='Använd förmåga':   
+                        elif mode=='Använd förmåga':   
                             namn = f_meny(figur.formagor)
-                            if not namn:
+                            if not namn: #gå tillbaka
                                 continue
                             
                             if namn == 'Djärv attack':
                                 target=listval([f.namn for f in aktiva_f])
-                                attack(a, aktiva_f[target], 'djärv')
-                                k_o(aktiva_f, effekter)
-                                k_o(aktiva_s, effekter)
+                                attack(figur, aktiva_f[target], 'djärv')
                                 
                             elif namn == 'Fågel':
                                 fv.fagel(figur)
@@ -482,38 +483,30 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             elif namn == 'Mystisk kraft':
                                 print(figur.namn+' hämtar kraft...')
                                 e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), int(10 + figur.lvl*0.4))
-                                e.sluttid += tick
-                                effekter.append(e)
-
-                            if namn == 'Projicera själ':
+                                uppdatera_effekter(e, use=False)
+                                
+                            elif namn == 'Projicera själ':
                                 print(figur.namn+' använder '+namn+'...')
                                 if len(aktiva_s)>1:
                                     print(figur.namn+' lämnar sin kroppsliga form')
                                     tid = int(6 + figur.lvl*0.1)
                                     for s in [spelare for spelare in aktiva_s if spelare.namn!=figur.namn]:
                                         e=Effekt(figur.namn+'s armar',difstat,s,('str',int(figur.stats['str']*0.7)),('str',-int(figur.stats['str']*0.7)),tid )
-                                        e.sluttid += tick
-                                        e.use()
-                                        effekter.append(e)
+                                        uppdatera_effekter(e)
 
                                         e=Effekt(figur.namn+'s kunskap',difstat,s,('smi',int(figur.stats['smi']*0.7)),('smi',-int(figur.stats['smi']*0.7)),tid )
-                                        e.sluttid += tick
-                                        e.use()
-                                        effekter.append(e)
+                                        uppdatera_effekter(e)
 
                                         e=Effekt(figur.namn+'s hjärta',difstat,s,('mkr',int(figur.stats['mkr']*0.7)),('mkr',-int(figur.stats['mkr']*0.7)),tid )
-                                        e.sluttid += tick
-                                        e.use()
-                                        effekter.append(e)
+                                        uppdatera_effekter(e)
 
-                                    e=Effekt('Projicerad själ',borta,figur,(aktiva_s, True),(aktiva_s, False), tid )
-                                    e.sluttid += tick
-                                    e.use()
-                                    effekter.append(e)
+                                    e=Effekt('Projicerad själ',borta,figur,(True),(False), tid )
+                                    uppdatera_effekter(e)
                                 else:
                                     print(namn+' fungerar bara om ni är flera')
+                                    continue
 
-                            if namn == 'Strategi':
+                            elif namn == 'Strategi':
                                 print(figur.namn+' använder '+namn+'...')
                                 if len(aktiva_s)>1:
                                     for s in [spelare for spelare in aktiva_s if spelare.namn!=figur.namn]:
@@ -521,53 +514,55 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                         uppdatera_effekter(e)
                                 else:
                                     print(namn+' fungerar bara om ni är flera')
+                                    continue
 
-                            if namn == 'Tillbakaförvandling':
+                            elif namn == 'Tillbakaförvandling':
                                 fv.tillbakaforvandling(figur)
 
-                            if namn == 'Urkraft':
+                            elif namn == 'Urkraft':
                                 print(figur.namn+' hämtar kraft...')
                                 e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), randint(3,7))
-                                e.sluttid += tick
-                                effekter.append(e)
+                                uppdatera_effekter(e, use=False)
 
                             elif namn == 'Återhämtning':
                                 difstat(figur, 'hp', int(figur.liv*0.2))
                             elif namn == 'Återhämtning 2':
                                 difstat(figur, 'hp', int(figur.liv*0.32))
 
-                            if namn == 'Älva':
+                            elif namn == 'Älva':
                                 fv.alva(figur)
 
+                            else:
+                                raise ValueError('Fel mode')
                             
                             del namn
                             break
 
                             
                         #FÖREMÅL    
-                        elif fightval(figur, inventory)[mode]=='Använd föremål':
+                        elif mode == 'Använd föremål':
                             res = fmal_meny(inventory, aktiva_s, aktiva_f)
                             if res:
                                 break
 
                         #MAGI
-                        elif fightval(figur, inventory)[mode]=='Använd magi':
-                            antal = 1
+                        elif mode == 'Använd magi':
+                            antalmagier = 1
                             done = True
                             if 'Dubbel magi' in figur.special:
-                                antal += 1
-                            for i in range(antal):
+                                antalmagier += 1
+                            for i in range(antalmagier):
                                 print('magikraft: '+str(figur.stats['mkr']))
                                 if i == 0:
                                     spell = magi_meny(figur.magier,figur.stats['mkr'])
-                                    if not spell:
-                                        done = False
+                                    if not spell: #gå tillbaka
+                                        done = False #för att inte bryta andra loopen också
                                         break
-                                else:
+                                else: #(dubbel)
                                     print('Välj en magi till')
                                     spell = magi_meny(figur.magier,figur.stats['mkr'],dubbel=True)
                                     if not spell:
-                                        break
+                                        break #även om man går tillbaka är man klar för turen
                                     
                                 if spell[0] == 'Beskydd':
                                     print(figur.namn+' använder '+spell[0]+'...')
@@ -578,16 +573,13 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Eld':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     attackmagi(figur, aktiva_f, 2, figur.lvl*(0.5+random()*0.5))
-                                    k_o(aktiva_f, effekter)
 
                                 elif spell[0] == 'Förtärande mörker':
-                                    target=listval([f.namn for f in aktiva_f])
+                                    target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     skada=int(figur.stats['mkr']*(randint(4,6)+figur.hp*0.02))
-                                    taskada(aktiva_f[target],skada)
-                                    k_o(aktiva_f,effekter,aktiva_f[target])
+                                    taskada(target,skada)
                                     taskada(figur,int(skada*0.3))
-                                    k_o(aktiva_s,effekter,figur)
                                         
                                 elif spell[0] == 'Förvrida framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')
@@ -596,80 +588,55 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                         uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=s.namn+' manipulerar redan tiden')
 
                                 elif spell[0] == 'Helning':
-                                    target=listval([s.namn for s in aktiva_s])
+                                    target=aktiva_s[listval([s.namn for s in aktiva_s])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    plus=int(figur.stats['mkr']*randint(4,7) + aktiva_s[target].liv*0.1)
-                                    aktiva_s[target].hp+=plus
-                                    if aktiva_s[target].hp>=aktiva_s[target].liv:
-                                        print(aktiva_s[target].namn+' fick full hp')
-                                        aktiva_s[target].hp=aktiva_s[target].liv
-                                    else:
-                                        print(aktiva_s[target].namn+' återhämtade '+str(plus)+' hp')
-                                    del plus
+                                    helning(figur, target, 3, mod2=0.3)
                                         
                                 elif spell[0] == 'Hypnos':
-                                    target=listval([f.namn for f in aktiva_f])
+                                    target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     if figur.stats['mkr']*0.007+0.5+random()>1:
-                                        e=Effekt('Hypnos',difstat,aktiva_f[target],(0,6,10,-3),(0,-6,10,-3),randint(5,12))                                    
+                                        e=Effekt('Hypnos',difstat,target,(0,6,10,-3),(0,-6,10,-3),randint(5,12))                                    
                                         uppdatera_effekter(e)
                                     else:
                                         print('...men hypnosen misslyckas.')
 
                                 elif spell[0] == 'Kyla':
-                                    target=listval([f.namn for f in aktiva_f])
+                                    target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    skada=int(figur.stats['mkr']*(2+random()) + figur.lvl*(0.5+random()*0.5) - aktiva_f[target].mods[2]*2)
-                                    print(aktiva_f[target].namn+' förlorar '+str(skada)+' hp')
-                                    aktiva_f[target].hp-=skada
-                                    if aktiva_f[target].hp<1:
-                                        print(aktiva_f[target].namnB+' är medvetslös.')
-                                        aktiva_f[target].hp=0
-                                        borta(aktiva_f[target], aktiva_f)
+                                    attackmagi(figur, target, 2, plus=figur.lvl*(0.5+random()*0.5))
 
                                 elif spell[0] == 'Lindring':
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    plus=int(figur.stats['mkr']*(0.5+random()*0.5))
-                                    for s in aktiva_s:
-                                        s.hp+=plus+int(s.liv*0.2)
-                                        if s.hp>=s.liv:
-                                            print(s.namn+' fick full hp')
-                                            s.hp=s.liv
-                                        else:
-                                            print(s.namn+' återhämtade '+str(plus+int(s.liv*0.2))+' hp')
-                                    del plus
+                                    helning(figur, aktiva_s, 1)
 
                                 elif spell[0] == 'Livskraft':
                                     n = len([s for s in s_lista if s.hp < 1])
                                     if n < 1:
                                         print(spell[0]+' kan bara användas om en följeslagare är medvetslös')
-                                        figur.stats['mkr'] += spell[1]
-                                    elif n == 1:
+                                        if i == 0:
+                                            done = False #om det är ens första magi får man välja om från början
+                                        break
+                                    print(figur.namn+' använder '+spell[0]+'...')
+                                    if n == 1:
                                         target = [s for s in s_lista if s.hp < 1][0]
-                                        print(figur.namn+' använder '+spell[0]+'...')
                                         target.hp = target.liv
                                         print(target.namn+' fick nya krafter!\n'+target.namn+' återfick full hp.')
                                         aktiva_s.append(target)
                                     else:
-                                        print(figur.namn+' använder '+spell[0]+'...')
                                         for s in [sp for sp in s_lista if sp.hp < 1]:
                                             s.hp = int(s.liv*0.5)
                                             print(s.namn+' fick nya krafter!\n'+s.namn+' återfick halva sin hp.')
                                             aktiva_s.append(s)
 
                                 elif spell[0] == 'Mystisk attack':
-                                    print(figur.namn+' använder '+spell[0]+'...')
-                                    target=listval([f.namn for f in aktiva_f])
-                                    attack(figur,aktiva_f[target],'mystisk')
-                                    k_o(aktiva_f,effekter,aktiva_f[target])
+                                    target = aktiva_f[listval([f.namn for f in aktiva_f])]
+                                    attack(figur,target,'mystisk')
                                     taskada(figur, int(figur.hp/6))
-                                    k_o(aktiva_s,effekter,figur)
 
                                 elif spell[0] == 'Mörk attack':
-                                    print(figur.namn+' använder '+spell[0]+'...')
-                                    target=listval([f.namn for f in aktiva_f])
-                                    attack(figur,aktiva_f[target],'mörk')
-                                    k_o(aktiva_f,effekter,aktiva_f[target])
+                                    target = aktiva_f[listval([f.namn for f in aktiva_f])]
+                                    attack(figur,target,'mörk')
 
                                 elif spell[0] == 'Se framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')
@@ -680,50 +647,48 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Smärta':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 1.5, figur.lvl*(0.5+random()*0.5) + target.liv*0.1)
-                                    if not k_o(aktiva_s, effekter, target): 
-                                        difstat(aktiva_s[target],0,1)
+                                    attackmagi(figur, target, 2, plus=target.liv*(0.5+random()*0.5))
+                                    if target in aktiva_f: 
+                                        difstat(target,0,1)
 
                                 elif spell[0] == 'Snabbhet':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for s in aktiva_s:
-                                        e=Effekt('Snabbhet',difstat,s,(0,-2,10,-3),(0,2,10,-3),int(figur.lvl*0.4) + randint(2,5) )
+                                        e=Effekt('Snabbhet',difstat,s,(0,-2,10,-4),(0,2,10,-4),int(figur.lvl*0.4) + randint(2,5) )
                                         uppdatera_effekter(e)
 
                                 elif spell[0] == 'Sömnighet':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for f in aktiva_f:
-                                        minus=int(2 + figur.stats['mkr']*0.3*random())
-                                        e=Effekt('Sömnighet',difstat,f,(0,minus,10,-3),(0,-minus,10,-3),int(figur.stats['mkr']*random()) + 6 )
+                                        e=Effekt('Sömnighet',difstat,f,(0,2,10,-4),(0,-2,10,-4),int(figur.stats['mkr']*random()) + 6 )
                                         uppdatera_effekter(e)
-                                    del minus
 
                                 elif spell[0] == 'Tillkvicknande':
                                     if len([s for s in s_lista if s.hp < 1]) < 1:
                                         print(spell[0]+' kan bara användas om en följeslagare är medvetslös')
-                                        figur.stats['mkr'] += spell[1]
+                                        if i == 0:
+                                            done = False #om det är ens första magi får man välja om från början
+                                        break
                                     else:
                                         target = [s for s in s_lista if s.hp < 1][listval([s.namn for s in s_lista if s.hp < 1])]
                                         print(figur.namn+' använder '+spell[0]+'...')
-                                        plus = int(target.liv*0.2 + figur.stats['mkr']*0.5)
-                                        target.hp = plus
-                                        print(target.namn+' fick nya krafter!\n'+target.namn+' återfick '+str(plus)+' hp.')
+                                        target.hp = int(target.liv*0.2 + figur.stats['mkr']*0.5)
+                                        print(target.namn+' fick nya krafter!\n'+target.namn+' återfick '+str(target.hp)+' hp.')
                                         aktiva_s.append(target)
 
                                 elif spell[0] == 'Trollstyrka':
-                                    target=listval([s.namn for s in aktiva_s])
+                                    target=aktiva_s[listval([s.namn for s in aktiva_s])]
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     plus=int(figur.stats['mkr']*random()*0.8)
                                     if plus < 1:
                                         plus = 1
                                     e=Effekt('Trollstyrka',difstat,aktiva_s[target],('str',plus),('str',-plus),int(figur.stats['mkr']*0.5) + randint(5,10) )
                                     uppdatera_effekter(e)
-                                    
 
                                 elif spell[0] == 'Trollsmäll':
                                     target=listval([f.namn for f in aktiva_f])
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 8, 40*random())
+                                    attackmagi(figur, target, 8, plus=40*random())
 
                                 elif spell[0] == 'Trollstoft':
                                     print(figur.namn+' använder '+spell[0]+'...')
@@ -734,16 +699,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                                 elif spell[0] == 'Upplyftning':
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    plus=int(figur.stats['mkr']*(1.5+random()))
-                                    for s in aktiva_s:
-                                        s.hp+=plus+int(s.liv*0.3)
-                                        if s.hp>=s.liv:
-                                            print(s.namn+' fick full hp')
-                                            s.hp=s.liv
-                                        else:
-                                            print(s.namn+' återhämtade '+str(plus)+' hp')
-                                    del plus
-
+                                    helning(figur, aktiva_s, 3, mod2=0.3)
+                                    
                                 elif spell[0] == 'Ändra framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for f in aktiva_f:
@@ -753,14 +710,15 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 else:
                                     raise ValueError('fel namn')                    
                                 figur.stats['mkr']-=spell[1]
+                                
+                            #efter antalmagier-loop:    
                             del spell
-                            del antal
+                            del antalmagier
                             if done:
                                 break
-
                             
-                        elif fightval(figur, inventory)[mode]=='Fly':    #FLY
-                            if max(s.klocka() for s in aktiva_s) -min(f.klocka() for f in aktiva_f)<randint(0,4):
+                        elif mode == 'Fly':    #FLY
+                            if max(s.klocka() for s in aktiva_s) -min(f.klocka() for f in aktiva_f) < randint(0,4):
                                 print('Ni flyr.')
                                 for s in s_lista:
                                     for spelare in [sp for sp in spelarlista if sp.namn==s.namn]:
@@ -909,11 +867,3 @@ MDICT = {'Demonen Zlokr':fi.DemonenZ(),
          'Gaurghus': fi.Gaurghus(),
          'Otak': fi.Otak(),
          'Joshki': fi.Joshki()}
-
-
-
-
-
-
-
-
