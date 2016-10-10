@@ -19,8 +19,8 @@ class Effekt:
         self.reverse=reverse
         self.sluttid=varaktighet
 
-    def use(self, noprint=False):
-        self.funktion(self.target,*self.args, noprint=noprint)
+    def use(self):
+        self.funktion(self.target,*self.args)
 
     def check(self,tick):
         if tick == self.sluttid:
@@ -222,7 +222,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 
                 #grundskada
                 if nyckelord == 'mystisk':
-                    skada = sum(a.stats) + figur.hp/4
+                    skada = sum(a.stats.values()) + figur.hp/4
                 elif nyckelord == 'mörk':
                     skada = a.stats['mkr']*0.85 + a.stats['str']*0.85
                 else:
@@ -500,7 +500,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                         e=Effekt(figur.namn+'s hjärta',difstat,s,('mkr',int(figur.stats['mkr']*0.7)),('mkr',-int(figur.stats['mkr']*0.7)),tid )
                                         uppdatera_effekter(e)
 
-                                    e=Effekt('Projicerad själ',borta,figur,(True),(False), tid )
+                                    e=Effekt('Projicerad själ',borta,figur,[True],[False], tid )
                                     uppdatera_effekter(e)
                                 else:
                                     print(namn+' fungerar bara om ni är flera')
@@ -682,7 +682,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     plus=int(figur.stats['mkr']*random()*0.8)
                                     if plus < 1:
                                         plus = 1
-                                    e=Effekt('Trollstyrka',difstat,aktiva_s[target],('str',plus),('str',-plus),int(figur.stats['mkr']*0.5) + randint(5,10) )
+                                    e=Effekt('Trollstyrka',difstat,target,('str',plus),('str',-plus),int(figur.stats['mkr']*0.5) + randint(5,10) )
                                     uppdatera_effekter(e)
 
                                 elif spell[0] == 'Trollsmäll':
