@@ -132,3 +132,29 @@ def slowprint(string, extraslow=1):
         sys.stdout.write(c)
         sys.stdout.flush()
         time.sleep(0.045*extraslow)
+
+#funktion för att ladda gamla filer med ny version
+def overgang3till4():
+    slowprint('I fängelsehålan möter ni Unghäxan.\n')
+    time.sleep(0.5)
+    slowprint('Unghäxan: Jag var den snälla häxans elev.\n'+
+              'Den elaka häxan har lyckats nästla sig in här på slottet\n'+
+              'och styr i praktiken bakom kulisserna.\n'+
+              'Jag blev tillfångatagen, men den snälla häxan har lyckats gömma sig.\n')
+    time.sleep(0.7)
+    slowprint('Mer soldater kommer att komma snart. Men ni kom ifrån skuggvärlden,\n'+
+              'den snälla häxan sa att ni måste ha hitttat Djurfrämlingens bok?\n')
+    time.sleep(0.7)
+    slowprint('Otroligt...!\n'+
+              'Men det verkar som en del av den magiska skriften bleknat bort...\n'+
+              'Unghäxan uttalar en lång trollformel...!\n')
+    time.sleep(1)
+    slowprint('Det kommer fram symboler på tomma sidor i boken!\n'+
+              'Unghäxan: Jag vågar inte lova var ni hamnar men om ni läser här\n'+
+              'kommer ni förflyttas någon annanstans...\n'+
+              'Hitta den snälla häxan! Använd boken nu, innan soldaterna kommer!\n')
+    time.sleep(2)
+    slowprint('Du läser ur Djurfrämlingens bok...\n',2)
+    time.sleep(2)
+    slowprint('Ni hamnade 50 år framåt i tiden!\n')
+    print('Ni står utanför slottet.')

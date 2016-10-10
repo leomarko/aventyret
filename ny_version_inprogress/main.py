@@ -5,7 +5,7 @@ import time
 import klasser as kls
 from fightfunks import fight as fightfunc
 from lvlup import lvlup
-from funktioner import difstat, plusformaga, listval, slowprint, uniquelist
+from funktioner import difstat, plusformaga, listval, slowprint, uniquelist, overgang3till4
 from collections import OrderedDict
 
 #lägg till / testa:
@@ -817,14 +817,35 @@ def meny():
                                     fight(['Otak','Joshki'], True)
                                     print('Ni hittade en blå mantel')
                                     inventory.append(FDICT['Blå mantel'])
+                                    time.sleep(1)
+                                    slowprint('I fängelsehålan möter ni Unghäxan.\n')
+                                    time.sleep(0.5)
+                                    slowprint('Unghäxan: Jag var den snälla häxans elev.\n'+
+                                              'Den elaka häxan har lyckats nästla sig in här på slottet\n'+
+                                              'och styr i praktiken bakom kulisserna.\n'+
+                                              'Jag blev tillfångatagen, men den snälla häxan har lyckats gömma sig.\n')
+                                    time.sleep(0.7)
+                                    slowprint('Mer soldater kommer att komma snart. Men ni kom ifrån skuggvärlden,\n'+
+                                              'den snälla häxan sa att ni måste ha hitttat Djurfrämlingens bok?\n')
+                                    time.sleep(0.7)
+                                    slowprint('Otroligt...!\n'+
+                                              'Men det verkar som en del av den magiska skriften bleknat bort...\n'+
+                                              'Unghäxan uttalar en lång trollformel...!\n')
+                                    time.sleep(1)
+                                    slowprint('Det kommer fram symboler på tomma sidor i boken!\n'+
+                                              'Unghäxan: Jag vågar inte lova var ni hamnar men om ni läser här\n'+
+                                              'kommer ni förflyttas någon annanstans...\n'+
+                                              'Hitta den snälla häxan! Använd boken nu, innan soldaterna kommer!\n')
+                                    time.sleep(2)
+                                    slowprint('Du läser ur Djurfrämlingens bok...\n',2)
+                                    time.sleep(2)
+                                    slowprint('Ni hamnade 50 år framåt i tiden!\n')
+                                    position += 200
                                     progress['main'] = 4
                                     progress['hittade_skatter'].add('ZZ')
-                                    #tills vidare
-                                    slowprint('FORTSÄTTNING FÖLJER\n',3)
-                                    spara(kopia=True)
-                                    print('Sparat som kopia!')
-                                    time.sleep(4)
-                                    raise SystemExit
+                                    progress['upptäckta_platser'].add(position)
+                                    print('Ni står utanför slottet.')
+                                    break
                         else:
                             print('Farväl')
                             break
@@ -1035,35 +1056,29 @@ def meny():
             if progress['main'] == 2 and position < 100:
                 slowprint('Den elaka häxan har skickat dig till en underlig värld av skuggor!')
                 position = 116
-            elif progress['main'] > 3:
-                slowprint('FORTSÄTTNING FÖLJER',2)
-                raise SystemExit
+            elif progress['main'] == 4 and 214 not in progress['upptäckta_platser']:
+                position += 200
+                progress['upptäckta_platser'].add(position)
+                overgang3till4()
                 
 
         if val[mode]=='Djurfrämlingens bok':
-            if not 'ZZ' or 'ZZZ' in progress['hittade_skatter']:
-                print('Du läser ur Djurfrämlingens bok...!')
-                if position < 100:
-                    varld = 'Skuggvärlden'
-                else:
-                    varld = 'Vanliga världen'
-
+            lista = ['Vanliga världen', 'Skuggvärlden']        
+            if 'ZZ' in progress['hittade_skatter']:
+                lista.append('50 år framåt')
+            if 'ZZZ' in progress['hittade_skatter']:
+                lista.append('200 år bakåt')
+            if position < 100:
+                lista.remove('Vanliga världen')
+            elif position < 200:
+                lista.remove('Skuggvärlden')
+            elif position < 300:
+                lista.remove('50 år framåt')
             else:
-                lista = ['Vanliga världen', 'Skuggvärlden']        
-                if 'ZZ' in progress['hittade_skatter']:
-                    lista.append('50 år framåt')
-                if 'ZZZ' in progress['hittade_skatter']:
-                    lista.append('200 år bakåt')
-                if position < 100:
-                    lista.remove('Vanliga världen')
-                elif position < 200:
-                    lista.remove('Skuggvärlden')
-                elif position < 300:
-                    lista.remove('50 år framåt')
-                else:
-                    lista.remove('200 år bakåt')
-                varld = lista[listval(lista)]
-                print('Du läser ur Djurfrämlingens bok...!')
+                lista.remove('200 år bakåt')
+            varld = lista[listval(lista)]
+            print('Du läser ur Djurfrämlingens bok...!')
+            time.sleep(1)
                 
             position -= 300
             while True:
@@ -1311,7 +1326,23 @@ PDICT={
     113:'En grotta',
     114:'Gården',
     115:'skugglandskap',
-    116:'skugglandskap'
+    116:'skugglandskap',
+    201:'vildmark',
+    202:'träsk',
+    203:'träsk',
+    204:'En glänta',
+    205:'Höga berget',
+    206:'landsväg',
+    207:'Ödsliga fältet',
+    208:'Gamla smeden',
+    209:'Huset',
+    210:'landsväg',
+    211:'ödemark',
+    212:'träsk',
+    213:'landsväg',
+    214:'Slottet',
+    215:'landsväg',
+    216:'Templet'
     }
 
 karta = kls.Karta(PDICT)
@@ -1369,9 +1400,10 @@ if listval(['Nytt äventyr','Ladda']) == 1:
     if progress['main'] == 2 and position < 100:
         slowprint('Den elaka häxan har skickat dig till en underlig värld av skuggor!')
         position = 116
-    elif progress['main'] > 3:
-        slowprint('FORTSÄTTNING FÖLJER',2)
-        raise SystemExit
+    elif progress['main'] == 4 and 214 not in progress['upptäckta_platser']:
+        position += 200
+        progress['upptäckta_platser'].add(position)
+        overgang3till4()
 
 else:
     #spelare
