@@ -1,9 +1,10 @@
 Beskydd---
-Lura naturen - testa
-Dubbel magi - testa
-Ändrat effekter - testa
-testa fightfunks2
+Lura naturen---
+Dubbel magi---
+Ändrat effekter---
+testa fightfunks2---
 fixa snyggare föremålslistor---
 fixa beskrivningar---
 fixa stats---
-gör så man kan gå tillbaka
+gör så man kan gå tillbaka---
+Skriv ut stats efter förvandling?

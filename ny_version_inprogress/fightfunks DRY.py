@@ -137,9 +137,9 @@ def magi_meny(magier, mkr, dubbel=False):
         spell = listval([m[0]+': '+str(m[1])+' magikraft' for m in tillgangliga]+['Ångra'])
     else:
         spell = listval([m[0]+': '+str(m[1])+' magikraft' for m in tillgangliga]+['(Ingen)'])
-    if obj == len(tillgangliga):
+    if spell == len(tillgangliga):
         return False
-    return magier[spell]
+    return tillgangliga[spell]
     
 def fmal_meny(inventory, aktiva_s, aktiva_f):
     fightprylar=[sak for sak in [f for f in inventory if isinstance(f,kls.EngangsForemal)] if sak.fight]
