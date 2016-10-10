@@ -49,7 +49,7 @@ class Stentiger(Varelse):
         self.liv=45
         self.hp=self.liv
         self.stats={'str':7,'smi':4,'mkr':6}
-        self.mods=[0,1,0,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.mods=[0,1,0,1]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=1
     
     def mode(self):
