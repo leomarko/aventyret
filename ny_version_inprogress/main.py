@@ -5,7 +5,8 @@ import time
 import klasser as kls
 from fightfunks import fight as fightfunc
 from lvlup import lvlup
-from funktioner import difstat, plusformaga, listval, slowprint
+from funktioner import difstat, plusformaga, listval, slowprint, uniquelist
+from collections import OrderedDict
 
 #lägg till / testa:
 #platser och rörelse -- FIXAT
@@ -233,7 +234,7 @@ def ladda():
         for index, line in zip(d_index, d_line):
             dialogval[index] = line
 
-        inventory=[kls.Foremal('Gå tillbaka')]  #föremål 0 är bara ett menyval
+        inventory=list()  #föremål 0 är bara ett menyval
         for s in f.readline().strip('\n').split('___'):                        #41
             if s != '':
                 inventory.append(FDICT[s])
@@ -245,6 +246,60 @@ def ladda():
 
         position = int(f.readline().strip())                        #43
 
+
+def classhierarchy(obj):
+    if isinstance(obj,kls.Foremal):
+        return 4
+    elif isinstance(obj,kls.EngangsForemal):
+        return 3
+    elif isinstance(obj,kls.Ovrigt):
+        return 2
+    elif isinstance(obj,kls.Vapen):
+        return 1
+    elif isinstance(obj,kls.Rustning):
+        return 0
+
+def foremalsmeny():
+    global inventory
+    while True:
+        print('\nFÖREMÅL')
+        ordered = uniquelist(inventory)
+        ordered.sort(key=classhierarchy)
+        antal = OrderedDict()
+        for f in ordered:
+            antal[f.namn] = inventory.count(f)
+        display = [f.namn for f in ordered]
+        for i in range(len(display)):
+            try:
+                display[i] += ' ('+ordered[i].bs+')'
+            except(AttributeError):
+                pass
+            if antal[ordered[i].namn] > 1:
+                display[i] += ' ('+str(antal[ordered[i].namn])+'st)'
+            
+        obj = listval(['Gå tillbaka']+display) - 1
+        if obj == -1: #gå tillbaka
+            break
+        obj = ordered[obj]
+        if isinstance(obj,kls.Utrustning):
+            print('Välj vem som ska använda '+obj.namn)
+            res = spelarlista[listval([s.namn for s in spelarlista])].equip(obj)
+            if res:  #res är den gamla utrustningen, eller False om det inte gick
+                inventory.remove(obj)
+                if res.namn != '':
+                    inventory.append(res)
+            del res
+        elif isinstance(obj,kls.EngangsForemal):
+            #if not obj.target: #kollar om man ska välja mål
+            sp = spelarlista[listval([s.namn for s in spelarlista])]
+            res = obj.use(sp)
+            if res:
+                inventory.remove(obj)
+            else:
+                print(sp.namn+' kan inte bli hjälpt av det')
+            del res
+        elif isinstance(obj,kls.Foremal):
+            print(obj.namn+' går inte att använda här.')
 
 
 #dialogfunktion,
@@ -939,34 +994,7 @@ def meny():
                 continue
 
         elif val[mode]=='Föremål':
-            while True:
-                print('\nFÖREMÅL')
-                obj = listval([inventory[0].namn]+[f.namn+' ('+f.bs+')' for f in inventory if not isinstance(f,kls.Foremal)]+['Övrigt'])
-                if obj == 0: #gå tillbaka
-                    break
-                elif obj == 1+len([f for f in inventory if not isinstance(f,kls.Foremal)]): #Övriga föremål
-                    print('\n'.join([f.namn for f in inventory if isinstance(f,kls.Foremal)][1:])+'\n')
-                    listval(['Gå tillbaka'])
-                    break
-                obj = [f for f in inventory if not isinstance(f,kls.Foremal)][obj-1]
-                if isinstance(obj,kls.Utrustning):
-                    print('Välj vem som ska använda '+obj.namn)
-                    res = spelarlista[listval([s.namn for s in spelarlista])].equip(obj)
-                    if res:  #res är den gamla utrustningen, eller False om det inte gick
-                        inventory.remove(obj)
-                        if res.namn != '':
-                            inventory.append(res)
-                    del res
-                elif isinstance(obj,kls.EngangsForemal):
-                    #if not obj.target: #kollar om man ska välja mål
-                    sp = spelarlista[listval([s.namn for s in spelarlista])]
-                    res = obj.use(sp)
-                    if res:
-                        inventory.remove(obj)
-                    else:
-                        print(sp.namn+' kan inte bli hjälpt av det')
-                    del res
-            del obj
+            foremalsmeny()
             continue
 
         elif val[mode]=='Stats':
@@ -1320,7 +1348,7 @@ dialogval=[d0,0,0,0,0,0,0,0,0,
            dX]
 
 #inventory
-inventory=[kls.Foremal('Gå tillbaka')]  #föremål 0 är bara ett menyval
+inventory=list()
         
 #vänner
 svan = kls.Spelare('Svan',30,3,2,3,[['Kamp',0],['Dunkel konst',0]])
