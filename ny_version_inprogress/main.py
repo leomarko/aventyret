@@ -849,7 +849,96 @@ def meny():
                         else:
                             print('Farväl')
                             break
-                                
+
+                elif progress['main'] == 4 and position == 14:
+                    print('Slottet är väl bevakat, ni kan inte närma er utan att bli upptäckta\n'+
+                          'och ni har ingen chans att ta er in med våld.')
+
+                elif position == 214:
+                    print('En soldat: Hell kung Kolskägg! Signat vare prästerskapet!')
+                    fraga = dialog([0,6])
+                    if fraga == 'Fråga om äventyr':
+                        print('Äventyret är inte tillåtet!')
+                    elif fraga == 'Hell kung Kolskägg! Signat vare prästerskapet!':
+                        print('Välkommen in frände.')
+                        if 'vägtilldvärgen' in progress['hittade_skatter']:
+                            print('Det är nog säkrast att inte gå in till borggården.')
+                        else:
+                            time.sleep(1.5)
+                            print('Ni går in till borggården.\n'+
+                                  'Där ser ni Unghäxan, som ni mötte i fängelsehålan för 50 år sedan!')
+                            time.sleep(1)
+                            print('Unghäxan: Det är ju ni! Äventyrarna från länge sen!\n'+
+                                  'Ingen här vet vem jag egentligen är, så låt oss tala där ingen hör...')
+                            while True:
+                                fraga = dialog([2,3,4])
+                                if fraga == 'Fråga om Elaka häxan':
+                                    print('Amuno och den elaka häxan är en och samma.\n'+
+                                          'Hon har låtit bygga ett tempel där tornet låg.')
+                                    if 'Tempelbrosch' not in [f.namn for f in inventory]:
+                                        slowprint('Om du har på dig den här broschen blir du insläppt.\n'+
+                                                  '(Du fick en Tempelbrosch!)\n')
+                                        time.sleep(1)
+                                    if 'templet' in progress['hittade_skatter']:
+                                        slowprint('Ni kan inte komma åt Amuno i templet säger ni?\n'+
+                                                  'Så ni vill hitta en väg in i slottet...\n')
+                                        time.sleep(1)
+                                        slowprint('Ok, vänta här...\n')
+                                        slowprint('.....\n'*3,3)
+                                        slowprint('Kusten är klar! Jag ska visa dig till kungens kammare.\n'+
+                                                  'Men ingen annan kan följa med, då blir vi upptäckta.\n')
+                                        spelarlista = [sp1]
+                                        time.sleep(2)
+                                        slowprint('Ni går upp många trappor, och kommer till kungens kammare\n'
+                                                  'Ni går in, och där står riddare Joshki och kung Kolskägg...!\n'+
+                                                  'Unghäxan lämnar rummet och låser dörren.\n+
+                                                  '-Förlåt mig.\n')
+                                        time.sleep(1)
+                                        slowprint('Kung Kolskägg: Tror ni jag är så dåraktig att jag lät en av häxans\n'+
+                                                  'bundsförvanter röra sig fritt i mitt slott?\n'+
+                                                  'Amuno har skänkt mig både vishet och styrka, inget undslipper min makt!\n\n'+
+                                                  'Riddare Joshki: Låt mig undanröja denna fiende åt er, min konung!\n'+
+                                                  'Kung Kolskägg: Låt gå!')
+                                        time.sleep(2)
+                                        fight(['Joshki2'],True)
+                                        time.sleep(2)
+                                        slowprint('Riddare Joshki: Jag har svikit ers majestät...\n'+
+                                                  'Kung Kolskägg: Vilken beskvikelse!\n'+
+                                                  'Nåja, nu ska du få känna på riktig makt!\n')
+                                        time.sleep(1)
+                                        slowprint('Men då...!')
+                                        time.sleep(1)
+                                        slowprint('Fönstret till kammaren krossas!\n'+
+                                                  'In flyger en stor fågel bärande på en reslig krigare,\n'+
+                                                  'fågeln byter skepnad och blir en kvinna.\n'+
+                                                  'Alri och Svan: Vi förstod snart att något var fel,\n'+
+                                                  'låt oss se vad den här falska kungen går för!\n')
+                                        time.sleep(1)
+                                        slowprint('Kung Kolskägg: Ni ska alla dö!')
+                                        fight(['Kolskägg'],True)
+                                        time.sleep(2)
+                                        slowprint('Kung Kolskägg: Aaargh!',2)
+                                        print('Ni tog kungens gyllene mantel')
+                                        inventory.append(FDICT['Gyllene mantel'])
+                                        time.sleep(2)
+                                        slowprint('Unghäxan kommer in i kammaren.\n'+
+                                                  'Unghäxan: Vänta! Ni kan inte åstadkomma något mer genom att döda kungen.\n'+
+                                                  'Jag vet att jag har svikit den snälla häxan.\n'+
+                                                  'Men jag vet en annan vän till henne som jag hemlighållit för den elaka häxan.\n'+
+                                                  'Det är en dvärg, och han bor nu i vildmarken, jag ska förklara vägen för er.\n')
+                                        time.sleep(1)
+                                        slowprint('Ni lärde er vägen till dvärgens boning.\n'+
+                                                  'Ni låter kungen och unghäxan gå och lämnar slottet.')
+                                        progress['hittade_skatter'].add('vägtilldvärgen')
+                                        break
+                                elif fraga == 'Fråga om monster':
+                                    print('Kungens riddare håller de flesta monstren borta från landsvägen,\n'+
+                                          'men de andra är vredare och mer fruktansvärda än någonsin.')
+                                elif fraga == 'Fråga om Snälla häxan':
+                                    print('Den snälla häxan har övergivit oss. Vi måste klara oss själva nu')
+                                else:
+                                    print('Var försiktig')
+                                    break                 
                 nyplats = False                           
                             
                         
@@ -1369,7 +1458,7 @@ d2='Fråga om Elaka häxan'
 d3='Fråga om monster'
 d4='Fråga om Snälla häxan'
 d5='Fråga om Una'
-d6='Fråga om Skuggkristallen'
+d6='Hell kung Kolskägg! Signat vare prästerskapet!'
 d7='Fråga om Mästarsmeden'
 d8='Fråga om böcker'
 dX='Ta avsked'
