@@ -103,7 +103,7 @@ def difstat(vem,stat,plus,tak=100,mini=0,noprint=False):
     if not noprint:
         if maxad:
             if stat == 'hp':
-                print(vem.namn+' fick full hp')
+                print(vem.namn+' fick full hp\n')
             elif isinstance(stat,str):
                 print(vem.namn+' har nu '+str(vem.stats[stat])+' i '+word+'\n')
             else:
