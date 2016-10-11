@@ -360,7 +360,7 @@ def meny():
                           'Vill du strida mot demonen?')
                     if listval(['Ja','Nej']) == 0:
                         fight(['Demonen Zlokr'],True)
-                        progress['döda_fiender'].add('Demonen Zlokr')
+                        progress['döda_fiender'].add('Zlokr')
                 elif randint(0,4) > 1:
                     if progress['main'] < 2:
                         fight()
@@ -552,8 +552,6 @@ def meny():
                         else:
                             print('På återseende!')
                             break
-                        
-                            
                             
                 nyplats = False
 
@@ -636,9 +634,78 @@ def meny():
                                 inventory.remove(f)
                             except(IndexError,ValueError):
                                 print('Grisen: Ni är töntar')
-                            
                 nyplats = False
-                            
+                
+            elif plats == 'Höga berget' and 200 < position < 300:
+                if 'skuggkristall' not in progress['hittade_skatter']:
+                    slowprint('Inne i en grotta i berget hittar du en märklig kristall!\n\n')
+                    inventory.append(FDICT['Skuggkristall']
+                    progress['hittade_skatter'].add('skuggkristall')
+                    time.sleep(2)
+                if 'Höga berget' not in progress['hittade_skatter']:
+                    print('Du träffar på tomten Sirkafirk på bergets topp.')
+                    if any(f in {'Zlokr','Ziriekl','Zaumakot','Zeoidodh'} for f in progress['döda_fiender'])
+                        slowprint('Sirkafirk: Du har dödat en demon, då är du min vän.\n'+
+                                  'Jag ska lära dig en hemlig förmåga.\n')
+                        time.sleep(2)
+                        slowprint(sp1.namn+' lärde sig Lura naturen!')
+                        sp1.formagor.append('Lura naturen')
+                        progress['hittade_skatter'].add('Höga berget')
+                    else:
+                        print('Sirkafirk: Den som kan besegra en demon är min vän')
+                nyplats = False
+
+            elif plats == 'Höga berget' and position < 100:
+                if 'Trollkungen' not in progress['döda_fiender']:
+                    slowprint('Uppe på berget ligger en borg.\n'+
+                              'Ni går in i borgen och där träffar ni ett troll.\n'+
+                              'Trollet: Vad gör ni människor här?!\n'+
+                              'Kom med mig, ni ska föras inför kungen.\n')
+                    time.sleep(3)
+                    slowprint('Trollkungen: Ser man på, några människor har hittat hit.')
+                    fraga = dialog([0,1])
+                    if fraga == 'Fråga om äventyr':
+                        slowprint('Jag har nog hört om dina äventyr från trollen i skogen,\n'+
+                                  'Men den här gången har du bråkat med fel troll!\n')
+                    elif fraga == 'Nu ska du få stryk!'
+                        slowprint('JASÅ DET TROR DU!!', 3)
+                    else:
+                        slowprint('Inte så fort! Idag ska vi festa på mänskostuvning!')
+                    time.sleep(2)
+                    fight(['Trollkungen',True])
+                    time.sleep(2)
+                    slowprint('Trollkungen: Nåd! Om du skonar mig lovar jag att vi ska vara till hjälp för er framöver.\n')
+                    time.sleep(2)
+                    slowprint('Ni skonar trollkungen.\n')
+                    progress['döda_fiender'].add('Trollkungen')
+                else:
+                    print('I trollborgen:\n'+
+                          'Trollkungen: Välkommen starka krigare!')
+                    if 'guldbåge' not in progress['hittade_skatter']:
+                        print('Våran hantverkskonst är högre än ni människors.\n'+
+                              'Visa mig det mest imponerande föremål du kan hitta,\n'+
+                              'så ska vi överträffa det!')
+                        time.sleep(2)
+                        if 'a4' in progress['hittade_skatter']:
+                            slowprint('Vad är det där för silvrig pilbåge?\n'+
+                                      'Jag kan inte tro att en människa skapat detta!\n'+
+                                      'Låt Mästartrollet titta på den!\n')
+                            slowprint('............',5)
+                            slowprint('Mästartrollet kommer tillbaks med en gyllene båge!\n'+
+                                      'Ni fick en Guldbåge.\n')
+                            inventory.append(FDICT['Guldbåge'])
+                            for vapen in [s.utrust['vapen'] for s in spelarlista]:
+                                if vapen.namn == 'Silverbåge':
+                                     vapen = Foremal('-')
+                            for f in inventory if f.namn == 'Silverbåge':
+                                inventory.remove(f)
+                            progress['hittade_skatter'].add('guldbåge')
+                        else:
+                            print('Jag ser inga imponerande föremål här...')
+                    else:
+                        print('Hur gillar ni Guldbågen?')
+                nyplats = False
+                                    
             elif plats == 'mörkt vatten':
                 if 'mörkt vatten' not in progress['hittade_skatter'] and randint(0,6) == 6:
                     print('Du hittar en blå ring!')
@@ -878,6 +945,7 @@ def meny():
                                     if 'Tempelbrosch' not in [f.namn for f in inventory]:
                                         slowprint('Om du har på dig den här broschen blir du insläppt.\n'+
                                                   '(Du fick en Tempelbrosch!)\n')
+                                        inventory.append(FDICT['Tempelbrosch'])
                                         time.sleep(1)
                                     if 'templet' in progress['hittade_skatter']:
                                         slowprint('Ni kan inte komma åt Amuno i templet säger ni?\n'+
@@ -1034,6 +1102,72 @@ def meny():
                         s.hp=s.liv
                     print('(Ni fick full hp)')
                     nyplats = False
+                    
+            elif plats == 'Templet':
+                entre = 'Tempelbrosch' in [f.namn for f in inventory]
+                if entre:    
+                    print('En präst: Du är andligt upplyst ser jag,\n'+
+                          'Gå i frid, signat vare prästerskapet.\n'+
+                          'Ni går in i Templet.')
+                    time.sleep(2)
+                    print('En annan präst: Välkommen, vad söker Ni?')
+                else:
+                    print('En präst: Du får inte komma in här, detta är en helig plats')
+                while True:
+                    fraga = dialog([2,6,8])
+                    if fraga == 'Fråga om Elaka häxan' and entre:
+                        print('Amuno?\nTemplets innersta är skyddat av mäktig magi, det går inte att komma in.\n'+
+                              'Men det talas om att Han ibland ger sig tillkänna på Slottet...\n'+
+                              'Endast konungen är värdig att personligen möta Amuno, sägs det.')
+                        progress['hittade_skatter'].add('templet')
+                        if 'Häxans smaragd' in [f.namn for f in inventory] and listval(['Använd Häxans smaragd','Gör inget']) == 0:
+                            pass #Hitta något coolt och möta en fet boss, se elaka häxan men hon försvinner
+                    elif fraga == 'Fråga om Elaka häxan':
+                        print('Några häxor finns inte mer här i landet.')
+                    elif fraga == 'Hell kung Kolskägg! Signat vare prästerskapet!':
+                        print('Hell kung Kolskägg! Signat vare prästerskapet!')
+                    elif fraga == 'Fråga om böcker' and entre:
+                        print('Vi har ett rikt bibliotek, prisa Amuno.\n'+
+                              'Låt mig visa vägen')
+                        time.sleep(2)
+                        if 'Jotun' not in progress['hittade_skatter']:
+                            print('Natu här är vår högst lärda.\n'+
+                                  'Natu: ... Ja...? Vad gäller det?')
+                            fraga2 = dialog([5,8])
+                            if fraga2 == 'Fråga om böcker':
+                                print('Natu: Hmm... Jag vet några som kan vara av intresse för er.\n'+
+                                      'Hon tar fram ett antal volymer.')
+                                if 'lärdom' not in progress['hittade_skatter']:
+                                    slowprint('Ni får 400 exp!\n', 2)
+                                    for s in spelarlista:
+                                        s.exp += 400
+                                    lvlup(spelarlista)
+                                else:
+                                    print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
+                            if fraga2 == 'Fråga om Una':
+                                slowprint('Natu: ..........\n',2)
+                                time.sleep(1)
+                                slowprint('Bibliotekarien ser förskräct ut och börjar vända sig om och gå,\n'+
+                                          'ni följer efter, men när ni rundar en bokhylla är hon försvunnen....!')
+                                progress['hittade_skatter'].add('Jotun')
+                        else:
+                            print('Vår bibliotekarie har försvunnit, men ni är välkomna att se er omkring.')
+                            if 'lärdom' not in progress['hittade_skatter']:
+                                slowprint('Ni hittar en intressant bok där "Natu" försvann\n')
+                                slowprint('Ni får 400 exp\n!', 2)
+                                for s in spelarlista:
+                                    s.exp += 400
+                                lvlup(spelarlista)
+                            else:
+                                print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
+                        print('Ni går tillbaka från biblioteket tillbaka till prästen ni pratade med.')
+                    elif fraga == 'Fråga om böcker':
+                        print('Vi har ett fantastiskt bibliotek och en otroligt kunnig bibliotekarie.\n'+
+                              'Men det är inte något som sådana som ni ska ta del av.')
+                    else:
+                        print('Adjö. Prisa Amuno.')
+                        break
+                nyplats = False
                            
             elif plats == 'Tornet':
                 if progress['main'] < 2:
@@ -1074,8 +1208,67 @@ def meny():
                     slowprint('Tornet är fullt av monster')
                     fight()
                 nyplats = False
-                        
 
+            elif plats == 'träsk':
+                if 'skog' in progress['hittade_skatter'] and 'Höga berget' not in progress['hittade_skatter'] and random() > 0.9:
+                    print('Ni träffar på den gamla tomten Heyjafjej.\n'+
+                          'Heyjafjej: Vi är redan vänner sedan gammalt,\n'+
+                          'men jag tror inte du har träffat min kusin Sirkafirk\n'+
+                          'som håller till på Höga berget.\nDet är bra att vara hans vän.')
+                elif randint(0,4) > 1:
+                    fight()
+                nyplats = False
+
+            elif plats == 'vildmark':
+                if random() > 0.9:
+                    foremal = ['Mystisk sten','Livsfrukt','Kniv','Förtrollad sköld'][randint(0,3)]
+                    slowprint('Ni hittar en '+foremal+'.\n')
+                    inventory.append(FDICT[foremal])
+                    del foremal
+                if progress['main'] > 4:
+                    print('Den snälla dvärgen möter er.\n'+'Dvärgen: Den snälla häxan...?\n'+
+                          'Jag vet inte var hon är nu, hon försvann för 20 år sedan.\n'+
+                          'Innan dess så var hon säker i en hemlig källare\n'+
+                          'som jag byggde i hennes stuga.\n'+
+                          'Den öppnade sig bara för den som sa "Lonme"...\n'+
+                          'Men nu är stugan förstörd, och kvar är bara ett ödsligt fält.')
+                elif 'vägtilldvärgen' in progress['hittade_skatter']:
+                    print('Det verkar farligt, men vill du fortsätta mot dvärgens boning?')
+                    if listval(['Ja', 'Nej']) == 0:
+                        slowprint('Det är en svår väg, men ni lyckas undivka vilddjur och monster,\n'+
+                                  'och till slut närmar ni er platsen där den snälla dvärgen ska bo.\n')
+                        time.sleep(2)
+                        slowprint('Där ser ni någon komma springande.\n'+
+                                  'Han vinkar till er, det verkar vara rätt person!\n'+)
+                        time.sleep(1.5)
+                        slowprint('Dvärgen: Akta! Ni har väckt den fruktansvärda draken!\n'+
+                                  'Titta bakom er....!!', 2)
+                        spelarlista.append(dvargen)
+                        fight(['Draken', True])
+                        spelarlista.remove(dvargen)
+                        time.sleep(2)
+                        slowprint('Dvärgen: Vi klarade det! Vilken strid!\n'+
+                                  'kom in i min boning och vila upp er.')
+                        for s in spelarlista:
+                            s.hp = s.liv
+                        print('Ni fick full hp.')
+                        time.sleep(1.5)
+                        slowprint('Varför har ni tappra äventyrare sökt upp mig på denna avlägsna plats?\n'+
+                                  'Den snälla häxan...?\n'+
+                                  'Jag vet inte var hon är nu, hon försvann för 20 år sedan.\n'+
+                                  'Innan dess så var hon säker i en hemlig källare\n'+
+                                  'som jag byggde i hennes stuga.\n'+
+                                  'Den öppnade sig bara för den som sa "Lonme"...\n'+
+                                  'Men nu är stugan förstörd, och kvar är bara ett ödsligt fält.\n')
+                        time.sleep(2)
+                        slowprint('Jag är ledsen att jag inte kan vara till mer hjälp.\n'+
+                                  'Men låt mig ge er den här magiska manteln.\n'+
+                                  'Ni fick Dvärgens mantel!')
+                        inventory.append(FDICT['Dvärgens mantel'])
+                        progress['main'] = 5  
+                else:
+                    print('Det är för farligt att ge sig längre ut i vildmarken utan att veta vägen.')
+                nyplats = False
                 
                 
         print('\nMENY')
@@ -1240,11 +1433,12 @@ def utforska(riktning):
             position = gammalpos
             print('Skuggorna är för täta för att komma vidare...')
             return 0
-    elif position == 5 and gammalpos < 100: #special, höga berget
-        position = gammalpos
-        print('Ni kan inte ta er upp på Höga berget')
-        progress['upptäckta_platser'].add(5)
-        return 0
+    elif (position == 5 and gammalpos < 100) or (position == 205 and 200 < gammalpos < 300): #special, höga berget
+        if 'bergsklättring' not in progress['hittade_skatter']:
+            progress['upptäckta_platser'].add(position)
+            position = gammalpos
+            print('Ni kan inte ta er upp på Höga berget')
+            return 0
     elif position == 105 and gammalpos < 200 and gammalpos > 100: #special, buren
         position = gammalpos
         print('Ni stoppas av ett konstigt enormt stängsel som verkar skyddas av magi.\n'+
@@ -1259,6 +1453,8 @@ def utforska(riktning):
     #randomencounter
     if plats in LANDSKAP: 
         print('Ni går genom '+ plats +'...\n')
+    elif plats == 'landsväg':
+        print('Ni går på '+ plats +'...\n')
     else:
         print('Ni kommer till '+plats+'\n')
 
@@ -1436,7 +1632,7 @@ PDICT={
 
 karta = kls.Karta(PDICT)
 
-LANDSKAP = {'skog', 'berg', 'skugglandskap', 'mörkt vatten'}
+LANDSKAP = {'skog', 'berg', 'skugglandskap', 'mörkt vatten', 'träsk', 'ödemark'}
 
 #position i rutnät 4*4 (16 platser)
 position=7
