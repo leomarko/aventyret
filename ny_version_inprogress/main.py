@@ -302,10 +302,9 @@ def foremalsmeny():
             print(obj.namn+' går inte att använda här.')
 
 def foremaloverallt(fnamn, tabort=False):
-    if fnamn in [f.namn for f in inventory]+
-    [f.namn for f in [foremal for utrustning in [s.utrust.values() for s in spelarlista] for foremal in utrustning]]:
+    if fnamn in [f.namn for f in inventory]+[f.namn for f in [foremal for utrustning in [s.utrust.values() for s in spelarlista] for foremal in utrustning]]:
         if tabort:
-            for f in inventory if f.namn == fnamn:
+            for f in [fo for fo in inventory if fo.namn == fnamn]:
                 inventory.remove(f)
             for s in spelarlista:
                 for k in s.utrust:
@@ -568,7 +567,7 @@ def meny():
                 nyplats = False
 
             elif plats == 'Gamla smeden':
-                if 'Gamla smeden' not in progress['hittade_skatter']
+                if 'Gamla smeden' not in progress['hittade_skatter']:
                     print('Gamla smeden: Jag tycker ni ser bekanta ut, har vi träffats förut...?\n'+
                           'Jaså ni är äventyrare, några sådana känner jag inte längre...\n'+
                           'Jag skulle gärna hjälpa er men jag har knappt om resurser,\n'+
@@ -733,12 +732,12 @@ def meny():
             elif plats == 'Höga berget' and 200 < position < 300:
                 if 'skuggkristall' not in progress['hittade_skatter']:
                     slowprint('Inne i en grotta i berget hittar du en märklig kristall!\n\n')
-                    inventory.append(FDICT['Skuggkristall']
+                    inventory.append(FDICT['Skuggkristall'])
                     progress['hittade_skatter'].add('skuggkristall')
                     time.sleep(2)
                 if 'Höga berget' not in progress['hittade_skatter']:
                     print('Du träffar på tomten Sirkafirk på bergets topp.')
-                    if any(f in {'Zlokr','Ziriekl','Zaumakot','Zeoidodh'} for f in progress['döda_fiender'])
+                    if any(f in {'Zlokr','Ziriekl','Zaumakot','Zeoidodh'} for f in progress['döda_fiender']):
                         slowprint('Sirkafirk: Du har dödat en demon, då är du min vän.\n'+
                                   'Jag ska lära dig en hemlighet.\n')
                         time.sleep(2)
@@ -761,7 +760,7 @@ def meny():
                     if fraga == 'Fråga om äventyr':
                         slowprint('Jag har nog hört om dina äventyr från trollen i skogen,\n'+
                                   'Men den här gången har du bråkat med fel troll!\n')
-                    elif fraga == 'Nu ska du få stryk!'
+                    elif fraga == 'Nu ska du få stryk!':
                         slowprint('JASÅ DET TROR DU!!', 3)
                     else:
                         slowprint('Inte så fort! Idag ska vi festa på mänskostuvning!')
@@ -1054,7 +1053,7 @@ def meny():
                                         time.sleep(2)
                                         slowprint('Ni går upp många trappor, och kommer till kungens kammare\n'
                                                   'Ni går in, och där står riddare Joshki och kung Kolskägg...!\n'+
-                                                  'Unghäxan lämnar rummet och låser dörren.\n+
+                                                  'Unghäxan lämnar rummet och låser dörren.\n'+
                                                   '-Förlåt mig.\n')
                                         time.sleep(1)
                                         slowprint('Kung Kolskägg: Tror ni jag är så dåraktig att jag lät en av häxans\n'+
@@ -1334,16 +1333,16 @@ def meny():
                                   'och till slut närmar ni er platsen där den snälla dvärgen ska bo.\n')
                         time.sleep(2)
                         slowprint('Där ser ni någon komma springande.\n'+
-                                  'Han vinkar till er, det verkar vara rätt person!\n'+)
+                                  'Han vinkar till er, det verkar vara rätt person!\n')
                         time.sleep(1.5)
                         slowprint('Dvärgen: Akta! Ni har väckt den fruktansvärda draken!\n'+
-                                  'Titta bakom er....!!', 2)
+                                  'Titta bakom er....!!\n', 2)
                         spelarlista.append(dvargen)
                         fight(['Draken', True])
                         spelarlista.remove(dvargen)
                         time.sleep(2)
                         slowprint('Dvärgen: Vi klarade det! Vilken strid!\n'+
-                                  'kom in i min boning och vila upp er.')
+                                  'kom in i min boning och vila upp er.\n')
                         for s in spelarlista:
                             s.hp = s.liv
                         print('Ni fick full hp.')
@@ -1597,7 +1596,7 @@ def utforska(riktning):
 def namn():
     string=[]
     n=0
-    for i in range(len(spelarelista)):
+    for i in range(len(spelarlista)):
         if i>0:
             if i==len(spelarlista)-1:
                 string.append(' och ')
@@ -1658,7 +1657,7 @@ FDICT = {
     'Guldhandske': kls.Ovrigt('Guldhandske','+4 styrka','str',4),
     'Amulett': kls.Ovrigt('Amulett','+3 smidighet','smi',3),
     'Skuggskor': kls.Ovrigt('Skuggskor','+4 smidighet','smi',4),
-    'Förtrollad dräkt', kls.Ovrigt('Förtrollad dräkt', '+5 smidighet', 'smi', 5)
+    'Förtrollad dräkt': kls.Ovrigt('Förtrollad dräkt', '+5 smidighet', 'smi', 5),
     'Zlokrs kappa': kls.Ovrigt('Zlokrs kappa','+6 undvikning',3,6),
     'Magiskt armband': kls.Ovrigt('Magiskt armband','+5 pricksäkerhet',1,5),
     'Blå ring': kls.Ovrigt('Blå ring','"Förmåga-Återhämtning 2"',1,0,'Återhämtning 2'),
@@ -1708,7 +1707,7 @@ ALDICT = {
     'Guldhandske': 20,
     'Amulett': 12,
     'Skuggskor': 20,
-    'Förtrollad dräkt', 30,
+    'Förtrollad dräkt': 30,
     'Blå ring': 14,
     'Lyckosmycke': 15,
     'Banditring': 30,

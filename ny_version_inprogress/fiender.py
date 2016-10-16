@@ -481,7 +481,7 @@ class Riddare(Varelse):
             self.namn+=' '+nr
         self.exp=120
         self.liv=140
-        self.hp=liv
+        self.hp=self.liv
         self.stats={'str':11,'smi':9,'mkr':5}
         self.mods=[0,0,5,0]
         self.rustning=3
@@ -511,7 +511,7 @@ class Soldat(Varelse):
             self.namn+=' '+nr
         self.exp=90
         self.liv=100
-        self.hp=liv
+        self.hp=self.liv
         self.stats={'str':9,'smi':9,'mkr':5}
         self.mods=[0,0,2,0]
         self.rustning=2
@@ -544,7 +544,7 @@ class Tempelprefekt(Varelse):
             self.namn+=' '+nr
         self.exp=120
         self.liv=100
-        self.hp=liv
+        self.hp=self.liv
         self.stats={'str':5,'smi':9,'mkr':10}
         self.mods=[0,0,6,2]
         self.rustning=0
@@ -577,14 +577,14 @@ class Bandit(Varelse):
             self.namn+=' '+nr
         self.exp=120
         self.liv=80
-        self.hp=liv
+        self.hp=self.liv
         self.stats={'str':10,'smi':13,'mkr':5}
         self.mods=[0,0,0,0]
         self.rustning=4
         self.ordning=0
 
     def mode(self):
-        n = randint(0,6):
+        n = randint(0,6)
         if n == 0:
             return 'fly'
         elif n < 3:
@@ -740,6 +740,81 @@ class Joshki(Varelse):
         return 'Mystiskt spjut'
 
 class Joshki2(Varelse):
+    exp=160
+    liv=140
+    hp=liv
+    stats={'str':11,'smi':10,'mkr':10}
+    mods=[0,0,4,0]
+    rustning=4
+    fly=False
+    namn='Riddare Joshki'
+    namnB=namn
+
+    def mode(self):
+        mode = randint(0,7)
+        if mode == 0:
+            return 'Förtärande mörker'
+        elif mode == 1:
+            return 'Se framtiden'
+        elif mode < 4:
+            return 'Smärta'
+        else:
+            return 'attack'
+
+    def drop(self, plus, progress, OP):
+        return 'Förbannad juvel'
+
+class Kolskagg(Varelse): #GÖR SEN
+    exp=160
+    liv=140
+    hp=liv
+    stats={'str':11,'smi':10,'mkr':10}
+    mods=[0,0,4,0]
+    rustning=4
+    fly=False
+    namn='Riddare Joshki'
+    namnB=namn
+
+    def mode(self):
+        mode = randint(0,7)
+        if mode == 0:
+            return 'Förtärande mörker'
+        elif mode == 1:
+            return 'Se framtiden'
+        elif mode < 4:
+            return 'Smärta'
+        else:
+            return 'attack'
+
+    def drop(self, plus, progress, OP):
+        return 'Förbannad juvel'
+
+class Trollkungen(Varelse): #GÖR SEN
+    exp=160
+    liv=140
+    hp=liv
+    stats={'str':11,'smi':10,'mkr':10}
+    mods=[0,0,4,0]
+    rustning=4
+    fly=False
+    namn='Riddare Joshki'
+    namnB=namn
+
+    def mode(self):
+        mode = randint(0,7)
+        if mode == 0:
+            return 'Förtärande mörker'
+        elif mode == 1:
+            return 'Se framtiden'
+        elif mode < 4:
+            return 'Smärta'
+        else:
+            return 'attack'
+
+    def drop(self, plus, progress, OP):
+        return 'Förbannad juvel'
+
+class Draken(Varelse): #GÖR SEN
     exp=160
     liv=140
     hp=liv

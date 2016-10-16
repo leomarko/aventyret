@@ -424,7 +424,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 e=Effekt('Strategi',difstat,f,(0,-1,10,-3),(0,1,10,-3),10 )
                                 uppdatera_effekter(e)
 
-                   elif mode == 'Sömnighet':
+                    elif mode == 'Sömnighet':
                         for s in aktiva_s:
                             e=Effekt('Sömnighet',difstat,s,(0,2,10,-4),(0,-2,10,-4),int(figur.stats['mkr']*random()) + 6 )
                             uppdatera_effekter(e)
@@ -891,7 +891,7 @@ PDICT = {
     ],
     'landsväg':[
     ['Två riddare och en soldat', fi.Riddare(), fi.Riddare('B'), fi.Soldat()],
-    ['Två soldater och en tempelprefekt', fi.Soldat(), fi.Soldat('B'), Tempelprefekt()],
+    ['Två soldater och en tempelprefekt', fi.Soldat(), fi.Soldat('B'), fi.Tempelprefekt()],
     ['Fem soldater', fi.Soldat(), fi.Soldat('B'), fi.Soldat('C'), fi.Soldat('D'), fi.Soldat('E')],
     ['Tre banditer', fi.Bandit(), fi.Bandit('B'), fi.Bandit('C')]
     ]
