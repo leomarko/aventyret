@@ -9,9 +9,9 @@ fixa stats---
 gör så man kan gå tillbaka---
 Skriv ut stats efter förvandling?
 
-gyllene mantel, förtrollad sköld, tempelbrosch, skuggkristall(hp->mana),
-guldbåge
+gyllene mantel---, förtrollad sköld, tempelbrosch, skuggkristall(hp->mana),
+guldbåge, trollsvärd
 
 dvärgen
 
-joshki2, kolskägg, draken, trollkungen, zaumakot
+joshki2---, kolskägg, draken, trollkungen, zaumakot

@@ -301,6 +301,18 @@ def foremalsmeny():
         elif isinstance(obj,kls.Foremal):
             print(obj.namn+' går inte att använda här.')
 
+def foremaloverallt(fnamn, tabort=False):
+    if fnamn in [f.namn for f in inventory]+
+    [f.namn for f in [foremal for utrustning in [s.utrust.values() for s in spelarlista] for foremal in utrustning]]:
+        if tabort:
+            for f in inventory if f.namn == fnamn:
+                inventory.remove(f)
+            for s in spelarlista:
+                for k in s.utrust:
+                    if s.utrust[k].namn == fnamn:
+                        s.utrust[k] = kls.Foremal('-')
+        return True
+    return False
 
 #dialogfunktion,
 #mata in vilka frågor som går att ställa till personen
@@ -355,7 +367,7 @@ def meny():
                 nyplats = False
 
             elif plats == 'Djupa dalen':
-                if randint(0,3) == 3 and 'Demonen Zlokr' not in progress['döda_fiender']:
+                if randint(0,3) == 3 and 'Zlokr' not in progress['döda_fiender']:
                     print('En demon dyker upp...!\n'+
                           'Vill du strida mot demonen?')
                     if listval(['Ja','Nej']) == 0:
@@ -555,6 +567,50 @@ def meny():
                             
                 nyplats = False
 
+            elif plats == 'Gamla smeden':
+                if 'Gamla smeden' not in progress['hittade_skatter']
+                    print('Gamla smeden: Jag tycker ni ser bekanta ut, har vi träffats förut...?\n'+
+                          'Jaså ni är äventyrare, några sådana känner jag inte längre...\n'+
+                          'Jag skulle gärna hjälpa er men jag har knappt om resurser,\n'+
+                          'så ni får stå för materialet.')
+                    time.sleep(3)
+                    print('Den där riddarrustningen kanske jag kan förbättra...')
+                    time.sleep(2)
+                    if [f.namn for f in inventory].count('Fiskstål') > 1 and foremaloverallt('Ormdräkt'):
+                        slowprint('Jag kan nog använda det där märkliga fjälliga stålet och er ormdräkt...\n')
+                        for i in range(2):
+                            inventory.remove([f for f in inventory if f.namn=='Fiskstål'][0])
+                        foremaloverallt('Ormdräkt',tabort=True)
+                        slowprint('.........\n',5)
+                        slowprint('Här får du en megarustning!\n')
+                        inventory.append(FDICT['Megarustning'])
+                        progress['hittade_skatter'].add('Gamla smeden')
+                    else:
+                        print('Men jag skulle behöva något verkligt bra läder och kraftigt stål.')
+                fraga = dialog([0,7])
+                if fraga == 'Fråga om äventyr':
+                    print('Du borde se vad som försiggår i slottet.\n'+
+                          'För att vinna tillit, se till vad soldaterna gör,\n'+
+                          'och försök bete dig likadant')
+                    dialogval[6] = d6
+                elif fraga == 'Fråga om Mästarsmeden':
+                    print('Jag är nog skicklig, men inte som den legendariska smeden från forna tider.')
+                nyplats = False
+
+            elif plats == 'glänta':
+                print('Det är en vacker glänta')
+                if 'glänta' not in progress['hittade_skatter'] and random() > 0.95:
+                    time.sleep(1)
+                    slowprint('En älva kommer fram till dig.\n'+
+                              'Älvan: Det finns ont om tappra äventyrare dessa dagar,\n'+
+                              'ta den här dräkten, må den hjälpa er på färden.\n'+
+                              'Ni fick en förtrollad dräkt.')
+                    inventory.append(FDICT['Förtrollad dräkt'])
+                print('Ni återhämtar kraft, och får full hp.')
+                for s in spelarlista:
+                    s.hp = s.liv
+                nyplats = False
+
             elif plats == 'Gården':
                 if progress['main'] == 2:
                     print('Ni kommer till en gård där olika djur bor.\n'+
@@ -635,6 +691,44 @@ def meny():
                             except(IndexError,ValueError):
                                 print('Grisen: Ni är töntar')
                 nyplats = False
+
+            elif plats == 'Huset':
+                print('Huset som låg här är kvar men är väldigt nedgånget.\n'+
+                      'Inne i huset träffar ni en gammal äventyrare.')
+                while True:
+                    fraga = dialog([0,3,4,7,8])
+                    if fraga == 'Fråga om äventyr':
+                        print('Det är inte detsamma att äventyra längre som när Gurgen regerade.\n'+
+                              'De säger till och med att äventyr är förbjudet!\n'+
+                              'När man pratar med folk är det bäst att låtsas att man bara lever\n'+
+                              'för att tjäna konungen och följa den där mystiska Amunos lagar.')
+                        dialogval[6] = d6   #(Hell kung kolskägg)
+                    elif fraga == 'Fråga om monster':
+                        print('Det kan bli en lång historia när jag börjar berätta om alla monster jag mött.\n'+
+                              'Jag har varit i mörka skogar, djupa dalar och höga berg...')
+                        if sp1.lvl > 45 and 'Magiskt rep' not in [f.namn for f in inventory]:
+                            slowprint('Du verkar vara en erfaren äventyrare själv...\n')
+                            time.sleep(1)
+                            slowprint('Men har du någonsin varit uppe på Höga berget?\n'+
+                                      'Jag fick det här magiska repet av en vis dvärg en gång,\n'+
+                                      'med det kan man ta sig upp.\n'+
+                                      'Jag är för gammal för sådant nu, du får det!')
+                            inventory.append(FDICT['Magiskt rep'])
+                        elif sp1.lvl < 46:
+                            print('Du är ännu ingen sann äventyrare som jag.')
+                    elif fraga == 'Fråga om Snälla häxan':
+                        print('Jag har hört att det bodde en snäll häxa i trakten för länge sen,\n'+
+                              'vem vet var hon tog vägen.')
+                    elif fraga == 'Fråga om Mästarsmeden':
+                        print('På mina resor har jag hört att det en gång bodde en smed vars like\n'+
+                              'inte skådats, något västerom där Slottet nu står.')
+                    elif fraga == 'Fråga om böcker':
+                        print('Det fanns många böcker här, men de beslagtogs alla av prästerna.\n'+
+                              'Jag tror att de har ett mäktigt bibliotek i Templet.')
+                    else:
+                        print('Må lyckans Gudar le mot er.')
+                        break
+                            
                 
             elif plats == 'Höga berget' and 200 < position < 300:
                 if 'skuggkristall' not in progress['hittade_skatter']:
@@ -646,7 +740,7 @@ def meny():
                     print('Du träffar på tomten Sirkafirk på bergets topp.')
                     if any(f in {'Zlokr','Ziriekl','Zaumakot','Zeoidodh'} for f in progress['döda_fiender'])
                         slowprint('Sirkafirk: Du har dödat en demon, då är du min vän.\n'+
-                                  'Jag ska lära dig en hemlig förmåga.\n')
+                                  'Jag ska lära dig en hemlighet.\n')
                         time.sleep(2)
                         slowprint(sp1.namn+' lärde sig Lura naturen!')
                         sp1.formagor.append('Lura naturen')
@@ -694,16 +788,17 @@ def meny():
                             slowprint('Mästartrollet kommer tillbaks med en gyllene båge!\n'+
                                       'Ni fick en Guldbåge.\n')
                             inventory.append(FDICT['Guldbåge'])
-                            for vapen in [s.utrust['vapen'] for s in spelarlista]:
-                                if vapen.namn == 'Silverbåge':
-                                     vapen = Foremal('-')
-                            for f in inventory if f.namn == 'Silverbåge':
-                                inventory.remove(f)
+                            foremaloverallt('Silverbåge', tabort=True)
                             progress['hittade_skatter'].add('guldbåge')
                         else:
                             print('Jag ser inga imponerande föremål här...')
                     else:
-                        print('Hur gillar ni Guldbågen?')
+                        print('Hur gillar ni Guldbågen? Höhöhö')
+                nyplats = False
+
+            elif plats == 'landsväg':
+                if randint(0,4) > 1:
+                    fight()
                 nyplats = False
                                     
             elif plats == 'mörkt vatten':
@@ -1008,8 +1103,7 @@ def meny():
                                     print('Var försiktig')
                                     break                 
                 nyplats = False                           
-                            
-                        
+                                
             elif plats == 'Stugan' and progress['main']>0:
                 if progress['main']<2:
                     print('Snälla häxan: Hej äventyrare, vila en stund och återhämta er')
@@ -1144,12 +1238,13 @@ def meny():
                                     lvlup(spelarlista)
                                 else:
                                     print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
-                            if fraga2 == 'Fråga om Una':
+                            elif fraga2 == 'Fråga om Una':
                                 slowprint('Natu: ..........\n',2)
                                 time.sleep(1)
                                 slowprint('Bibliotekarien ser förskräct ut och börjar vända sig om och gå,\n'+
                                           'ni följer efter, men när ni rundar en bokhylla är hon försvunnen....!')
                                 progress['hittade_skatter'].add('Jotun')
+                            del fraga2
                         else:
                             print('Vår bibliotekarie har försvunnit, men ni är välkomna att se er omkring.')
                             if 'lärdom' not in progress['hittade_skatter']:
@@ -1215,8 +1310,8 @@ def meny():
                           'Heyjafjej: Vi är redan vänner sedan gammalt,\n'+
                           'men jag tror inte du har träffat min kusin Sirkafirk\n'+
                           'som håller till på Höga berget.\nDet är bra att vara hans vän.')
-                elif randint(0,4) > 1:
-                    fight()
+##                elif randint(0,4) > 1:
+##                    fight()
                 nyplats = False
 
             elif plats == 'vildmark':
@@ -1269,7 +1364,44 @@ def meny():
                 else:
                     print('Det är för farligt att ge sig längre ut i vildmarken utan att veta vägen.')
                 nyplats = False
-                
+
+            elif plats == 'ödemark':
+                if 'ödemark' not in progress['hittade_skatter'] and random() > 0.9:
+                    slowprint('Du hittar ett trollsvärd!')
+                    progress['hittade_skatter'].add('ödemark')
+                    inventory.append(FDICT['Trollsvärd'])
+                elif random() > 0.9:
+                    slowprint('Du hittar en häxbrygd!')
+                    inventory.append(FDICT['Häxbrygd'])
+##                elif random() > 0.7:
+##                    fight(OP=1)
+                nyplats = False
+                                     
+            elif plats == 'Ödsliga fältet':
+                if random() > 0.7 and 'Ödsliga fältet' not in progress['hittade_skatter']:
+                    slowprint('Du ser ett mäktigt lejon. Det verkar vänligt inställt...\n')
+                    time.sleep(2)
+                    godkand = False
+                    for lista in alri.utveckling:
+                        if lista[0] == 'Själskunskap' and lista[1] > 25:
+                            godkand = True
+                    if godkand:
+                        slowprint('Lejonet kommer fram till Alri och räcker över en randig gren.\n',2)
+                        inventory.append(FDICT['Randig gren'])
+                        progress['hittade_skatter'].add('Ödsliga fältet')
+                    else:
+                        slowprint('Lejonet tycks vilja något, men ni kan inte få kontakt med det.\n')
+                    slowprint('Lejonet går sin väg.\n')
+                    del godkand
+                elif random() > 7.5 and 'Zaumakot' not in progress['döda_fiender']:
+                    print('En demon dyker upp...!\n'+
+                          'Vill du strida mot demonen?')
+                    if listval(['Ja','Nej']) == 0:
+                        fight(['Demonen Zaumakot'],True)
+                        progress['döda_fiender'].add('Zaumakot')
+                else:
+                    print('Det är väldigt ödsligt.')
+                nyplats = False
                 
         print('\nMENY')
         val = ['Utforska','Föremål','Stats','Karta','Spara','Ladda','Avsluta']
@@ -1491,13 +1623,14 @@ FDICT = {
     'Randig gren': kls.Foremal('Randig gren'),
     'Svärd': kls.Vapen('Svärd',1),
     'Bra svärd': kls.Vapen('Bra svärd',2,5,'str'),
+    'Tungt svärd': kls.Vapen('Tungt svärd',4,9,'str'),
     'Mästarsvärd': kls.Vapen('Mästarsvärd',6,6,'str'),
     'Kniv': kls.Vapen('Kniv',0.7),
     'Mystisk dolk': kls.Vapen('Mystisk dolk',2,5,'mkr'),
     'Tandkniv': kls.Vapen('Tandkniv',2.5),
-    'Zlokrs kniv': kls.Vapen('Zlokrs kniv',7,9,'smi'),
     'Fiskspjut': kls.Vapen('Fiskspjut',3),
     'Mystiskt spjut': kls.Vapen('Mystiskt spjut',3.5,7,'mkr'),
+    'Förhäxad spira': kls.Vapen('Förhäxad spira',4,9,'mkr'),
     'Jotuns hammare': kls.Vapen('Jotuns hammare',4,7,'str'),
     'Pilbåge': kls.Vapen('Pilbåge',2,5,'smi'),
     'Bra pilbåge': kls.Vapen('Bra pilbåge',3.5,7,'smi'),
@@ -1513,7 +1646,10 @@ FDICT = {
     'Mitrilrustning': kls.Rustning('Mitrilrustning',9),
     'Skyddande ädelsten': kls.Ovrigt('Skyddande ädelsten','+1 magiskt skydd',2,1),
     'Svart mantel': kls.Ovrigt('Svart mantel','+3 magiskt skydd',2,3),
+    'Förtrollad sköld': kls.Ovrigt('Förtrollad sköld','+4 magiskt skydd',2,4),
+    'Gyllene mantel': kls.Ovrigt('Gyllene mantel','+6 magiskt skydd',2,6),
     'Grön mantel': kls.Ovrigt('Grön mantel','+40 liv','liv',40),
+    'Zaumakots ring': kls.Ovrigt('Zaumakots ring','+180 liv','liv',180),
     'Blå mantel': kls.Ovrigt('Blå mantel','+2 snabbhet',0,-2),
     'Guldlänk': kls.Ovrigt('Guldlänk','+2 magikraft','mkr',2),
     'Magisk ring': kls.Ovrigt('Magisk ring','+3 magikraft','mkr',3),
@@ -1522,11 +1658,15 @@ FDICT = {
     'Guldhandske': kls.Ovrigt('Guldhandske','+4 styrka','str',4),
     'Amulett': kls.Ovrigt('Amulett','+3 smidighet','smi',3),
     'Skuggskor': kls.Ovrigt('Skuggskor','+4 smidighet','smi',4),
-    'Demonkappa': kls.Ovrigt('Demonkappa','+6 undvikning',3,6),
+    'Förtrollad dräkt', kls.Ovrigt('Förtrollad dräkt', '+5 smidighet', 'smi', 5)
+    'Zlokrs kappa': kls.Ovrigt('Zlokrs kappa','+6 undvikning',3,6),
     'Magiskt armband': kls.Ovrigt('Magiskt armband','+5 pricksäkerhet',1,5),
     'Blå ring': kls.Ovrigt('Blå ring','"Förmåga-Återhämtning 2"',1,0,'Återhämtning 2'),
     'Lyckosmycke': kls.Ovrigt('Lyckosmycke','"Skattletande"',3,0,'Skattletande'),
+    'Banditring': kls.Ovrigt('Banditring','"Skattletande 2"',3,0,'Skattletande 2'),
     'Blodkristall': kls.Ovrigt('Blodkristall','"Dubbel attack"',3,0,'Dubbel attack'),
+    'Tapperhetsmedalj': kls.Ovrigt('Tapperhetsmedalj','"Stridsinsikt"',3,0,'Stridsinsikt'),
+    'Förbannad juvel': kls.Ovrigt('Förbannad juvel','"Magi-Förtärande mörker"',2,5,'Förtärande mörker'),
     'Uråldrig kristall': kls.Ovrigt('Uråldrig kristall','"Magi-Livskraft"',2,5,'Livskraft'),
     'De vises sten': kls.Ovrigt('De vises sten','"Dubbel magi"',3,0,'Dubbel magi'),
     'Salva': kls.EngangsForemal('Salva','Läkande',difstat,('hp',15),fight=True),
@@ -1544,10 +1684,10 @@ FDICT = {
 ALDICT = {
     'Svärd': 3,
     'Bra svärd': 6,
+    'Tungt svärd': 12,
     'Kniv': 2,
     'Mystisk dolk': 6,
     'Tandkniv': 8,
-    'Zlokrs kniv': 50,
     'Fiskspjut': 10,
     'Mystiskt spjut': 12,
     'Jotuns hammare': 15,
@@ -1558,20 +1698,23 @@ ALDICT = {
     'Drakfjällsbrynja': 8,
     'Tung rustning': 10,
     'Magisk rustning': 12,
-    'Riddarrustning': 12,
-    'Ormdräkt': 16,
     'Mitrilbrynja': 20,
     'Guldlänk': 6,
-    'Skyddande ädelsten': 6,
+    'Skyddande ädelsten': 4,
+    'Förtrollad sköld': 20,
     'Magisk ring': 12,
+    'Trollring': 20,
     'Guldring': 12,
-    'Guldhandske': 18,
+    'Guldhandske': 20,
     'Amulett': 12,
-    'Skuggskor': 18,
-    'Demonkappa': 40,
+    'Skuggskor': 20,
+    'Förtrollad dräkt', 30,
     'Blå ring': 14,
     'Lyckosmycke': 15,
-    'Blodkristall': 18,
+    'Banditring': 30,
+    'Blodkristall': 20,
+    'Tapperhetsmedalj': 30,
+    'Förbannad juvel': 18, 
     'Uråldrig kristall': 28,
     'Salva': 1,
     'Läkört': 5,

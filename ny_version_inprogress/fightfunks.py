@@ -334,6 +334,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
         for figur in aktiva_f:
             if aktiva_s==[]:
                 print('Du är besegrad.\nSlut på äventyret.')
+                time.sleep(4)
                 raise SystemExit
             if tick % figur.klocka() == 0:
                 print(figur.namn+'s tur')
@@ -358,9 +359,18 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 #Nedan alla fienders förmågor och magier. Fiender betalar inte mp
                 else:
                     print(figur.namnB+' använder '+mode+'...')
-
-                    if mode == 'Eld':
+                    
+                    if mode == 'Beskydd':
+                        for f in aktiva_f:
+                            e=Effekt('Beskydd',difstat,f,(2,5),(2,-5),int(figur.stats['mkr']*(0.3+random()*0.5)) + randint(7,9) )                                        
+                            uppdatera_effekter(e)
+                                        
+                    elif mode == 'Eld':
                         attackmagi(figur, aktiva_s, 2.5)
+
+                    elif mode == 'Förgöra verkligheten':
+                        slowprint('Världen tynar bort',3)
+                        aktiva_s = []
 
                     elif mode == 'Förtärande mörker':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
@@ -385,6 +395,15 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         for s in aktiva_s:
                             taskada(s, int(s.liv*0.2))
                             
+                    elif mode == 'Kyla':
+                        target = aktiva_s[listval([s.namn for s in aktiva_s])]
+                        attackmagi(figur, target, 2.5)
+
+                    elif mode == 'Se framtiden':
+                        for f in aktiva_f:
+                            e=Effekt('Förutbestämmande',difstat,f,(3,2),(3,-2),int(figur.stats['mkr']*(0.3+random()*0.5)) + randint(8,10) )
+                            uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=s.namn+' manipulerar redan tiden')
+                            
                     elif mode == 'Smärta':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 2, plus=target.liv*(0.5+random()*0.5))
@@ -398,7 +417,18 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             uppdatera_effekter(e)
                             e = Effekt('Utmattning',difstat,s,('str',-3),('str',+3),8)
                             uppdatera_effekter(e)
-               
+
+                    elif mode == 'Strategi':
+                        if len(aktiva_f) > 1:
+                            for f in [fiende for fiende in aktiva_f if fiende.namn!=figur.namn]:
+                                e=Effekt('Strategi',difstat,f,(0,-1,10,-3),(0,1,10,-3),10 )
+                                uppdatera_effekter(e)
+
+                   elif mode == 'Sömnighet':
+                        for s in aktiva_s:
+                            e=Effekt('Sömnighet',difstat,s,(0,2,10,-4),(0,-2,10,-4),int(figur.stats['mkr']*random()) + 6 )
+                            uppdatera_effekter(e)
+                
                     elif mode == 'Trollsmäll':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 8, 40*random())
@@ -761,8 +791,11 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
         xp = sum([f.exp+10 for f in fiender])*3
     else:
         xp = sum([f.exp for f in fiender])
-    print('Ni fick '+str(xp)+' exp')
+    print('Ni fick '+str(xp)+' efp')
     for s in spelarlista:
+        if 'Stridsinsikt' in s.special:
+            print(s.namn+' fick '+str(int(xp*0.25))+'extra efp')
+            s.exp += int(xp*0.25)
         s.exp += xp
 
     #Läkekonst
@@ -855,15 +888,27 @@ PDICT = {
     ['Tre skuggkatter',fi.Skuggkatt(),fi.Skuggkatt('B'),fi.Skuggkatt('C')],
     ['Två namnlösa vidunder', fi.Nvidunder(),fi.Nvidunder('B')],
     ['Fyra elaka vättar',fi.ElVatte(),fi.ElVatte('B'),fi.ElVatte('C'),fi.ElVatte('D')]
-    ]}
+    ],
+    'landsväg':[
+    ['Två riddare och en soldat', fi.Riddare(), fi.Riddare('B'), fi.Soldat()],
+    ['Två soldater och en tempelprefekt', fi.Soldat(), fi.Soldat('B'), Tempelprefekt()],
+    ['Fem soldater', fi.Soldat(), fi.Soldat('B'), fi.Soldat('C'), fi.Soldat('D'), fi.Soldat('E')],
+    ['Tre banditer', fi.Bandit(), fi.Bandit('B'), fi.Bandit('C')]
+    ]
+    }
 
 #för unika fiender och bestämda encounters
-MDICT = {'Demonen Zlokr':fi.DemonenZ(),
-         'Elaka häxan': fi.ElakaHaxan1(),
+MDICT = {'Elaka häxan': fi.ElakaHaxan1(),
          'Vildsvinet': fi.Vildsvinet(),
          'Grisen': fi.Grisen(),
-         'Zeoidodh': fi.Zeoidodh(),
-         'Djurfrämlingen': fi.Djurframlingen(),
-         'Gaurghus': fi.Gaurghus(),
          'Otak': fi.Otak(),
-         'Joshki': fi.Joshki()}
+         'Joshki': fi.Joshki(),
+         'Joshki2': fi.Joshki2(),
+         'Kolskägg': fi.Kolskagg(),
+         'Draken': fi.Draken(),
+         'Gaurghus': fi.Gaurghus(),
+         'Trollkungen': fi.Trollkungen(),
+         'Demonen Zlokr':fi.DemonenZl(),
+         'Demonen Zaumakot':fi.DemonenZa(),
+         'Zeoidodh': fi.Zeoidodh(),
+         'Djurfrämlingen': fi.Djurframlingen()}
