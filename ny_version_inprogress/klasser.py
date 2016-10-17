@@ -12,9 +12,9 @@ class Varelse:
 
     def klocka(self):
         klocka=12
-        klocka -= int(self.stats['smi']*2.5 - self.stats['smi']**1.22 - self.mods[0]*0.7) 
+        klocka -= int(self.stats['smi']*1.6 - self.stats['smi']**1.07 - self.mods[0]*1.7) 
         #klockan minskar långsammare ju närmare noll, snabbhet räknas negativt
-        if klocka < -0.4:
+        if klocka < -1:
             klocka = 1
         elif klocka < 1.5:
             klocka = 2
