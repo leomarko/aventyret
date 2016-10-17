@@ -9,16 +9,7 @@ from funktioner import difstat, plusformaga, listval, slowprint, uniquelist, ove
 from collections import OrderedDict
 
 #lägg till / testa:
-#platser och rörelse -- FIXAT
-#inventorymeny -- FIXAT
-#karta -- FIXAT
-#hela fightfunks -- FIXAT
-#dictionary med föremål, förenkla ladd och spar -- FIXAT
-#spar och ladd, detaljerat -- FIXAT
-#GÖR SÅ DIALOGVAL SPARAS -- FIXAT
 
-#Djurfrämlingens bok -- FIXAT? #Djufrämlingens namn Zeoidodh
-#skuggvärlden
 
 
 ######################       FUNKTIONER        #############################
@@ -324,12 +315,13 @@ def dialog(nr_listform):
     lista.append('Ta avsked')
     return lista[listval(lista)]
         
-#ofärdig meny
+#--------------------------------------------------HUVUDDEL AV SPELET
 def meny():
     global inventory
     global progress
     global dialogval
     global position
+    global spelarlista
 
     nyplats = False
     
@@ -377,6 +369,20 @@ def meny():
                         fight()
                     else:
                         fight(OP=1)
+                nyplats = False
+
+            elif plats == 'En glänta':
+                print('Det är en vacker glänta')
+                if 'glänta' not in progress['hittade_skatter'] and random() > 0.95:
+                    time.sleep(1)
+                    slowprint('En älva kommer fram till dig.\n'+
+                              'Älvan: Det finns ont om tappra äventyrare dessa dagar,\n'+
+                              'ta den här dräkten, må den hjälpa er på färden.\n'+
+                              'Ni fick en förtrollad dräkt.')
+                    inventory.append(FDICT['Förtrollad dräkt'])
+                print('Ni återhämtar kraft, och får full hp.')
+                for s in spelarlista:
+                    s.hp = s.liv
                 nyplats = False
 
             elif plats == 'En grotta': #lägg till bossar och bonusar
@@ -594,20 +600,6 @@ def meny():
                     dialogval[6] = d6
                 elif fraga == 'Fråga om Mästarsmeden':
                     print('Jag är nog skicklig, men inte som den legendariska smeden från forna tider.')
-                nyplats = False
-
-            elif plats == 'glänta':
-                print('Det är en vacker glänta')
-                if 'glänta' not in progress['hittade_skatter'] and random() > 0.95:
-                    time.sleep(1)
-                    slowprint('En älva kommer fram till dig.\n'+
-                              'Älvan: Det finns ont om tappra äventyrare dessa dagar,\n'+
-                              'ta den här dräkten, må den hjälpa er på färden.\n'+
-                              'Ni fick en förtrollad dräkt.')
-                    inventory.append(FDICT['Förtrollad dräkt'])
-                print('Ni återhämtar kraft, och får full hp.')
-                for s in spelarlista:
-                    s.hp = s.liv
                 nyplats = False
 
             elif plats == 'Gården':
@@ -1474,8 +1466,7 @@ def meny():
                 progress['upptäckta_platser'].add(position)
                 overgang3till4()
                 
-
-        if val[mode]=='Djurfrämlingens bok':
+        elif val[mode]=='Djurfrämlingens bok':
             lista = ['Vanliga världen', 'Skuggvärlden']        
             if 'ZZ' in progress['hittade_skatter']:
                 lista.append('50 år framåt')
@@ -1592,22 +1583,8 @@ def utforska(riktning):
     return 1
 
 
-#språkfunktioner
-def namn():
-    string=[]
-    n=0
-    for i in range(len(spelarlista)):
-        if i>0:
-            if i==len(spelarlista)-1:
-                string.append(' och ')
-            else:
-                string.append(', ')
-        string.append(spelarlista[i])
-    return "".join(string)
 
-
-
-#konstanter
+#---------------------------------------------konstanter
 
 # dictionary med alla föremål
 FDICT = {
