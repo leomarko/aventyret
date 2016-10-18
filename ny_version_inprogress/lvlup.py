@@ -71,10 +71,7 @@ KAMPLISTA=[PLUSSTR,
            PLUSHP,
            PLUSSMI,
            PLUSSTR,
-           PLUSHP,
-           PLUSPRI,
-           PLUSHP,
-           PLUSSKY,]
+           PLUSHP]
 SKICKLIGLISTA=[PLUSSMI,
                Bonus('Läkekonst', plusformaga,(3,'Läkekonst')),
                PLUSSNA,
@@ -96,7 +93,7 @@ SKICKLIGLISTA=[PLUSSMI,
                PLUSSMI,
                PLUSHP,
                PLUSSTR,
-               PLUSSNA,
+               PLUSHP,
                Bonus('Magi-Snabbhet',plusformaga,(2,'Snabbhet',2)),
                PLUSSMI,
                PLUSHP,
@@ -235,13 +232,12 @@ HEMLIGLISTA=[Bonus('Förmåga-Mystisk kraft',plusformaga,(1,'Mystisk kraft')),
              Bonus('Mystisk attack', plusformaga,(2,('Mystisk attack',3))),
              PLUSNONE,
              PLUSMKR,
-             PLUSSKY,
-             PLUSNONE,
              Bonus('Magi-Livskraft', plusformaga,(2,('Livskraft',5))),
              Bonus('Förmåga-Urkraft',plusformaga,(1,'Urkraft'))]
              
 #Av tomten 200 år tillbaka i tiden lär man sig tre hemliga utvecklingsvägar,
 #som man får fördela på sina figurer:
+#Eller alla får alla tre, varje innehåller bara typ två förmågor
 STRIDSKONST=[Bonus('Trippel attack',plusformaga,(3,'Trippel attack'))] #t.ex. (ska komma senare)
 KUNNIGHET=[Bonus('Taktik',plusformaga,(3,'Taktik'))] #t.ex. (ska komma senare)
 MAGI=[Bonus('Magi-Kvävning', plusformaga,(2,('Kvävning',6)))] #t.ex.
