@@ -13,7 +13,7 @@ def fagel(spelare):
 
 def gorilla(spelare):
     spelare.vilande={'stats':spelare.stats,'formagor':spelare.formagor,'magier':spelare.magier, 'vapen':spelare.utrust['vapen'],'liv':spelare.liv, 'namn':spelare.namn}
-    spelare.vilande['hpdif']=1.70
+    spelare.vilande['hpdif']=1.50
     spelare.formagor=['Tillbakaförvandling'] 
     spelare.magier=[]
     spelare.stats['str']=int(spelare.stats['str']*1.5+3)
@@ -36,6 +36,17 @@ def alva(spelare):
     spelare.utrust['vapen']=''
     print(spelare.namn+' förvandlar sig till en älva')
     spelare.namn+='(älva)'
+
+def tiger(spelare):
+    spelare.vilande={'stats':spelare.stats,'formagor':spelare.formagor,'magier':spelare.magier, 'vapen':spelare.utrust['vapen'],'liv':spelare.liv, 'namn':spelare.namn}
+    spelare.vilande['hpdif']=1
+    spelare.formagor=['Tillbakaförvandling'] 
+    spelare.magier=[('Helning',1),('Mystisk attack',3)]
+    spelare.stats['str']=int(spelare.stats['str']*2)
+    spelare.stats['smi']=spelare.stats['smi']+=2
+    spelare.utrust['vapen']=''
+    print(spelare.namn+' förvandlar sig till en tiger')
+    spelare.namn+='(tiger)'
 
 def tillbakaforvandling(spelare):
     spelare.stats['str']=spelare.vilande['stats']['str']
