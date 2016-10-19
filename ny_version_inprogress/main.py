@@ -578,9 +578,9 @@ def meny():
                           'Jaså ni är äventyrare, några sådana känner jag inte längre...\n'+
                           'Jag skulle gärna hjälpa er men jag har knappt om resurser,\n'+
                           'så ni får stå för materialet.')
-                    time.sleep(3)
+                    input('(tryck enter)')
                     print('Den där riddarrustningen kanske jag kan förbättra...')
-                    time.sleep(2)
+                    time.sleep(1)
                     if [f.namn for f in inventory].count('Fiskstål') > 1 and foremaloverallt('Ormdräkt'):
                         slowprint('Jag kan nog använda det där märkliga fjälliga stålet och er ormdräkt...\n')
                         for i in range(2):
@@ -591,15 +591,19 @@ def meny():
                         inventory.append(FDICT['Megarustning'])
                         progress['hittade_skatter'].add('Gamla smeden')
                     else:
-                        print('Men jag skulle behöva något verkligt bra läder och kraftigt stål.')
-                fraga = dialog([0,7])
-                if fraga == 'Fråga om äventyr':
-                    print('Du borde se vad som försiggår i slottet.\n'+
-                          'För att vinna tillit, se till vad soldaterna gör,\n'+
-                          'och försök bete dig likadant')
-                    dialogval[6] = d6
-                elif fraga == 'Fråga om Mästarsmeden':
-                    print('Jag är nog skicklig, men inte som den legendariska smeden från forna tider.')
+                        slowprint('Men jag skulle behöva något verkligt bra läder och kraftigt stål.\n')
+                while True:
+                    fraga = dialog([0,7])
+                    if fraga == 'Fråga om äventyr':
+                        print('Du borde se vad som försiggår i slottet.\n'+
+                              'För att vinna tillit, se till vad soldaterna gör,\n'+
+                              'och försök bete dig likadant')
+                        dialogval[6] = d6
+                    elif fraga == 'Fråga om Mästarsmeden':
+                        print('Jag är nog skicklig, men inte som den legendariska smeden från forna tider.')
+                    else:
+                        print('Farväl')
+                        break
                 nyplats = False
 
             elif plats == 'Gården':
@@ -722,10 +726,10 @@ def meny():
                             
                 
             elif plats == 'Höga berget' and 200 < position < 300:
-                if 'skuggkristall' not in progress['hittade_skatter']:
+                if 'blodkristall' not in progress['hittade_skatter']:
                     slowprint('Inne i en grotta i berget hittar du en märklig kristall!\n\n')
-                    inventory.append(FDICT['Skuggkristall'])
-                    progress['hittade_skatter'].add('skuggkristall')
+                    inventory.append(FDICT['Blodkristall'])
+                    progress['hittade_skatter'].add('blodkristall')
                     time.sleep(2)
                 if 'Höga berget' not in progress['hittade_skatter']:
                     print('Du träffar på tomten Sirkafirk på bergets topp.')
@@ -1595,22 +1599,26 @@ FDICT = {
     'Mystisk fjäder': kls.Foremal('Mystisk fjäder'),
     'Häxrot': kls.Foremal('Häxrot'),
     'Tand': kls.Foremal('Tand'),
+    'Tempelbrosch': kls.Foremal('Tempelbrosch'),
     'Häxans ring': kls.Foremal('Häxans ring'),
     'Randig gren': kls.Foremal('Randig gren'),
+    'Kniv': kls.Vapen('Kniv',0.7),
     'Svärd': kls.Vapen('Svärd',1),
     'Bra svärd': kls.Vapen('Bra svärd',2,5,'str'),
-    'Tungt svärd': kls.Vapen('Tungt svärd',4,9,'str'),
-    'Mästarsvärd': kls.Vapen('Mästarsvärd',6,6,'str'),
-    'Kniv': kls.Vapen('Kniv',0.7),
     'Mystisk dolk': kls.Vapen('Mystisk dolk',2,5,'mkr'),
+    'Pilbåge': kls.Vapen('Pilbåge',2,5,'smi'),
     'Tandkniv': kls.Vapen('Tandkniv',2.5),
     'Fiskspjut': kls.Vapen('Fiskspjut',3),
-    'Mystiskt spjut': kls.Vapen('Mystiskt spjut',3.5,7,'mkr'),
-    'Förhäxad spira': kls.Vapen('Förhäxad spira',4,9,'mkr'),
-    'Jotuns hammare': kls.Vapen('Jotuns hammare',4,7,'str'),
-    'Pilbåge': kls.Vapen('Pilbåge',2,5,'smi'),
     'Bra pilbåge': kls.Vapen('Bra pilbåge',3.5,7,'smi'),
+    'Jotuns hammare': kls.Vapen('Jotuns hammare',4,7,'str'),
+    'Mystiskt spjut': kls.Vapen('Mystiskt spjut',4,7,'mkr'),
+    'Tungt svärd': kls.Vapen('Tungt svärd',4.5,9,'str'),
+    'Förhäxad spira': kls.Vapen('Förhäxad spira',4.5,9,'mkr'),
+    'Dödlig kniv': kls.Vapen('Förhäxad spira',5,10,'smi'),
+    'Trollsvärd': kls.Vapen('Trollsvärd',4.5),
+    'Mästarsvärd': kls.Vapen('Mästarsvärd',6,6,'str'),
     'Silverbåge': kls.Vapen('Silverbåge',6,9,'smi'),
+    'Guldbåge': kls.Vapen('Guldbåge',9,11,'smi')
     'Lätt rustning': kls.Rustning('Lätt rustning',1),
     'Brynja': kls.Rustning('Brynja',2),
     'Drakfjällsbrynja': kls.Rustning('Drakfjällsbrynja',3,5,'str'),
@@ -1618,14 +1626,16 @@ FDICT = {
     'Magisk rustning': kls.Rustning('Magisk rustning',6,6,'mkr'),
     'Riddarrustning': kls.Rustning('Riddarrustning',6,8,'str'),
     'Ormdräkt': kls.Rustning('Ormdräkt',7,8,'smi'),
+    'Trollrustning': kls.Rustning('Trollrustning',7,8,'mkr'),
     'Mitrilbrynja': kls.Rustning('Mitrilbrynja',7),
+    'Drakfjällsrustning': kls.Rustning('Drakfjällsrustning',8,10,'str'),
     'Mitrilrustning': kls.Rustning('Mitrilrustning',9),
     'Skyddande ädelsten': kls.Ovrigt('Skyddande ädelsten','+1 magiskt skydd',2,1),
     'Svart mantel': kls.Ovrigt('Svart mantel','+3 magiskt skydd',2,3),
     'Förtrollad sköld': kls.Ovrigt('Förtrollad sköld','+4 magiskt skydd',2,4),
     'Gyllene mantel': kls.Ovrigt('Gyllene mantel','+6 magiskt skydd',2,6),
     'Grön mantel': kls.Ovrigt('Grön mantel','+40 liv','liv',40),
-    'Zaumakots ring': kls.Ovrigt('Zaumakots ring','+180 liv','liv',180),
+    'Zaumakots ring': kls.Ovrigt('Zaumakots ring','+100 liv','liv',100),
     'Blå mantel': kls.Ovrigt('Blå mantel','+2 snabbhet',0,-2),
     'Guldlänk': kls.Ovrigt('Guldlänk','+2 magikraft','mkr',2),
     'Magisk ring': kls.Ovrigt('Magisk ring','+3 magikraft','mkr',3),
@@ -1639,7 +1649,7 @@ FDICT = {
     'Magiskt armband': kls.Ovrigt('Magiskt armband','+5 pricksäkerhet',1,5),
     'Blå ring': kls.Ovrigt('Blå ring','"Förmåga-Återhämtning 2"',1,0,'Återhämtning 2'),
     'Lyckosmycke': kls.Ovrigt('Lyckosmycke','"Skattletande"',3,0,'Skattletande'),
-    'Banditring': kls.Ovrigt('Banditring','"Skattletande 2"',3,0,'Skattletande 2'),
+    'Rubin': kls.Ovrigt('Rubin','"Skattletande 2"',3,0,'Skattletande 2'),
     'Blodkristall': kls.Ovrigt('Blodkristall','"Dubbel attack"',3,0,'Dubbel attack'),
     'Tapperhetsmedalj': kls.Ovrigt('Tapperhetsmedalj','"Stridsinsikt"',3,0,'Stridsinsikt'),
     'Förbannad juvel': kls.Ovrigt('Förbannad juvel','"Magi-Förtärande mörker"',2,5,'Förtärande mörker'),
@@ -1665,16 +1675,22 @@ ALDICT = {
     'Mystisk dolk': 6,
     'Tandkniv': 8,
     'Fiskspjut': 10,
-    'Mystiskt spjut': 12,
+    'Mystiskt spjut': 15,
     'Jotuns hammare': 15,
     'Pilbåge': 6,
     'Bra pilbåge': 12,
+    'Tungt svärd': 18,
+    'Förhäxad spira': 18,
+    'Trollsvärd': 20,
+    'Dödlig kniv': 24,
     'Lätt rustning': 3,
     'Brynja': 5,
     'Drakfjällsbrynja': 8,
     'Tung rustning': 10,
     'Magisk rustning': 12,
+    'Trollrustning': 18,
     'Mitrilbrynja': 20,
+    'Drakfjällsrustning': 25,
     'Guldlänk': 6,
     'Skyddande ädelsten': 4,
     'Förtrollad sköld': 20,
@@ -1687,7 +1703,7 @@ ALDICT = {
     'Förtrollad dräkt': 30,
     'Blå ring': 14,
     'Lyckosmycke': 15,
-    'Banditring': 30,
+    'Rubin': 30,
     'Blodkristall': 20,
     'Tapperhetsmedalj': 30,
     'Förbannad juvel': 18, 
