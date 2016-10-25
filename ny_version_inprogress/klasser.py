@@ -116,51 +116,55 @@ class Utrustning:
         return True
 
 class Ovrigt(Utrustning): #kan ge förmåga och/eller ändra stat
-    def __init__(self, namn, bs, stat, plus, formaga='', krav=False, attribut=''):
+    def __init__(self, namn, bs, stat, plus, formaga=None, krav=False, attribut=''):
         super().__init__(namn,krav,attribut)
         self.kortbs = bs
         self.bs = 'Attiralj: '+bs
         self.stat=stat
         self.plus=plus
-        self.formaga=formaga #om det är en förmåga står stat för vilken typ och plus för mp        
+        self.formaga=formaga #tupel med 3 element        
     
     def equip(self,spelare,on=True):
-        if self.formaga == '':
-            if on == True:
-                difstat(spelare,self.stat,self.plus)
-            else:
-                difstat(spelare,self.stat,-self.plus)
+        if on:
+            difstat(spelare,self.stat,self.plus)
         else:
-            if on == True:
-                plusformaga(spelare, self.stat, self.formaga, self.plus)
-            else:
-                borta = True
-                if self.stat == 1:
-                    spelare.formagor.remove(self.formaga)
-                    if self.formaga in spelare.formagor:
-                        borta = False
-                if self.stat == 2:
-                    spelare.magier.remove((self.formaga,self.plus))
-                    if self.formaga in [m[0] for m in spelare.magier]:
-                        borta = False
-                if self.stat == 3:
-                    spelare.special.remove(self.formaga)
-                    if self.formaga in spelare.special:
-                        borta = False
-                if borta:
-                    print(spelare.namn+' kan inte längre använda '+self.formaga)
+            difstat(spelare,self.stat,-self.plus)
+        if on and self.formaga:
+            plusformaga(spelare, *self.formaga)
+        elif self.formaga:
+            borta = True
+            if self.formaga[0] == 1:
+                spelare.formagor.remove(self.formaga[1])
+                if self.formaga[1] in spelare.formagor:
+                    borta = False
+            if self.formaga[0] == 2:
+                spelare.magier.remove((self.formaga[1],self.formaga[2]))
+                if self.formaga[1] in [m[0] for m in spelare.magier]:
+                    borta = False
+            if self.formaga[0] == 3:
+                spelare.special.remove(self.formaga[1])
+                if self.formaga[1] in spelare.special:
+                    borta = False
+            if borta:
+                print(spelare.namn+' kan inte längre använda '+self.formaga)
                 
 class Vapen(Utrustning):
-    def __init__(self,namn,skada,krav=False, attribut=''):
+    def __init__(self,namn,skada,krav=False, attribut='',magi=0):
         super().__init__(namn,krav,attribut)
         self.skada=skada
+        self.magi=magi
         self.bs = 'Vapen: +'+str(int(skada*2))
+        if magi != 0:
+            self.bs += ', magi +'+str(int(magi*2))
 
 class Rustning(Utrustning):
-    def __init__(self,namn,skydd,krav=False, attribut=''):
+    def __init__(self,namn,skydd,krav=False, attribut='',mskydd=0):
         super().__init__(namn,krav,attribut)
         self.skydd=skydd
+        self.mskydd=mskydd
         self.bs = 'Rustning: +'+str(skydd)
+        if mskydd != 0:
+            self.bs += ', m-skydd +'+str(mskydd)
 
 class Kartdict:
     def __init__(self,dictionary,u):
@@ -217,15 +221,3 @@ class Karta:
               '-   '+d.namn(x + 1)+d.namn(x + 2)+d.namn(x + 3)+d.namn(x + 4)+'   -\n'+
               '-   '+self.markp(p,x+1)+self.markp(p,x+2)+self.markp(p,x+3)+self.markp(p,x+4)+'   -\n'+
               '\n    '+'-'*26+'SYD'+'-'*27+'    '+'\n\n')
-
-#test
-##d={}
-##for i in range(1,17):
-##    d[i] = 'skog'
-##d[5] = 'berg'
-##d[7] = 'stugan'
-##u={1,5,6,7}
-##k=Karta(d)
-##k.rita(u,5)
-
-              
