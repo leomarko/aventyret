@@ -46,12 +46,17 @@ def randomenc(plats):
     return (gruppnamn, fiender)
 
 def helning(figur, target, mod, mod2=0.2, plus=0):
+    bas = figur.stats['mkr']
+    try:
+        bas += figur.utrust['vapen'].magi
+    except(AttributeError):
+        bas = bas
     if isinstance(target, list):
         for s in target:
-            helning = int(figur.stats['mkr']*(mod+random()) + s.liv*mod2 + plus)
+            helning = int(bas*(mod+random()) + s.liv*mod2 + plus)
             difstat(s,'hp',helning)
     else:
-        helning = int(figur.stats['mkr']*(mod+random()) + target.liv*mod2 + plus)
+        helning = int(bas*(mod+random()) + target.liv*mod2 + plus)
         difstat(target,'hp',helning)
                 
 def f_meny(lista):
@@ -197,14 +202,24 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
             lista.append(figur)
 
     def attackmagi(figur,target,mod,plus=0):
+        def _mskada(bas,target,mod,plus):
+            skada = int(bas*(mod+random()) + plus - target.mods[2]*2)
+            try:
+                skada -= target.utrust['rustning'].mskydd
+            except(AttributeError):
+                skada = skada
+            taskada(target,skada)
+
+        bas = figur.stats['mkr']
+        try:
+            bas += figur.utrust['vapen'].magi
+        except(AttributeError):
+            bas = bas           
         if isinstance(target, list):
             for f in target:
-                skada = int(figur.stats['mkr']*(mod+random()) + plus - f.mods[2]*2)
-                taskada(f,skada)
-        else:
-            skada = int(figur.stats['mkr']*(mod+random()) + plus - target.mods[2]*2)
-            taskada(target,skada)
-        return skada
+                _mskada(bas,f,mod,plus)
+            return
+        _mskada(bas,target,mod,plus)
 
     def attack(a, b, nyckelord=''):
         ggr = 1

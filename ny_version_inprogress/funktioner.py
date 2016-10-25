@@ -96,7 +96,7 @@ def difstat(vem,stat,plus,tak=100,mini=0,noprint=False):
     if stat==1:
         word='pricksäkerhet'
     if stat==2:
-        word='magiskt skydd'
+        word='beskydd'
     if stat==3:
         word='undvikning'
 
