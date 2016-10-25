@@ -2,9 +2,16 @@ Fixa unbound local error på stats?? ---
 
 Fixa fly-loop---
 Fixa snabbhet, göra mer skillnad?---
-förläng varaktighet, särskilt på snabbhetsförändrande saker
-(klart på Beskydd, Hypnos)
+förläng varaktighet, särskilt på snabbhetsförändrande saker---
 Försvåra fiender på landsvägen något---
+
+försämra djärv attack---
+förbättra fantom---
+förstärk effekten av hypnos---
+ändra djfr.b.---
+skriv lvl i stats---
+förbättra dubbel attack något---
+försämra smärta-?
 
 Beskydd---
 Lura naturen---
@@ -19,10 +26,14 @@ Skriv ut stats efter förvandling?
 
 fixa till gamla smeden---
 
-gyllene mantel---, förtrollad sköld, tempelbrosch, skuggkristall(hp->mana),
-guldbåge, trollsvärd
+gyllene mantel---, förtrollad sköld---, tempelbrosch,
+guldbåge---, trollsvärd---
+
+försvåra fiender lite, och öka exp ordentligt, för framtiden
 
 dvärgen
 tiger---
+
+grottan
 
 joshki2---, kolskägg, draken, trollkungen, zaumakot

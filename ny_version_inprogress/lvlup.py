@@ -16,7 +16,7 @@ def lvlup(spelarlista):
         for spelare in spelarlista:
             if spelare.exp  >=  (25*spelare.lvl) + (spelare.lvl**2.7):
                 spelare.lvl+=1
-                print(spelare.namn+' är nu level '+str(spelare.lvl)+'!')
+                print(spelare.namn+' är nu nivå '+str(spelare.lvl)+'!')
                 if len(spelare.utveckling)<1: #om maxat utvecklingen
                     randombonus=[plushp,plushp,plushp,plushp,plushp,plusstr,plussmi,plusmkr]
                     randombonus[randint(0,7)].use(spelare)
@@ -221,12 +221,12 @@ SJALLISTA=[PLUSHP,
            PLUSSTR]
 HEMLIGLISTA=[Bonus('Förmåga-Mystisk kraft',plusformaga,(1,'Mystisk kraft')),
              PLUSMKR,
-             PLUSNONE,
+             PLUSHP,
              Bonus('Magi-Eld', plusformaga,(2,('Eld',3))),
              PLUSNONE,
              Bonus('Magi-Helning',plusformaga,(2,'Helning',1)),
-             PLUSSKY,
-             PLUSSKY,
+             PLUSHP,
+             PLUSSMI,
              PLUSNONE,
              Bonus('Lyckoträff', plusformaga,(3,'Lyckoträff')),
              Bonus('Mystisk attack', plusformaga,(2,('Mystisk attack',3))),

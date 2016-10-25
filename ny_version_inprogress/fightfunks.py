@@ -214,7 +214,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
             
         #dubbel            
         if 'dubbel' in nyckelord:
-            if not spelare or a.stats['smi']*0.07 + 2.3*random()  >  2:
+            if not spelare or a.stats['smi']*0.07 + 2.5*random()  >  2:
                 ggr = 2
         #loop
         while ggr > 0:
@@ -268,7 +268,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 else:
                     print(a.namnB+' attackerar '+b.namn+' och gör '+str(skada)+' skada.')
                 if nyckelord == 'djärv':
-                    taskada(a, int(skada*(random()*0.35)))
+                    taskada(a, int(skada*(0.1+random()*0.3)))
                     
             else: #(miss)
                 if spelare:
@@ -326,22 +326,20 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 for mod in f.mods:
                     mod *= 2
     aktiva_s=[s for s in s_lista if s.hp>0]
-    aktiva_f=f_lista
+    aktiva_f=[f for f in f_lista]
 
     #-----------------------------------LOOP---------------------------------
     while True:
         #----------------------FIENDER----------------------------------
         for figur in aktiva_f:
             if aktiva_s==[]:
-                print('Du är besegrad.\nSlut på äventyret.')
-                time.sleep(4)
-                raise SystemExit
+                return 'game over'
             if tick % figur.klocka() == 0:
                 print(figur.namn+'s tur')
                 input('(tryck enter)')
                 mode = figur.mode()
 
-                if mode == 'attack' or mode == 'critical' or mode == 'dubbel':
+                if mode == 'attack' or mode == 'critical' or mode == 'dubbel' or mode == 'mystisk':
                     target = aktiva_s[randint(0,len(aktiva_s)-1)]
                     attack(figur, target, mode)
 
@@ -377,16 +375,28 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         skada=int(figur.stats['mkr']*(randint(4,6)+figur.hp*0.02))
                         taskada(target,skada)
                         taskada(figur, int(skada*0.3))
-                            
+
+                    elif mode == 'Förbjuden makt': #Svans specialare, annorlunda för fienden
+                        taskada(figur, int(figur.liv*0.3))
+                        bonus = 3 + int(figur.liv*0.01)
+                        print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
+                        print(figur.namn+' fick '+str(bonus)+' styrka.\n')
+                        figur.stats['mkr'] += bonus
+                        figur.stats['str'] += bonus
+                                    
                     elif mode == 'Förvrida framtiden':
                         for f in aktiva_f:
                             e=Effekt('Förutbestämmande',difstat,f,(3,4),(3,-4),int(figur.stats['mkr']*random()*0.4) + 7 )
                             uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=f.namn+' manipulerar redan tiden')
-                            
+
+                    elif mode == 'Helning':
+                        target=aktiva_f[randint(0,len(aktiva_f)-1)]
+                        helning(figur, target, 3, mod2=0.3)
+                                    
                     elif mode == 'Hypnos':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         if (figur.stats['mkr']+5)*random()*10 > target.liv*0.5 + target.mods[2]*10:
-                            e=Effekt('Hypnos',difstat,target,(0,8,10,-3),(0,-8,10,-3),randint(6,14))
+                            e=Effekt('Hypnos',difstat,target,(0,20),(0,-20),randint(6,14))
                             uppdatera_effekter(e)
                         else:
                             print('...men hypnosen misslyckas.')
@@ -406,7 +416,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             
                     elif mode == 'Smärta':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        attackmagi(figur, target, 2, plus=target.liv*(0.5+random()*0.5))
+                        attackmagi(figur, target, 2, plus=target.liv*(0.01+random()*0.04))
                         if target in aktiva_s:
                             if target.mods[0] < 2:
                                 difstat(target,0,1)
@@ -506,13 +516,12 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 fv.fagel(figur)
 
                             elif namn == 'Förbjuden makt': #Svans specialare
-                                print(figur.namn+' använder '+namn+'...\n'+
-                                      figur.namn+' förlorar '+str(int(figur.liv*0.5))+' hp')
+                                print(figur.namn+' använder '+namn+'...')
                                 taskada(figur, int(figur.liv*0.5))
                                 if figur in aktiva_s:
                                     bonus = 3 + int(figur.liv*0.02)
                                     print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
-                                    figur.mkr += bonus
+                                    figur.stats['mkr'] += bonus
                                     e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), 15)
                                     uppdatera_effekter(e)
 
@@ -646,7 +655,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     if (figur.stats['mkr']+5)*random()*10 > target.liv*0.5 + target.mods[2]*10:
-                                        e=Effekt('Hypnos',difstat,target,(0,8,10,-3),(0,-8,10,-3),randint(6,14))                                    
+                                        e=Effekt('Hypnos',difstat,target,(0,20),(0,-20),randint(6,14))                                    
                                         uppdatera_effekter(e)
                                     else:
                                         print('...men hypnosen misslyckas.')
@@ -697,7 +706,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Smärta':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 2, plus=target.liv*(0.5+random()*0.5))
+                                    attackmagi(figur, target, 2, plus=target.liv*(0.01+random()*0.04))
                                     if target in aktiva_f:
                                         if target.mods[0] < 2:
                                             difstat(target,0,1)
@@ -808,11 +817,11 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
     #Exp
     if OP == 1:
-        xp = int(sum([f.exp+3 for f in fiender])*2)
+        xp = int(sum([f.exp+3 for f in f_lista])*2)
     elif OP ==2:
-        xp = sum([f.exp+10 for f in fiender])*3
+        xp = sum([f.exp+10 for f in f_lista])*3
     else:
-        xp = sum([f.exp for f in fiender])
+        xp = sum([f.exp for f in f_lista])
     print('Ni fick '+str(xp)+' efp')
     for s in spelarlista:
         if 'Stridsinsikt' in s.special:
@@ -920,7 +929,7 @@ PDICT = {
     'träsk':[
     ['Två ilskna troll', fi.IlsketTroll(), fi.IlsketTroll('B')],
     ['Två träskdvärgar och ett ilsket troll', fi.Traskdvarg(), fi.Traskdvarg('B'), fi.IlsketTroll()],
-    ['Fyra järnkrokodiler', fi.Jarnkrokodil(), fi.Jarnkrokodil('B'), fi.Jarnkrokodil('C'), fi.Jarnkrokodil('D')],
+    ['Två järnkrokodiler', fi.Jarnkrokodil(), fi.Jarnkrokodil('B')],
     ['Tre järnkrokodiler', fi.Jarnkrokodil(), fi.Jarnkrokodil('B'), fi.Jarnkrokodil('C')],
     ['Tre träskdvärgar', fi.Traskdvarg(), fi.Traskdvarg('B'), fi.Traskdvarg('C')],
     ['En fantom', fi.Fantom()]

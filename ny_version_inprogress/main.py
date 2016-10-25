@@ -394,11 +394,23 @@ def meny():
                         for i in ['Demondryck', 'Ormmedicin', 'Livsfrukt', 'Mystisk sten']:
                             inventory.append(FDICT[i])
                         progress['döda_fiender'].add('Gaurghus')
-##                    elif progress['main'] > 4 and nånting not in progress['hittade_skatter']:
-##                        fight(['Boss'],True)
-##                        #svan lär sig nån specialgrej
-##                    elif progress['main'] > 5 and nånting in progress['hittade_skatter']:
-##                        #få nånting
+                    elif progress['main'] > 3 and 'Entrios' not in progress['döda_fiender']:
+                        fight(['Entrios'],True)
+                        slowprint('Entrios försvinner in i grottan...\n')
+                        time.sleep(1)
+                        slowprint('Svan: Han kallar mig.\n')
+                        time.sleep(1)
+                        slowprint('Svan försvinner in i grottan!\n')
+                        slowprint('. . . . .\n',4)
+                        slowprint('Plötsligt dyker Svan upp ur mörkret.\n')
+                        time.sleep(1)
+                        slowprint('Svan lärde sig Förbjuden makt.\n')
+                        svan.formagor.append('Förbjuden makt')
+                        progress['döda_fiender'].add('Entrios')
+                    elif progress['main'] > 4 and 'Grottan' not in progress['hittade_skatter']:
+                        slowprint('Ni hittade Skuggornas ring och Okänd materia inne i grottan')
+                        progress['hittade_skatter'].add('Grottan')
+                        inventory += [FDICT['Skuggornas ring'],FDICT['Okänd materia']]
                     else:
                         print('Grottan verkar vara tom, men ni känner av\n'+
                               'en obehaglig närvaro')
@@ -538,7 +550,7 @@ def meny():
                             print('Alkemisten: Jag kan inte skapa något mer till er.')
                             break
                         print('ALKEMISTEN')
-                        obj = listval([inventory[0].namn]+
+                        obj = listval(['Gå tillbaka']+
                                       [f.namn+' - Alkemivärde: '+str(ALDICT[f.namn]) for f in inventory if f.namn in ALDICT])
                         if obj == 0:
                             break
@@ -826,11 +838,11 @@ def meny():
                         slowprint('Här får du en tung rustning.\n')
                         inventory.append(FDICT['Tung rustning'])
                         progress['smeden']+=1
-                    elif max([s.lvl for s in spelarlista])>22 and progress['smeden']<5:
+                    elif max([s.lvl for s in spelarlista])>25 and progress['smeden']<5:
                         slowprint('Här får du en guldhandske.\n')
                         inventory.append(FDICT['Guldhandske'])
                         progress['smeden']+=1
-                    elif max([s.lvl for s in spelarlista])>32 and progress['smeden']<6:
+                    elif max([s.lvl for s in spelarlista])>39 and progress['smeden']<6:
                         slowprint('Här får du mitt bästa verk\n',2)
                         inventory.append(FDICT['Mästarsvärd'])
                         progress['smeden']+=1
@@ -1305,8 +1317,8 @@ def meny():
                           'Heyjafjej: Vi är redan vänner sedan gammalt,\n'+
                           'men jag tror inte du har träffat min kusin Sirkafirk\n'+
                           'som håller till på Höga berget.\nDet är bra att vara hans vän.')
-##                elif randint(0,4) > 1:
-##                    fight()
+                elif randint(0,4) > 1:
+                    fight()
                 nyplats = False
 
             elif plats == 'vildmark':
@@ -1362,9 +1374,9 @@ def meny():
 
             elif plats == 'ödemark':
                 if 'ödemark' not in progress['hittade_skatter'] and random() > 0.9:
-                    slowprint('Du hittar ett trollsvärd!')
+                    slowprint('Du hittar en välsignad rustning!')
                     progress['hittade_skatter'].add('ödemark')
-                    inventory.append(FDICT['Trollsvärd'])
+                    inventory.append(FDICT['Välsignad rustning'])
                 elif random() > 0.9:
                     slowprint('Du hittar en häxbrygd!')
                     inventory.append(FDICT['Häxbrygd'])
@@ -1430,7 +1442,7 @@ def meny():
         elif val[mode]=='Stats':
             for s in spelarlista:
                 print('\n'+s.namn+':\n'+
-                      s.hpstr()+'\n'+
+                      'nivå '+str(s.lvl)+'  '+s.hpstr()+'\n'+
                       'Styrka: '+str(s.stats['str'])+'  Smidighet: '+str(s.stats['smi'])+'  Magikraft: '+str(s.stats['mkr'])+'\n'+
                       'Vapen: '+s.utrust['vapen'].namn+' (+'+str(int(s.utrust['vapen'].skada*2))+')'+
                       '  Rustning: '+s.utrust['rustning'].namn+' (+'+str(s.utrust['rustning'].skydd)+')'+
@@ -1504,6 +1516,8 @@ def meny():
                     break
                 position += 100
             nyplats = True
+            progress['upptäckta_platser'].add(position)
+            print('Ni kommer kommer till '+PDICT[position])
                 
                 
 #fler funktioner:
@@ -1512,6 +1526,10 @@ def fight(plats='plats', specifik=False, OP=0):
     if plats == 'plats':
         plats = PDICT[position]
     loot = fightfunc(spelarlista, inventory, progress, plats, specifik, OP=OP)
+    if loot == 'game over':
+        print('Du är besegrad.\nSlut på äventyret.')
+        time.sleep(4)
+        raise SystemExit
     if loot != None:
         for f in loot:
             inventory.append(FDICT[f])
@@ -1602,6 +1620,7 @@ FDICT = {
     'Tempelbrosch': kls.Foremal('Tempelbrosch'),
     'Häxans ring': kls.Foremal('Häxans ring'),
     'Randig gren': kls.Foremal('Randig gren'),
+    'Okänd materia': kls.Foremal('Okänd materia'),
     'Kniv': kls.Vapen('Kniv',0.7),
     'Svärd': kls.Vapen('Svärd',1),
     'Bra svärd': kls.Vapen('Bra svärd',2,5,'str'),
@@ -1611,14 +1630,15 @@ FDICT = {
     'Fiskspjut': kls.Vapen('Fiskspjut',3),
     'Bra pilbåge': kls.Vapen('Bra pilbåge',3.5,7,'smi'),
     'Jotuns hammare': kls.Vapen('Jotuns hammare',4,7,'str'),
-    'Mystiskt spjut': kls.Vapen('Mystiskt spjut',4,7,'mkr'),
-    'Tungt svärd': kls.Vapen('Tungt svärd',4.5,9,'str'),
-    'Förhäxad spira': kls.Vapen('Förhäxad spira',4.5,9,'mkr'),
-    'Dödlig kniv': kls.Vapen('Förhäxad spira',5,10,'smi'),
-    'Trollsvärd': kls.Vapen('Trollsvärd',4.5),
-    'Mästarsvärd': kls.Vapen('Mästarsvärd',6,6,'str'),
-    'Silverbåge': kls.Vapen('Silverbåge',6,9,'smi'),
-    'Guldbåge': kls.Vapen('Guldbåge',9,11,'smi')
+    'Mystiskt spjut': kls.Vapen('Mystiskt spjut',4.5,7,'mkr'),
+    'Tungt svärd': kls.Vapen('Tungt svärd',5,9,'str'),
+    'Förhäxad spira': kls.Vapen('Förhäxad spira',5,9,'mkr'),
+    'Dödlig kniv': kls.Vapen('Dödlig kniv',5.5,10,'smi'),
+    'Förtrollad hammare': kls.Vapen('Förtrollad hammare',5.5,9,'mkr'),
+    'Konungasvärd': kls.Vapen('Konungasvärd',6,9,'str'),
+    'Mästarsvärd': kls.Vapen('Mästarsvärd',6.5,6,'str'),
+    'Silverbåge': kls.Vapen('Silverbåge',6.5,9,'smi'),
+    'Guldbåge': kls.Vapen('Guldbåge',9,11,'smi'),
     'Lätt rustning': kls.Rustning('Lätt rustning',1),
     'Brynja': kls.Rustning('Brynja',2),
     'Drakfjällsbrynja': kls.Rustning('Drakfjällsbrynja',3,5,'str'),
@@ -1626,10 +1646,12 @@ FDICT = {
     'Magisk rustning': kls.Rustning('Magisk rustning',6,6,'mkr'),
     'Riddarrustning': kls.Rustning('Riddarrustning',6,8,'str'),
     'Ormdräkt': kls.Rustning('Ormdräkt',7,8,'smi'),
-    'Trollrustning': kls.Rustning('Trollrustning',7,8,'mkr'),
+    'Välsignad rustning': kls.Rustning('Välsignad rustning',7,7,'mkr'),
     'Mitrilbrynja': kls.Rustning('Mitrilbrynja',7),
-    'Drakfjällsrustning': kls.Rustning('Drakfjällsrustning',8,10,'str'),
-    'Mitrilrustning': kls.Rustning('Mitrilrustning',9),
+    'Järnskinnsdräkt': kls.Rustning('Järnskinnsdräkt',8,10,'str'),
+    'Drakfjällsrustning': kls.Rustning('Drakfjällsrustning',9,10,'mkr'),
+    'Mitrilrustning': kls.Rustning('Mitrilrustning',10),
+    'Megarustning': kls.Rustning('Megarustning',10),
     'Skyddande ädelsten': kls.Ovrigt('Skyddande ädelsten','+1 magiskt skydd',2,1),
     'Svart mantel': kls.Ovrigt('Svart mantel','+3 magiskt skydd',2,3),
     'Förtrollad sköld': kls.Ovrigt('Förtrollad sköld','+4 magiskt skydd',2,4),
@@ -1640,6 +1662,7 @@ FDICT = {
     'Guldlänk': kls.Ovrigt('Guldlänk','+2 magikraft','mkr',2),
     'Magisk ring': kls.Ovrigt('Magisk ring','+3 magikraft','mkr',3),
     'Trollring': kls.Ovrigt('Trollring','+4 magikraft','mkr',4),
+    'Skuggornas ring': kls.Ovrigt('Skuggornas ring','+5 magikraft','mkr',5),
     'Guldring': kls.Ovrigt('Guldring','+3 styrka','str',3),
     'Guldhandske': kls.Ovrigt('Guldhandske','+4 styrka','str',4),
     'Amulett': kls.Ovrigt('Amulett','+3 smidighet','smi',3),
@@ -1681,14 +1704,15 @@ ALDICT = {
     'Bra pilbåge': 12,
     'Tungt svärd': 18,
     'Förhäxad spira': 18,
-    'Trollsvärd': 20,
+    'Förtrollad hammare': 24,
     'Dödlig kniv': 24,
+    'Konungasvärd': 28,
     'Lätt rustning': 3,
     'Brynja': 5,
     'Drakfjällsbrynja': 8,
     'Tung rustning': 10,
     'Magisk rustning': 12,
-    'Trollrustning': 18,
+    'Välsignad rustning': 18,
     'Mitrilbrynja': 20,
     'Drakfjällsrustning': 25,
     'Guldlänk': 6,
