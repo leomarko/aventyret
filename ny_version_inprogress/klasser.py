@@ -146,7 +146,7 @@ class Ovrigt(Utrustning): #kan ge förmåga och/eller ändra stat
                 if self.formaga[1] in spelare.special:
                     borta = False
             if borta:
-                print(spelare.namn+' kan inte längre använda '+self.formaga)
+                print(spelare.namn+' kan inte längre använda '+self.formaga[1])
                 
 class Vapen(Utrustning):
     def __init__(self,namn,skada,krav=False, attribut='',magi=0):
