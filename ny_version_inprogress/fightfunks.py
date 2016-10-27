@@ -45,7 +45,7 @@ def randomenc(plats):
     fiender = [f for f in lista[1:]] 
     return (gruppnamn, fiender)
 
-def helning(figur, target, mod, mod2=0.2, plus=0):
+def helning(figur, target, mod, mod2=0.25, plus=0):
     bas = figur.stats['mkr']
     try:
         bas += figur.utrust['vapen'].magi
@@ -216,8 +216,12 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
         except(AttributeError):
             bas = bas           
         if isinstance(target, list):
-            for f in target:
+            i = 0
+            while i < len(target):
+                f = target[i]
                 _mskada(bas,f,mod,plus)
+                if f in target:
+                    i += 1
             return
         _mskada(bas,target,mod,plus)
 
@@ -237,7 +241,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 
                 #grundskada
                 if nyckelord == 'mystisk':
-                    skada = sum(a.stats.values()) + figur.hp/4
+                    skada = sum(a.stats.values()) + figur.hp*0.2
                 elif nyckelord == 'mörk':
                     skada = a.stats['mkr']*0.85 + a.stats['str']*0.85
                 else:
@@ -318,9 +322,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
     for s in s_lista:
         s.formagor = uniquelist(s.formagor) #eliminerar dubletter 
         s.magier = uniquelist(s.magier) #eliminerar dubletter
-    f_lista=[]
-    for f in fiender:
-        f_lista.append(copy(f))
+    f_lista=deepcopy(fiender)
     if OP != 0:
         if OP == 1:
             for f in f_lista:
@@ -353,6 +355,9 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 print(figur.namn+'s tur')
                 input('(tryck enter)')
                 mode = figur.mode()
+
+                if mode == 'mystisk':
+                    print(figur.namnB+' använder Mystisk attack...')
 
                 if mode == 'attack' or mode == 'critical' or mode == 'dubbel' or mode == 'mystisk':
                     target = aktiva_s[randint(0,len(aktiva_s)-1)]
@@ -410,7 +415,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Helning':
                         target=aktiva_f[randint(0,len(aktiva_f)-1)]
-                        helning(figur, target, 3, mod2=0.3)
+                        helning(figur, target, 3)
                                     
                     elif mode == 'Hypnos':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
@@ -439,7 +444,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             
                     elif mode == 'Smärta':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        attackmagi(figur, target, 2, plus=target.liv*(0.01+random()*0.04))
+                        attackmagi(figur, target, 2.25, plus=target.liv*(0.01+random()*0.04))
                         if target in aktiva_s:
                             if target.mods[0] < 2:
                                 difstat(target,0,1)
@@ -468,13 +473,13 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         attackmagi(figur, target, 8, 40*random())
 
                     elif mode == 'Trollstoft':
-                        helning(figur, aktiva_f, 0.8)
+                        helning(figur, aktiva_f, 1, mod2=0.15)
                         for f in aktiva_f:
                             e=Effekt('Trollstoft',difstat,f,(0,-1,10,-3),(0,1,10,-3),int(figur.stats['mkr']*0.5) + randint(7,10) )
                             uppdatera_effekter(e)
 
                     elif mode == 'Upplyftning':
-                        helning(figur, aktiva_f, 3, mod2=0.3)
+                        helning(figur, aktiva_f, 2.5)
 
                     elif mode == 'Återhämtning':
                         difstat(figur, 'hp', int(figur.liv*0.2))
@@ -685,7 +690,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Helning':
                                     target=aktiva_s[listval([s.namn for s in aktiva_s])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    helning(figur, target, 3, mod2=0.3)
+                                    helning(figur, target, 3)
                                         
                                 elif spell[0] == 'Hypnos':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
@@ -742,7 +747,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Smärta':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 2, plus=target.liv*(0.01+random()*0.04))
+                                    attackmagi(figur, target, 2.25, plus=target.liv*(0.01+random()*0.04))
                                     if target in aktiva_f:
                                         if target.mods[0] < 2:
                                             difstat(target,0,1)
@@ -788,14 +793,14 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                                 elif spell[0] == 'Trollstoft':
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    helning(figur, aktiva_s, 0.8)
+                                    helning(figur, aktiva_s, 1, mod2=0.15)
                                     for s in aktiva_s:
                                         e=Effekt('Trollstoft',difstat,s,(0,-1,10,-3),(0,1,10,-3),int(figur.stats['mkr']*0.5) + randint(7,10) )
                                         uppdatera_effekter(e)
 
                                 elif spell[0] == 'Upplyftning':
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    helning(figur, aktiva_s, 3, mod2=0.3)
+                                    helning(figur, aktiva_s, 2.5)
                                     
                                 elif spell[0] == 'Ändra framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')

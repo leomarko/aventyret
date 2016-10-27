@@ -427,7 +427,7 @@ def meny():
                                   'Efter en stund så tittar hon i den, tar fram en penna och skriver något...')
                             progress['hittade_skatter'].add('ZZZ')
                 elif 'källare' in progress['hittade_skatter']:
-                    print('Det är ingen här, bara massa böcker')
+                    print('Det är ingen här, bara massa böcker.')
                     dialogval[8] = d8 #fråga om böcker
                 else:
                     slowprint('Ni ser en jätte, som springer ifrån er.\n'+
@@ -744,6 +744,7 @@ def meny():
                     else:
                         print('Må lyckans Gudar le mot er.')
                         break
+                nyplats=False
                             
                 
             elif plats == 'Höga berget' and 200 < position < 300:
@@ -1085,18 +1086,19 @@ def meny():
                                                   'Kung Kolskägg: Vilken beskvikelse!\n'+
                                                   'Nåja, nu ska du få känna på riktig makt!\n')
                                         time.sleep(1)
-                                        slowprint('Men då...!')
+                                        slowprint('Men då...!\n')
                                         time.sleep(1)
                                         slowprint('Fönstret till kammaren krossas!\n'+
                                                   'In flyger en stor fågel bärande på en reslig krigare,\n'+
                                                   'fågeln byter skepnad och blir en kvinna.\n'+
                                                   'Alri och Svan: Vi förstod snart att något var fel,\n'+
                                                   'låt oss se vad den här falska kungen går för!\n')
+                                        spelarlista = [sp1, svan, alri]
                                         time.sleep(1)
-                                        slowprint('Kung Kolskägg: Ni ska alla dö!')
+                                        slowprint('Kung Kolskägg: Ni ska alla dö!\n')
                                         fight(['Kolskägg'],True)
                                         time.sleep(2)
-                                        slowprint('Kung Kolskägg: Aaargh!',2)
+                                        slowprint('Kung Kolskägg: Aaargh!\n',2)
                                         print('Ni tog kungens gyllene mantel')
                                         inventory.append(FDICT['Gyllene mantel'])
                                         time.sleep(2)
@@ -1104,7 +1106,7 @@ def meny():
                                                   'Unghäxan: Vänta! Ni kan inte åstadkomma något mer genom att döda kungen.\n'+
                                                   'Jag vet att jag har svikit den snälla häxan.\n'+
                                                   'Men jag vet en annan vän till henne som jag hemlighållit för den elaka häxan.\n'+
-                                                  'Det är en dvärg, och han bor nu i vildmarken, jag ska förklara vägen för er.\n')
+                                                  'Det är en dvärg, och han bor nu i vildmarken i sydväst, jag ska förklara vägen för er.\n')
                                         time.sleep(1)
                                         slowprint('Ni lärde er vägen till dvärgens boning.\n'+
                                                   'Ni låter kungen och unghäxan gå och lämnar slottet.')
@@ -1248,27 +1250,29 @@ def meny():
                                 print('Natu: Hmm... Jag vet några som kan vara av intresse för er.\n'+
                                       'Hon tar fram ett antal volymer.')
                                 if 'lärdom' not in progress['hittade_skatter']:
-                                    slowprint('Ni får 400 exp!\n', 2)
+                                    slowprint('Ni får 800 exp!\n', 2)
                                     for s in spelarlista:
-                                        s.exp += 400
+                                        s.exp += 800
                                     lvlup(spelarlista)
+                                    progress['hittade_skatter'].add('lärdom')
                                 else:
                                     print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
                             elif fraga2 == 'Fråga om Una':
                                 slowprint('Natu: ..........\n',2)
                                 time.sleep(1)
                                 slowprint('Bibliotekarien ser förskräct ut och börjar vända sig om och gå,\n'+
-                                          'ni följer efter, men när ni rundar en bokhylla är hon försvunnen....!')
+                                          'ni följer efter, men när ni rundar en bokhylla är hon försvunnen....!\n')
                                 progress['hittade_skatter'].add('Jotun')
                             del fraga2
                         else:
                             print('Vår bibliotekarie har försvunnit, men ni är välkomna att se er omkring.')
                             if 'lärdom' not in progress['hittade_skatter']:
                                 slowprint('Ni hittar en intressant bok där "Natu" försvann\n')
-                                slowprint('Ni får 400 exp\n!', 2)
+                                slowprint('Ni får 800 exp!\n', 2)
                                 for s in spelarlista:
-                                    s.exp += 400
+                                    s.exp += 800
                                 lvlup(spelarlista)
+                                progress['hittade_skatter'].add('lärdom')
                             else:
                                 print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
                         print('Ni går tillbaka från biblioteket tillbaka till prästen ni pratade med.')
@@ -1389,8 +1393,8 @@ def meny():
                 elif random() > 0.9:
                     slowprint('Du hittar en häxbrygd!')
                     inventory.append(FDICT['Häxbrygd'])
-##                elif random() > 0.7:
-##                    fight(OP=1)
+                elif random() > 0.6:
+                    fight()
                 nyplats = False
                                      
             elif plats == 'Ödsliga fältet':
@@ -1528,7 +1532,7 @@ def meny():
                 position += 100
             nyplats = True
             progress['upptäckta_platser'].add(position)
-            print('Ni kommer kommer till '+PDICT[position])
+            print('Ni kommer till '+PDICT[position])
                 
                 
 #fler funktioner:

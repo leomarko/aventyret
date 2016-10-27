@@ -611,7 +611,7 @@ class Otroll(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=320
+        self.exp=420
         self.liv=240
         self.hp=self.liv
         self.stats={'str':17,'smi':12,'mkr':15}
@@ -647,7 +647,7 @@ class Jarnkrokodil(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=450
+        self.exp=550
         self.liv=200
         self.hp=self.liv
         self.stats={'str':15,'smi':15,'mkr':7}
@@ -738,7 +738,7 @@ class Vitvarg(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=450
+        self.exp=500
         self.liv=250
         self.hp=self.liv
         self.stats={'str':19,'smi':16,'mkr':7}
@@ -765,7 +765,7 @@ class Olyckskorp(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=300
+        self.exp=350
         self.liv=100
         self.hp=self.liv
         self.stats={'str':14,'smi':25,'mkr':7}
@@ -791,7 +791,7 @@ class Skogsvasen(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=500
+        self.exp=600
         self.liv=200
         self.hp=self.liv
         self.stats={'str':5,'smi':18,'mkr':19}
@@ -820,7 +820,7 @@ class Gammeltroll(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=700
+        self.exp=850
         self.liv=450
         self.hp=self.liv
         self.stats={'str':23,'smi':14,'mkr':20}
@@ -998,7 +998,7 @@ class Entrios(Varelse):
     exp=800
     liv=450
     hp=liv
-    stats={'str':18,'smi':12,'mkr':18}
+    stats={'str':18,'smi':14,'mkr':18}
     mods=[-1,0,5,4]
     rustning=5
     fly=False
@@ -1006,7 +1006,7 @@ class Entrios(Varelse):
     namnB=namn+' nattens väktare'
 
     def mode(self):
-        mode = randint(0,6)
+        mode = randint(0,4)
         if mode == 0 and self.hp > 300:
             return 'Förbjuden makt'
         elif mode == 1:
@@ -1089,11 +1089,11 @@ class Joshki2(Varelse):
         return 'Förbannad juvel'
 
 class Kolskagg(Varelse):
-    exp=700
-    liv=500
+    exp=1000
+    liv=400
     hp=liv
-    stats={'str':18,'smi':14,'mkr':18}
-    mods=[-1,0,6,0]
+    stats={'str':19,'smi':15,'mkr':12}
+    mods=[-1,0,6,1]
     rustning=6
     fly=False
     namn='Kung Kolskägg'
