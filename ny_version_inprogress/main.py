@@ -604,8 +604,9 @@ def meny():
                         slowprint('Jag kan nog använda det där märkliga fjälliga stålet och er ormdräkt...\n')                   
                         inventory.remove([f for f in inventory if f.namn=='Fiskstål'][0])
                         foremaloverallt('Ormdräkt',tabort=True)
+                        foremaloverallt('Riddarrustning',tabort=True)
                         time.sleep(1)
-                        slowprint('Du gav Ormdräkt och Fiskstål till smeden.\n')
+                        slowprint('Du gav Riddarrustning, Ormdräkt och Fiskstål till smeden.\n')
                         slowprint('.........\n',5)
                         slowprint('Här får du en megarustning!\n')
                         inventory.append(FDICT['Megarustning'])
@@ -1646,7 +1647,7 @@ FDICT = {
     'Dödlig kniv': kls.Vapen('Dödlig kniv',5.5,10,'smi'),
     'Förtrollad hammare': kls.Vapen('Förtrollad hammare',5.5,9,'mkr',magi=1.5),
     'Konungasvärd': kls.Vapen('Konungasvärd',6,9,'str',magi=2),
-    'Skuggsvärd': kls.Vapen('Skuggsvärd',4.5,magi=4.5),
+    'Skuggsvärd': kls.Vapen('Skuggsvärd',4,magi=4),
     'Guldspira': kls.Vapen('Guldspira',3,magi=7),
     'Mästarsvärd': kls.Vapen('Mästarsvärd',6.5,6,'str',magi=3),
     'Silverbåge': kls.Vapen('Silverbåge',6.5,9,'smi',magi=4),

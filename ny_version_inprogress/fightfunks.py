@@ -561,7 +561,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                             elif namn == 'Mystisk kraft':
                                 print(figur.namn+' hämtar kraft...')
-                                e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), randint(12,14))
+                                e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), randint(15,22))
                                 uppdatera_effekter(e, use=False)
                                 
                             elif namn == 'Projicera själ':
@@ -605,7 +605,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                             elif namn == 'Urkraft':
                                 print(figur.namn+' hämtar kraft...')
-                                e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), randint(4,7))
+                                e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), randint(7,11))
                                 uppdatera_effekter(e, use=False)
 
                             elif namn == 'Återhämtning':
@@ -657,7 +657,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                                 elif spell[0] == 'Eld':
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, aktiva_f, 2, figur.lvl*(0.5+random()*0.5))
+                                    attackmagi(figur, aktiva_f, 2, figur.lvl*(0.2+random()*0.2))
 
                                 elif spell[0] == 'Förgöra':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
@@ -699,7 +699,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Kyla':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 2, plus=figur.lvl*(0.5+random()*0.5))
+                                    attackmagi(figur, target, 2, plus=figur.lvl*(0.3+random()*0.3))
 
                                 elif spell[0] == 'Lindring':
                                     print(figur.namn+' använder '+spell[0]+'...')
@@ -869,18 +869,18 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
     lakekonst_lista=[0]
     for s in aktiva_s:
         if 'Läkekonst 2' in s.special:
-            lakekonst_lista.append( (s.stats['smi'] + s.lvl + randint(0,2))*1.7 )
+            lakekonst_lista.append( (s.stats['smi']*0.5 + randint(1,3))*1.7 )
         elif 'Läkekonst' in s.special:
-            lakekonst_lista.append( s.stats['smi'] + s.lvl + randint(0,2) )
+            lakekonst_lista.append( s.stats['smi']*0.5 + randint(1,3) )
     if max(lakekonst_lista)>0:
         print('Läkekonst:')
         for s in [sp for sp in spelarlista if sp.namn in [a.namn for a in aktiva_s] ]:
-            s.hp  +=  int(s.liv * max(lakekonst_lista)*0.008)
+            s.hp  +=  int(s.liv * max(lakekonst_lista)*0.013)
             if s.hp>=s.liv:
                 print(s.namn+' fick full hp')
                 s.hp=s.liv
             else:
-                print(s.namn+' återfick '+str(int(s.liv * max(lakekonst_lista)*0.008))+' hp')
+                print(s.namn+' återfick '+str(int(s.liv * max(lakekonst_lista)*0.013))+' hp')
 
     #Loot
     loot=[]
