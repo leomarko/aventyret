@@ -501,7 +501,7 @@ class Riddare(Varelse):
             return 'Tungt svärd'
         else:
             return False
-#####
+
 class Soldat(Varelse):
     namn='Soldat'
     namnB=namn+'en'
@@ -604,9 +604,9 @@ class Bandit(Varelse):
 
 #------------------------------------------Framtiden: träsk och ödemark
 
-class IlsketTroll(Varelse):
-    namn='Ilsket troll'
-    namnB='Det ilskna trollet'
+class Otroll(Varelse):
+    namn='Otroll'
+    namnB=namn+'et'
 
     def __init__(self, nr=0):
         if nr!=0:
@@ -614,7 +614,7 @@ class IlsketTroll(Varelse):
         self.exp=320
         self.liv=240
         self.hp=self.liv
-        self.stats={'str':18,'smi':12,'mkr':16}
+        self.stats={'str':17,'smi':12,'mkr':15}
         self.mods=[0,1,3,0]
         self.rustning=6
 
@@ -650,7 +650,7 @@ class Jarnkrokodil(Varelse):
         self.exp=450
         self.liv=200
         self.hp=self.liv
-        self.stats={'str':17,'smi':17,'mkr':7}
+        self.stats={'str':15,'smi':15,'mkr':7}
         self.mods=[0,0,7,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=12
     
@@ -694,10 +694,10 @@ class Traskdvarg(Varelse):
         
     def drop(self, plus, progress, OP):
         n = randint(0,10)+plus
-        if n > 10:
-            return 'Mitrilbrynja'
-        elif n > 9:
+        if n > 9:
             return 'Dödlig kniv'
+        elif n > 8:
+            return 'Mitrilbrynja'
         return False
 
 class Fantom(Varelse):
@@ -725,10 +725,184 @@ class Fantom(Varelse):
             return 'other'
 
     def drop(self, plus, progress, OP):
-        if randint(0,12) + plus > 12:
+        if randint(0,15) + plus > 15:
             return ['Demondryck','Livsfrukt','Ormmedicin',False][randint(0,3)]
         else:
             return False
+
+#-----------------------------------------------------Dåtiden, skog
+class Vitvarg(Varelse):
+    namn = 'Vitvarg'
+    namnB = namn+'en'
+
+    def __init__(self, nr=0):
+        if nr!=0:
+            self.namn+=' '+nr
+        self.exp=450
+        self.liv=250
+        self.hp=self.liv
+        self.stats={'str':19,'smi':16,'mkr':7}
+        self.mods=[0,0,6,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=6
+    
+    def mode(self):
+        mode=randint(0,3)
+        if mode > 0:
+            return 'attack'
+        else:
+            return 'critical'
+        
+    def drop(self, plus, progress, OP):
+        n = randint(0,15)+plus
+        if n > 14:
+            return 'Blodkristall'
+        return False
+
+class Olyckskorp(Varelse):
+    namn = 'Olyckskorp'
+    namnB = namn+'en'
+
+    def __init__(self, nr=0):
+        if nr!=0:
+            self.namn+=' '+nr
+        self.exp=300
+        self.liv=100
+        self.hp=self.liv
+        self.stats={'str':14,'smi':25,'mkr':7}
+        self.mods=[0,0,5,1]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=3
+    
+    def mode(self):
+        mode=randint(0,3)
+        if mode > 1:
+            return 'attack'
+        elif mode == 1:
+            return 'Ändra framtiden'
+        else:
+            return 'critical'
+        
+    def drop(self, plus, progress, OP):
+        return False
+
+class Skogsvasen(Varelse):
+    namn = 'Skogsväsen'
+    namnB = namn+'det'
+
+    def __init__(self, nr=0):
+        if nr!=0:
+            self.namn+=' '+nr
+        self.exp=500
+        self.liv=200
+        self.hp=self.liv
+        self.stats={'str':5,'smi':18,'mkr':19}
+        self.mods=[0,0,14,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=0
+    
+    def mode(self):
+        mode=randint(0,6)
+        if mode == 0:
+            return 'Naturkraft'
+        elif mode == 1:
+            return 'Upplyftning'
+        else:
+            return 'Eld'
+        
+    def drop(self, plus, progress, OP):
+        n = randint(0,15)+plus
+        if n > 14:
+            return 'Trädgrenskrona'
+        return False
+
+class Gammeltroll(Varelse):
+    namn = 'Gammeltroll'
+    namnB = namn+'et'
+
+    def __init__(self, nr=0):
+        if nr!=0:
+            self.namn+=' '+nr
+        self.exp=700
+        self.liv=450
+        self.hp=self.liv
+        self.stats={'str':23,'smi':14,'mkr':20}
+        self.mods=[0,0,6,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=4
+    
+    def mode(self):
+        mode=randint(0,3)
+        if mode == 0 and 99 < self.hp < 200:
+            return 'Återhämtning 2'
+        elif mode == 1:
+            return 'Trollsmäll'
+        else:
+            return 'attack'
+        
+    def drop(self, plus, progress, OP):
+        n = randint(0,16)+plus
+        if n > 15:
+            return 'Kraftring'
+        return False
+
+#-----------------------------------------------------Dåtiden, berg
+
+#Gammeltroll, Draken
+
+class Dimdvarg(Varelse):
+    namn='Dimdvärg'
+    namnB = namn+'en'
+
+    def __init__(self, nr=0):
+        if nr!=0:
+            self.namn+=' '+nr
+        self.exp=400
+        self.liv=210
+        self.hp=self.liv
+        self.stats={'str':15,'smi':17,'mkr':14}
+        self.mods=[-1,0,10,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=0
+    
+    def mode(self):
+        mode=randint(0,4)
+        if mode > 2:
+            return 'attack'
+        elif mode > 0:
+            return 'dubbel'
+        else:
+            return 'Förvrida framtiden'
+        
+    def drop(self, plus, progress, OP):
+        n = randint(0,13)+plus
+        if n > 12:
+            return 'Dimsilverbrynja'
+        return False
+
+class Sfinx(Varelse):
+    namn = 'Sfinx'
+    namnB = namn+'en'
+
+    def __init__(self, nr=0):
+        if nr!=0:
+            self.namn+=' '+nr
+        self.exp=1700
+        self.liv=800
+        self.hp=self.liv
+        self.stats={'str':23,'smi':17,'mkr':23}
+        self.mods=[0,0,7,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=5
+        self.modes = ['Förgöra','attack','dubbel','Eld','Helning',
+                      'Sömnighet','Kvävning','other']
+    
+    def mode(self):
+        return self.modes[randint(0,7)]
+        
+    def other(self):
+        slowprint('Sfinxen är stilla\n')
+        
+    def drop(self, plus, progress, OP):
+        n = randint(0,19)+plus
+        if n > 18:
+            return 'Guldspira'
+        return False
+
 #----------------------------------------------------------------------
 #BOSSAR
 
@@ -821,10 +995,10 @@ class Gaurghus(Varelse):
         return 'Ormdräkt'
 
 class Entrios(Varelse):
-    exp=600
-    liv=400
+    exp=800
+    liv=450
     hp=liv
-    stats={'str':20,'smi':12,'mkr':20}
+    stats={'str':18,'smi':12,'mkr':18}
     mods=[-1,0,5,4]
     rustning=5
     fly=False
@@ -843,7 +1017,7 @@ class Entrios(Varelse):
             return 'attack'
 
     def drop(self, plus, progress, OP):
-        return 'Förtrollad hammare'
+        return 'Skuggsvärd'
 
 class Otak(Varelse):
     exp=175
@@ -915,7 +1089,7 @@ class Joshki2(Varelse):
         return 'Förbannad juvel'
 
 class Kolskagg(Varelse):
-    exp=600
+    exp=700
     liv=500
     hp=liv
     stats={'str':18,'smi':14,'mkr':18}
@@ -929,7 +1103,7 @@ class Kolskagg(Varelse):
         mode = randint(0,6)
         if mode < 2:
             return 'mystisk'
-        elif mode == 2 and self.hp < 150:
+        elif mode == 2 and 50 < self.hp < 150:
             return 'Helning'
         elif mode == 3:
             return 'dubbel'
@@ -964,7 +1138,7 @@ class Draken(Varelse): #GÖR SEN -man har dvärgen till hjälp
     def drop(self, plus, progress, OP):
         return 'Drakfjällsrustning'
 
-class Trollkungen(Varelse): #GÖR SEN -lika svår som draken
+class Trollkungen(Varelse): #GÖR SEN -lite svårare än draken
     exp=160
     liv=140
     hp=liv
@@ -1051,6 +1225,31 @@ class DemonenZa(Varelse):
 
     def drop(self, plus, progress, OP):
         return 'Zaumakots armband'
+
+class DemonenZi(Varelse): #gör sen
+    exp=4000
+    liv=2000
+    hp=liv
+    stats={'str':25,'smi':25,'mkr':25}
+    mods=[0,0,10,0]
+    rustning=10
+    fly=True
+    namn='Demonen Ziriekl'
+    namnB=namn
+
+    def mode(self):
+        mode = randint(0,9)
+        if mode == 0:
+            return 'dubbel'
+        elif mode < 3:
+            return 'Förgöra'
+        elif mode == 3:
+            return 'Beskydd'
+        else:
+            return 'Eld'
+
+    def drop(self, plus, progress, OP):
+        return 'Ziriekls rustning'
         
 class Djurframlingen(Varelse): #gör sen
     exp=200

@@ -375,11 +375,15 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     
                     if mode == 'Beskydd':
                         for f in aktiva_f:
-                            e=Effekt('Beskydd',difstat,f,(2,5),(2,-5),int(figur.stats['mkr']*(0.3+random()*0.5)) + randint(8,12) )                                        
+                            e=Effekt('Beskydd',difstat,f,(2,int(figur.stats['mkr']*0.25+3)),(2,-int(figur.stats['mkr']*0.25+3)),randint(10,14) )                                        
                             uppdatera_effekter(e)
                                         
                     elif mode == 'Eld':
                         attackmagi(figur, aktiva_s, 2.5)
+
+                    elif mode == 'Förgöra':
+                        target = aktiva_s[randint(0,len(aktiva_s)-1)]
+                        attackmagi(figur, target, 5+random())
 
                     elif mode == 'Förgöra verkligheten':
                         slowprint('Världen tynar bort',3)
@@ -387,7 +391,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Förtärande mörker':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        skada=int(figur.stats['mkr']*(randint(4,6)+figur.hp*0.02))
+                        skada=int(figur.stats['mkr']*(randint(4,6)+figur.hp*0.03))
                         taskada(target,skada)
                         taskada(figur, int(skada*0.3))
 
@@ -423,6 +427,10 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     elif mode == 'Kyla':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 2.5)
+
+                    elif mode == 'Naturkraft':
+                        figur.stats['mkr'] += 5
+                        print(figur.namn+' fick 5 mer i magikraft.')
 
                     elif mode == 'Se framtiden':
                         for f in aktiva_f:
@@ -464,6 +472,9 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         for f in aktiva_f:
                             e=Effekt('Trollstoft',difstat,f,(0,-1,10,-3),(0,1,10,-3),int(figur.stats['mkr']*0.5) + randint(7,10) )
                             uppdatera_effekter(e)
+
+                    elif mode == 'Upplyftning':
+                        helning(figur, aktiva_f, 3, mod2=0.3)
 
                     elif mode == 'Återhämtning':
                         difstat(figur, 'hp', int(figur.liv*0.2))
@@ -641,17 +652,27 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 if spell[0] == 'Beskydd':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for s in aktiva_s:
-                                        e=Effekt('Beskydd',difstat,s,(2,5),(2,-5),int(figur.stats['mkr']*(0.3+random()*0.5)) + randint(8,12) )                                        
+                                        e=Effekt('Beskydd',difstat,s,(2,int(figur.stats['mkr']*0.2+3)),(2,-int(figur.stats['mkr']*0.2+3)),randint(10,14) )                                        
                                         uppdatera_effekter(e)
 
                                 elif spell[0] == 'Eld':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     attackmagi(figur, aktiva_f, 2, figur.lvl*(0.5+random()*0.5))
 
+                                elif spell[0] == 'Förgöra':
+                                    target=aktiva_f[listval([f.namn for f in aktiva_f])]
+                                    print(figur.namn+' använder '+spell[0]+'...')
+                                    attackmagi(figur, target, 5+random())
+
                                 elif spell[0] == 'Förtärande mörker':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    skada=int(figur.stats['mkr']*(randint(4,6)+figur.hp*0.02))
+                                    skada=int(figur.stats['mkr'])
+                                    try:
+                                        skada += figur.utrust['vapen'].magi
+                                    except(AttributeError):
+                                        skada = skada
+                                    skada = int(skada*(randint(4,6)+figur.hp*0.03))
                                     taskada(target,skada)
                                     taskada(figur,int(skada*0.3))
                                         
@@ -942,19 +963,32 @@ PDICT = {
     ['Tre banditer', fi.Bandit(), fi.Bandit('B'), fi.Bandit('C')]
     ],
     'träsk':[
-    ['Två ilskna troll', fi.IlsketTroll(), fi.IlsketTroll('B')],
-    ['Två träskdvärgar och ett ilsket troll', fi.Traskdvarg(), fi.Traskdvarg('B'), fi.IlsketTroll()],
+    ['Två otroll', fi.Otroll(), fi.Otroll('B')],
+    ['Två träskdvärgar och ett otroll', fi.Traskdvarg(), fi.Traskdvarg('B'), fi.Otroll()],
     ['Två järnkrokodiler', fi.Jarnkrokodil(), fi.Jarnkrokodil('B')],
     ['Tre järnkrokodiler', fi.Jarnkrokodil(), fi.Jarnkrokodil('B'), fi.Jarnkrokodil('C')],
     ['Tre träskdvärgar', fi.Traskdvarg(), fi.Traskdvarg('B'), fi.Traskdvarg('C')],
     ['En fantom', fi.Fantom()]
     ],
     'ödemark':[
-    ['Tre ilskna troll', fi.IlsketTroll(), fi.IlsketTroll('B'),fi.IlsketTroll('C')],
+    ['Tre otroll', fi.Otroll(), fi.Otroll('B'),fi.Otroll('C')],
     ['En fantom', fi.Fantom()],
     ['En fantom', fi.Fantom()],
     ['Tre fantomer', fi.Fantom(), fi.Fantom('B'), fi.Fantom('C')]
     ],
+    'trollskog':[
+    ['Ett gammeltroll', fi.Gammeltroll()],
+    ['Ett skogsväsen och ett gammeltroll',fi.Gammeltroll(),fi.Skogsvasen],
+    ['Tre olyckskorpar', fi.Olyckskorp(), fi.Olyckskorp('B'), fi.Olyckskorp('C')],
+    ['En vitvarg, en olyckskorp och ett skogsväsen', fi.Vitvarg(), fi.Olyckskorp(), fi.Skogsvasen()],
+    ['Två vitvargar', fi.Vitvarg(), fi.Vitvarg('B')]
+    ],
+    'vilda bergstrakter':[
+    ['En drake', fi.Draken()],
+    ['En sfinx', fi.Sfinx()],
+    ['Två gammeltroll', fi.Gammeltroll(), fi.Gammeltroll('B')],
+    ['Tre dimdvärgar', fi.Dimdvarg(), fi.Dimdvarg('B'), fi.Dimdvarg('C')]
+    ]
     }
 
 #för unika fiender och bestämda encounters
@@ -967,8 +1001,10 @@ MDICT = {'Elaka häxan': fi.ElakaHaxan1(),
          'Kolskägg': fi.Kolskagg(),
          'Draken': fi.Draken(),
          'Gaurghus': fi.Gaurghus(),
+         'Entrios': fi.Entrios(),
          'Trollkungen': fi.Trollkungen(),
          'Demonen Zlokr':fi.DemonenZl(),
          'Demonen Zaumakot':fi.DemonenZa(),
+         'Demonen Ziriekl': fi.DemonenZi(),
          'Zeoidodh': fi.Zeoidodh(),
          'Djurfrämlingen': fi.Djurframlingen()}
