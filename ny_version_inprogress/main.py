@@ -1,4 +1,4 @@
-from random import randint, random
+from random import randint, random, shuffle
 import os
 import time
 
@@ -350,26 +350,132 @@ def meny():
                     print('Är ni redo?')
                     time.sleep(1.5)
                     if 'Zeoidodh' in progress['hittade_skatter']:
-                        #bättre odds om man kan hens namn
+                        print('Djurfrämlingens makt minskar av att du känner\n'+
+                              'hens rätta namn: Zeoidodh')
+                        time.sleep(1.5)
                         fight(['Zeoidodh'],True)
                     else:
                         fight(['Djurfrämlingen'],True)
                     progress['döda_fiender'].add('Zeoidodh')
                 nyplats = False
-
+                
+            elif plats == 'djup skog' and 'djup skog' not in progress['hittade_skatter']:
+                slowprint('Skogen blir mycket tät här.\n')
+                if min((s.stats['smi'] for s in spelarlista)) < 12:
+                    print('Er grupp är inte tillräckligt smidig för att fortsätta')
+                else:
+                    slowprint('Ni fortsätter in, och i en glänta hittar ni en alvbåge!\n')
+                    inventory.append(FDICT['Alvbåge'])
+                    progress['hittade_skatter'].add('djup skog')
+                nyplats = False
+                
             elif plats == 'Djupa dalen':
-                if randint(0,3) == 3 and 'Zlokr' not in progress['döda_fiender']:
+                demon = None
+                if randint(0,3) == 3:
+                    if position < 300 and 'Zlokr' not in progress['döda_fiender']:
+                        demon = 'Zlokr'
+                    elif position > 300 and 'Ziriekl' not in progress['döda_fiender']:
+                        demon = 'Ziriekl'
+                if demon:
                     print('En demon dyker upp...!\n'+
                           'Vill du strida mot demonen?')
                     if listval(['Ja','Nej']) == 0:
-                        fight(['Demonen Zlokr'],True)
-                        progress['döda_fiender'].add('Zlokr')
+                        fight([demon],True)
+                        progress['döda_fiender'].add(demon)
                 elif randint(0,4) > 1:
                     if progress['main'] < 2:
                         fight()
-                    else:
+                    elif position < 300:
                         fight(OP=1)
+                    else:
+                        fight(OP=2)
+                del demon
                 nyplats = False
+
+            elif plats == 'Dvärgbyn':
+                print('Det finns många att prata med i dvärgbyn')
+                while True:
+                    print('Vem vill du prata med?')
+                    n = listval(['Byäldsten','En förmögen dvärg','Byfånen','Lämna dvärgbyn'])
+                    if n == 0:
+                        while True:
+                            fraga = dialog([0,7])
+                            if fraga == 'Fråga om äventyr':
+                                print('Var försiktig när du utforskar de här landen, främling,\n'+
+                                      'du ser inte ut att vara lika kraftig som oss.\n'+ 
+                                      'I bergen dväljs fasansfulla vidunder,\n'+
+                                      'och i dalen västerom byn har en mäktig demon synts till.')
+                            elif fraga == 'Fråga om Mästarsmeden':
+                                print('En av vårt släkte som med rätta kan kallas mästare\n'+
+                                      'lämnade byn och byggde en boning åt nordöst.')
+                            else:
+                                print('Adjö')
+                                break
+                    elif n == 1:
+                        if 'dvärgbyn' not in progress['hittade_skatter']:
+                            print('Var hälsad äventyrare.\n'+
+                                  'Jag har en skatt som skulle vara er behjälplig på färden.\n'+
+                                  'Ni får den gärna, om ni har något värdefullt att erbjuda i utbyte')
+                            ulista = [f.namn for f in inventory if f.namn in ALDICT]
+                            ulista = [f for f in ulista if ALDICT[f] > 24]
+                            if len(ulista) > 0:
+                                n = listval(['Erbjud dvärgen '+f for f in ulista]+['Tacka nej'])
+                                if n == len(ulista):
+                                    next
+                                else:
+                                    print('Du gav dvärgen '+ulista[n]+'\n och fick De gamlas ring i utbyte.')
+                                    inventory.remove(FDICT[ulista[n]])
+                                    inventory.append(FDICT['De gamlas ring'])
+                                    progress['hittade_skatter'].add('dvärgbyn')
+                            else:
+                                slowprint('...',3)
+                                print('Jag ser inget jag är intresserad av bland dina saker')
+                            del ulista
+                        else:
+                            print('Jag har inget mer att erbjuda er')
+                    elif n == 2:
+                        while True:
+                            fraga = dialog([0,3])
+                            if fraga == 'Fråga om äventyr':
+                                print('I den mörka mörka skogen finns märkliga ting,\n'+
+                                      'men den som är klumpenduns kommer inte in.')
+                            elif fraga == 'Fråga om monster':
+                                print('Mina Vänner har namn ingen får höra och leva,\n'+
+                                      'om deras sanna namn blir känt förminskas deras makt\n'+
+                                      'Jag har en Vän jag träffar på berget.\n'+
+                                      '(mumlar:)...Måste hitta vägen till Mörkret för att släppa Vännen fri...')
+                            else:
+                                print('......')
+                                break
+                    else:
+                        break
+                nyplats = False
+
+            elif plats == 'En boning':
+                print('En gammal dvärg bor här\nGråskägge: Mitt namn är Gråskägge, vad är ert ärende?')
+                fraga = dialog(0,7)
+                if fraga == 'Fråga om äventyr':
+                    print('Den rika dvärgen i byn har ett öga för värde,\n'+
+                          'men hon ser inte skillnad på unika mästerverk och ting av allmän kvalitet')
+                elif fraga == 'Fråga om Mästarsmeden' and 'boning' not in progress['hittade_skatter']:
+                    slowprint('Nå nå, det är sant att jag inte har sett den smed\n'+
+                          'som kan mäta sig med min smideskonst.\n')
+                    time.sleep(1)
+                    slowprint('Hmm... Den som smidit detta svärd\n(Gråskägge studerar ditt Mästarsvärd)\n'+
+                              'tycks ha försökt efterlikna mitt hantverk.\n'+
+                              'Det är inte dåligt gjort, men det är ännu mycket kvar att önska\n')
+                    time.sleep(1)
+                    slowprint('Om du hittar ett antal monstertänder och en del älvstoft\n'+
+                              'kan jag fullända verket')
+                    if inventory.count(FDICT['Tand']) > 2 and inventory.count(FDICT['Älvstoft']) > 1:
+                        slowprint('Du har det? Mycket bra. Vänta då.\n')
+                        slowprint('...\n...\n...\n',3)
+                        slowprint('Gråskägge förbättrade Mästarsvärdet!')
+                        foremaloverallt('Mästarsvärd',tabort=True)
+                        foremaloverallt('Tand',tabort=True)
+                        foremaloverallt('Älvstoft',tabort=True)
+                        inventory.append(FDICT['Mästarsvärdet'])
+                        
 
             elif plats == 'En glänta':
                 print('Det är en vacker glänta')
@@ -419,12 +525,13 @@ def meny():
             elif plats == 'En källare': #här får man en uppgradering till Djurfrämlingens bok
                 if 'Jotun' in progress['hittade_skatter']:
                     print('Det är en jätte i källaren.')
-                    if 'ZZZ' not in progress['hittade skatter']: 
+                    if 'ZZZ' not in progress['hittade_skatter']: 
                         dialogval[8] = d8
                         if dialog([8]) == 'Fråga om böcker':
                             slowprint('När jätten ser att du har Djufrämlingens bok blir hon förskräckt.\n'+
-                                  'Det är hon som har skrivit den åt Djurfrämlingen säger hon.\n'+
-                                  'Efter en stund så tittar hon i den, tar fram en penna och skriver något...')
+                                  'Det är hon som har skrivit den åt Djurfrämlingen säger hon.\n')
+                            time.sleep(1.5)
+                            slowprint('Efter en stund så tittar hon i den, tar fram en penna och skriver något...\n')
                             progress['hittade_skatter'].add('ZZZ')
                 elif 'källare' in progress['hittade_skatter']:
                     print('Det är ingen här, bara massa böcker.')
@@ -722,16 +829,17 @@ def meny():
                     elif fraga == 'Fråga om monster':
                         print('Det kan bli en lång historia när jag börjar berätta om alla monster jag mött.\n'+
                               'Jag har varit i mörka skogar, djupa dalar och höga berg...')
-                        if sp1.lvl > 45 and 'Magiskt rep' not in [f.namn for f in inventory]:
+                        if sp1.lvl > 40 and 'Magiskt rep' not in [f.namn for f in inventory]:
                             slowprint('Du verkar vara en erfaren äventyrare själv...\n')
                             time.sleep(1)
                             slowprint('Men har du någonsin varit uppe på Höga berget?\n'+
                                       'Jag fick det här magiska repet av en vis dvärg en gång,\n'+
                                       'med det kan man ta sig upp.\n'+
-                                      'Jag är för gammal för sådant nu, du får det!')
+                                      'Jag är för gammal för sådant nu, du får det!\n')
                             inventory.append(FDICT['Magiskt rep'])
-                        elif sp1.lvl < 46:
-                            print('Du är ännu ingen sann äventyrare som jag.')
+                        elif sp1.lvl < 41:
+                            print('Du är ännu ingen sann äventyrare som jag.\n'+
+                                  'Kom tillbaka när du är mer erfaren.')
                     elif fraga == 'Fråga om Snälla häxan':
                         print('Jag har hört att det bodde en snäll häxa i trakten för länge sen,\n'+
                               'vem vet var hon tog vägen.')
@@ -813,6 +921,71 @@ def meny():
                         print('Hur gillar ni Guldbågen? Höhöhö')
                 nyplats = False
 
+            elif plats == 'Höga berget' and position > 300:
+                if random() > 0.4:
+                    print('Ni möter ett väsen på berget,\n'+
+                          'det liknar en blandning mellan människa, ko, fågel och fisk\n'+
+                          'men framstår annorlunda varje gång du ser på det.')
+                    time.sleep(1)
+                    print('???: Vad söker ni?')
+                    lurat = False
+                    fraga = dialog(1,3,8)
+                    if fraga == 'Fråga om böcker':
+                        print('Den där boken tillhör inte er...')
+                        demon = False
+                        if listval(['Det gör den visst',
+                                    'Vi vill återföra den till sin rätta ägare']) == 1:
+                            slowprint('???: Jaså,')
+                            time.sleep(1)
+                            slowprint(' det är bra.')
+                            alt = ['Låt den rätta ägaren tillkännage sig',
+                                   'Vad kan du ge mig?',
+                                   'Men dess rätta ägare är fast i Skuggvärlden',
+                                   'Men dess rätta ägare är jätten Jotun']
+                            shuffle(alt)
+                            ans = alt[listval(alt)]
+                            if ans == 'Låt den rätta ägaren tillkännage sig':
+                                time.sleep(2)
+                                slowprint('Zeoidodh är mitt namn, hör det och fasa, Människa!\n'+
+                                          'Den bokens krafter har ni inte ens börjat förstå.\n'+
+                                          'Återlämna den nu till mig!')
+                                demon = True
+                                lurat = True
+                            elif ans == 'Vad kan du ge mig?':
+                                slowprint('???: Jag kan ge dig krafter du aldrig drömt om...\n')
+                                demon = True
+                            else:
+                                slowprint('Du vet inte vad du talar om!\n')
+                            if demon:
+                                if listval(['Ok', 'Nej']) == 0:
+                                    slowprint('Du gav Djurfrämlingens bok till Djurfrämlingen...\n')
+                                    time.sleep(1.5)
+                                    slowprint('Du blev en Demon.......\n Slut på äventyret.',3)
+                                    time.sleep(1.5)
+                                    raise SystemExit
+                            del demon
+                                
+                        slowprint('Väsendet sträcker sig efter Djurfrämlingens bok!\n'+
+                                  '...\n *!*?*! -men en magisk kraft hindrar rörelsen\n'+
+                                  'Ni slås till marken av krafturladdningen,\n'+
+                                  'väsendet försvinner sin väg\n')
+                        for s in spelarlista:
+                            s.hp = int(s.hp*0.7)
+                        if lurat and 'Zeoidodh' not in progress['hittade_skatter']:
+                            slowprint('Du lärde dig Djurfrämlingens rätta namn: Zeoidodh\n',2)
+                            progress['hittade_skatter'].add('Zeoidodh')
+                    elif fraga == 'Nu ska du få stryk!':
+                        print('???: Hahaha. Om ni blott kände till vilka krafter jag besitter,\n'+
+                              'men ni ska inte möta er död idag.')
+                        time.sleep(1.5)
+                        print('\nNi grips av en djup fasa vid tanken på at kämpa mot denna varelse,\n'+
+                              'Det verkar bäst att inte provocera ytterligare')
+                    else:
+                        print('Vad ett monster är beror på vem som betraktar vem')
+                    del lurat
+
+                nyplats = False
+                        
             elif plats == 'landsväg':
                 if randint(0,4) > 1:
                     fight()
@@ -1324,6 +1497,24 @@ def meny():
                     fight()
                 nyplats = False
 
+            elif plats == 'trollskog':
+                if 'trollskog' not in progress['hittade_skatter'] and random() > 0.8:
+                    print('Ni träffar på tomten Gurtaburt.')
+                    if foremaloverallt('Guldbåge') and foremaloverallt('Mästarsvärdet'):
+                        slowprint('Gurtaburt: Ni är väldigt väl utrustade, då är ni mina vänner.\n'+
+                                  'Jag ska lära er en magi och en stridsteknik.\n')
+                        time.sleep(1.5)
+                        for s in spelarlista:
+                            s.magier.append(('Förgöra',4))
+                            s.special.append('Kontring')
+                        slowprint('Ni lärde er Förgöra och Kontring!\n')
+                        progress['hittade_skatter'].add('trollskog')
+                    else:
+                        print('Gurtaburt: De som har de bästa vapnen är mina vänner.')
+                elif randint(0,3) > 0:
+                    fight()
+                nyplats = False
+
             elif plats == 'träsk':
                 if 'skog' in progress['hittade_skatter'] and 'Höga berget' not in progress['hittade_skatter'] and random() > 0.9:
                     print('Ni träffar på den gamla tomten Heyjafjej.\n'+
@@ -1331,6 +1522,15 @@ def meny():
                           'men jag tror inte du har träffat min kusin Sirkafirk\n'+
                           'som håller till på Höga berget.\nDet är bra att vara hans vän.')
                 elif randint(0,4) > 1:
+                    fight()
+                nyplats = False
+
+            elif plats == 'vilda berg':
+                if random() > 0.9 and 'bergstrakter' not in progress['hittade_skatter']:
+                    slowprint('Ni hittade en mäktig hammare!')
+                    inventory.append(FDICT['Mäktig hammare'])
+                    progress['hittade_skatter'].add('bergstrakter')
+                elif randint(0,3) > 0:
                     fight()
                 nyplats = False
 
@@ -1350,7 +1550,7 @@ def meny():
                 elif 'vägtilldvärgen' in progress['hittade_skatter']:
                     print('Det verkar farligt, men vill du fortsätta mot dvärgens boning?')
                     if listval(['Ja', 'Nej']) == 0:
-                        slowprint('Det är en svår väg, men ni lyckas undivka vilddjur och monster,\n'+
+                        slowprint('Det är en svår väg, men ni lyckas undvika vilddjur och monster,\n'+
                                   'och till slut närmar ni er platsen där den snälla dvärgen ska bo.\n')
                         time.sleep(2)
                         slowprint('Där ser ni någon komma springande.\n'+
@@ -1359,7 +1559,10 @@ def meny():
                         slowprint('Dvärgen: Akta! Ni har väckt den fruktansvärda draken!\n'+
                                   'Titta bakom er....!!\n', 2)
                         spelarlista.append(dvargen)
-                        fight(['Draken', True])
+                        fight(['Draken'], True)
+                        if not foremaloverallt('Drakfjällsrustning'):
+                            print('Ni hittade Drakfjällsrustning')
+                            inventory.append(FDICT['Drakjällsrustning'])
                         spelarlista.remove(dvargen)
                         time.sleep(2)
                         slowprint('Dvärgen: Vi klarade det! Vilken strid!\n'+
@@ -1417,7 +1620,7 @@ def meny():
                     print('En demon dyker upp...!\n'+
                           'Vill du strida mot demonen?')
                     if listval(['Ja','Nej']) == 0:
-                        fight(['Demonen Zaumakot'],True)
+                        fight(['Zaumakot'],True)
                         progress['döda_fiender'].add('Zaumakot')
                 else:
                     print('Det är väldigt ödsligt.')
@@ -1592,8 +1795,8 @@ def utforska(riktning):
             position = gammalpos
             print('Skuggorna är för täta för att komma vidare...')
             return 0
-    elif (position == 5 and gammalpos < 100) or (position == 205 and 200 < gammalpos < 300): #special, höga berget
-        if 'bergsklättring' not in progress['hittade_skatter']:
+    elif PDICT[position] == 'Höga berget' and abs(gammalpos - position) < 50: #special, höga berget
+        if 'Magiskt rep' not in [f.namn for f in inventory] and abs(gammalpos - position) < 50:
             progress['upptäckta_platser'].add(position)
             position = gammalpos
             print('Ni kan inte ta er upp på Höga berget')
@@ -1636,6 +1839,8 @@ FDICT = {
     'Häxans ring': kls.Foremal('Häxans ring'),
     'Randig gren': kls.Foremal('Randig gren'),
     'Okänd materia': kls.Foremal('Okänd materia'),
+    'Älvstoft': kls.Foremal('Älvstoft'),
+    'Magiskt rep': kls.Foremal('Magiskt rep'),
     'Kniv': kls.Vapen('Kniv',0.7),
     'Svärd': kls.Vapen('Svärd',1),
     'Bra svärd': kls.Vapen('Bra svärd',2,5,'str'),
@@ -1644,18 +1849,22 @@ FDICT = {
     'Tandkniv': kls.Vapen('Tandkniv',2.5),
     'Fiskspjut': kls.Vapen('Fiskspjut',3),
     'Bra pilbåge': kls.Vapen('Bra pilbåge',3.5,7,'smi'),
-    'Jotuns hammare': kls.Vapen('Jotuns hammare',2.5,7,'str',magi=3),
+    'Jotuns hammare': kls.Vapen('Jotuns hammare',3,7,'str',magi=3),
     'Mystiskt spjut': kls.Vapen('Mystiskt spjut',4.5,7,'mkr',magi=1.5),
     'Tungt svärd': kls.Vapen('Tungt svärd',5,9,'str'),
-    'Förhäxad spira': kls.Vapen('Förhäxad spira',3,9,'mkr',magi=3),
+    'Förhäxad spira': kls.Vapen('Förhäxad spira',2.5,9,'mkr',magi=3.5),
     'Dödlig kniv': kls.Vapen('Dödlig kniv',5.5,10,'smi'),
     'Förtrollad hammare': kls.Vapen('Förtrollad hammare',5.5,9,'mkr',magi=1.5),
     'Konungasvärd': kls.Vapen('Konungasvärd',6,9,'str',magi=2),
     'Skuggsvärd': kls.Vapen('Skuggsvärd',4,magi=4),
+    'Mäktig hammare': kls.Vapen('Mäktig hammare',7.5,12,'str',magi=2),
+    'Alvbåge': kls.Vapen('Alvbåge',6.5,14,'smi',magi=4.5),
+    'Silvertunga': kls.Vapen('Silvertunga',7.5,11,'mkr',magi=3),
     'Guldspira': kls.Vapen('Guldspira',3,magi=7),
-    'Mästarsvärd': kls.Vapen('Mästarsvärd',6.5,6,'str',magi=3),
-    'Silverbåge': kls.Vapen('Silverbåge',6.5,9,'smi',magi=4),
-    'Guldbåge': kls.Vapen('Guldbåge',9,11,'smi',magi=6),
+    'Mästarsvärd': kls.Vapen('Mästarsvärd',6.5,7,'str',magi=3),
+    'Mästarsvärdet': kls.Vapen('Mästarsvärdet',9.5,11,'str',magi=5),
+    'Silverbåge': kls.Vapen('Silverbåge',6.5,9,'smi',magi=3.5),
+    'Guldbåge': kls.Vapen('Guldbåge',8.5,11,'smi',magi=6),
     'Lätt rustning': kls.Rustning('Lätt rustning',1),
     'Brynja': kls.Rustning('Brynja',2),
     'Drakfjällsbrynja': kls.Rustning('Drakfjällsbrynja',3,5,'str',mskydd=1),
@@ -1678,6 +1887,7 @@ FDICT = {
     'Grön mantel': kls.Ovrigt('Grön mantel','+40 liv','liv',40),
     'Zaumakots ring': kls.Ovrigt('Zaumakots ring','+100 liv','liv',100),
     'Blå mantel': kls.Ovrigt('Blå mantel','+2 snabbhet',0,-2),
+    'Dvärgens mantel': kls.Ovrigt('Dvärgens mantel', '+3 smidighet, Lyckoträff', 'smi',3,(3,'Lyckoträff')),
     'Guldlänk': kls.Ovrigt('Guldlänk','+2 magikraft','mkr',2),
     'Magisk ring': kls.Ovrigt('Magisk ring','+3 magikraft','mkr',3),
     'Trollring': kls.Ovrigt('Trollring','+4 magikraft','mkr',4),
@@ -1690,6 +1900,7 @@ FDICT = {
     'Förtrollad dräkt': kls.Ovrigt('Förtrollad dräkt', '+5 smidighet', 'smi', 5),
     'Zlokrs kappa': kls.Ovrigt('Zlokrs kappa','+7 undvikning',3,7),
     'Magiskt armband': kls.Ovrigt('Magiskt armband','+5 pricksäkerhet',1,5),
+    'Djurfrämlingens mask': kls.Ovrigt('Djurfrämlingens mask','+15 styrka', 'str', 15),
     'Blå ring': kls.Ovrigt('Blå ring','+10 liv, Förmåga-Återhämtning 2','liv',10,(1,'Återhämtning 2')),
     'Lyckosmycke': kls.Ovrigt('Lyckosmycke','+1 smidighet, Skattletande"','smi',1,(3,'Skattletande')),
     'Rubin': kls.Ovrigt('Rubin','+2 smidighet, Skattletande 2','smi',2,(3,'Skattletande 2')),
@@ -1697,6 +1908,7 @@ FDICT = {
     'Tapperhetsmedalj': kls.Ovrigt('Tapperhetsmedalj','+15 liv, Stridsinsikt','liv',15,(3,'Stridsinsikt')),
     'Förbannad juvel': kls.Ovrigt('Förbannad juvel','+2 magikraft, Magi-Förtärande mörker','mkr',2,(2,'Förtärande mörker',5)),
     'Trädgrenskrona': kls.Ovrigt('Trädgrenskrona','+3 magikraft, Förmåga-Urkraft','mkr',3,(1,'Urkraft')),
+    'De gamlas ring': kls.Ovrigt('De gamlas ring','+60 liv, Magi-Helning','liv',60,(2,'Helning',1)),
     'Uråldrig kristall': kls.Ovrigt('Uråldrig kristall','+3 magikraft, Magi-Livskraft','mkr',3,(2,'Livskraft',5)),
     'De vises sten': kls.Ovrigt('De vises sten','+2 magikraft, Dubbel magi','mkr',2,(3,'Dubbel magi')),
     'Salva': kls.EngangsForemal('Salva','Läkande',difstat,('hp',15),fight=True),
@@ -1713,6 +1925,8 @@ FDICT = {
     }
 
 ALDICT = {
+    'Okänd materia': 50,
+    'Älvstoft': 8,
     'Svärd': 3,
     'Bra svärd': 6,
     'Tungt svärd': 12,
@@ -1726,11 +1940,13 @@ ALDICT = {
     'Bra pilbåge': 12,
     'Tungt svärd': 18,
     'Förhäxad spira': 18,
-    'Förtrollad hammare': 24,
-    'Dödlig kniv': 24,
-    'Konungasvärd': 28,
-    'Skuggsvärd': 35,
-    'Guldspira': 40,
+    'Förtrollad hammare': 22,
+    'Dödlig kniv': 22,
+    'Konungasvärd': 24,
+    'Skuggsvärd': 28,
+    'Guldspira': 38,
+    'Alvbåge': 34,
+    'Mäktig hammare': 34,
     'Lätt rustning': 3,
     'Brynja': 5,
     'Drakfjällsbrynja': 8,
@@ -1813,7 +2029,23 @@ PDICT={
     213:'landsväg',
     214:'Slottet',
     215:'landsväg',
-    216:'Templet'
+    216:'Templet',
+    301:'Djupa dalen',
+    302:'Dvärgbyn',
+    303:'trollskog',
+    304:'trollskog',
+    305:'Höga berget',
+    306:'vilda berg',
+    307:'trollskog',
+    308:'trollskog',
+    309:'vilda berg',
+    310:'vilda berg',
+    311:'trollskog',
+    312:'En boning',
+    313:'vilda berg',
+    314:'djup skog',
+    315:'trollskog',
+    316:'trollskog'
     }
 
 karta = kls.Karta(PDICT)
@@ -1855,6 +2087,12 @@ inventory=list()
 #vänner
 svan = kls.Spelare('Svan',30,3,2,3,[['Kamp',0],['Dunkel konst',0]])
 alri = kls.Spelare('Alri',25,3,3,4,[['Skicklighet',0],['Själskunskap',0]])
+dvargen = kls.Spelare('Dvärgen',100,14,12,13,['Inget'])
+dvargen.utrust['vapen'] = FDICT['Förtrollad hammare']
+dvargen.utrust['rustning'] = FDICT['Megarustning']
+dvargen.lvl = 50
+dvargen.magier = [('Helning',1),('Beskydd',3),('Upplyftning',3),('Mystisk attack',3)]
+dvargen.special = ['Lyckoträff']
 
 
 

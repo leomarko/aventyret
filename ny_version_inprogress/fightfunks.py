@@ -244,7 +244,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     skada = sum(a.stats.values()) + figur.hp*0.2
                 elif nyckelord == 'mörk':
                     skada = a.stats['mkr']*0.85 + a.stats['str']*0.85
-                else:
+                else: #vanlig
                     skada = a.stats['str']
                 try:
                     skada += figur.utrust['vapen'].skada
@@ -263,6 +263,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     skada = int(skada*(0.5 + random() + random()))
                 elif nyckelord == 'djärv':
                     skada = int(skada*(2 + random() + random()))
+                elif nyckelord == 'svans':
+                    skada = int(skada*(1 + random()*0.8))
                 else:
                     skada = int(skada*(1.5 + random()))
 
@@ -463,6 +465,10 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 e=Effekt('Strategi',difstat,f,(0,-1,10,-3),(0,1,10,-3),16 )
                                 uppdatera_effekter(e)
 
+                    elif mode == 'Svansattack':
+                        for s in aktiva_s:
+                            attack(figur, s, 'svans')
+
                     elif mode == 'Sömnighet':
                         for s in aktiva_s:
                             e=Effekt('Sömnighet',difstat,s,(0,2,10,-4),(0,-2,10,-4),int(figur.stats['mkr']*random()) + 9 )
@@ -553,7 +559,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     bonus = 3 + int(figur.liv*0.02)
                                     print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
                                     figur.stats['mkr'] += bonus
-                                    e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), 15)
+                                    e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), 22)
                                     uppdatera_effekter(e)
 
                             elif namn == 'Gorilla':
@@ -787,7 +793,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     uppdatera_effekter(e)
 
                                 elif spell[0] == 'Trollsmäll':
-                                    target=listval([f.namn for f in aktiva_f])
+                                    target = aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     attackmagi(figur, target, 8, plus=40*random())
 
@@ -1008,8 +1014,8 @@ MDICT = {'Elaka häxan': fi.ElakaHaxan1(),
          'Gaurghus': fi.Gaurghus(),
          'Entrios': fi.Entrios(),
          'Trollkungen': fi.Trollkungen(),
-         'Demonen Zlokr':fi.DemonenZl(),
-         'Demonen Zaumakot':fi.DemonenZa(),
-         'Demonen Ziriekl': fi.DemonenZi(),
+         'Zlokr':fi.DemonenZl(),
+         'Zaumakot':fi.DemonenZa(),
+         'Ziriekl': fi.DemonenZi(),
          'Zeoidodh': fi.Zeoidodh(),
          'Djurfrämlingen': fi.Djurframlingen()}
