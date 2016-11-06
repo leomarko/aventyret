@@ -582,7 +582,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     bonus = 3 + int(figur.liv*0.02)
                                     print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
                                     figur.stats['mkr'] += bonus
-                                    e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), 22)
+                                    e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), 25)
                                     uppdatera_effekter(e)
 
                             elif namn == 'Gorilla':
@@ -595,7 +595,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                             elif namn == 'Mystisk kraft':
                                 print(figur.namn+' hämtar kraft...')
-                                e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), randint(15,22))
+                                e=Effekt(namn,difstat,figur,('mkr',0),('mkr',0), 21+figur.mods[0]*2)
                                 uppdatera_effekter(e, use=False)
                                 
                             elif namn == 'Projicera själ':
