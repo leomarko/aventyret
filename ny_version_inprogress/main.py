@@ -1390,51 +1390,89 @@ def meny():
                             print('Den elaka häxan är lömsk, lita inte på henne')
                         else:
                             print('Hejdå')
-                            nyplats=False
                             break
 
                 #senare
-                else:
-                #första gången tillbaks i vanliga världen
-                    if progress['main'] == 3 and d4 not in dialogval: 
-                        if alri not in spelarlista:
-                            if 9 in progress['upptäckta platser']:
-                                slowprint('Den underliga kvinnan som du sett stå och flaxa med armarna är i Stugan\n')
-                            else:
-                                slowprint('En underlig kvinna är i Stugan\n')
-                            slowprint('Alri: Den Snälla häxan har försvunnit, och den Elaka också.\n'+
-                                  'Och nu är alla monster starkare och fursten Gurgen gömmer sig.\n'+
-                                  'Jag tror att den Elaka häxan har hittat på något otyg...\n')
-                            time.sleep(0.5)
-                            slowprint('Vilka är ni?\n')
-                            time.sleep(0.5)
-                            slowprint('Jaså ni är vänner till den Snälla häxan.'+
-                                  'Då följer jag med er så ställer vi det här till rätta tillsammans\n'+
-                                  'Alri ansluter sig till ditt sällskap!\n')
-                            spelarlista.append(alri)
-                            alri.exp = int(sp1.exp*0.8)
-                            if ('Tillkvicknande',2) in sp1.magier:
-                                alri.magier.append(('Tillkvicknande',2))
-                            if 'Hemlig lära' in [u[0] for u in sp1.utveckling]:
-                                alri.utveckling.append(['Hemlig lära',0])
-                            lvlup(spelarlista)
+                elif progress['main'] == 3 and d4 not in dialogval::
+                #första gången tillbaks i vanliga världen 
+                    if alri not in spelarlista:
+                        if 9 in progress['upptäckta platser']:
+                            slowprint('Den underliga kvinnan som du sett stå och flaxa med armarna är i Stugan\n')
                         else:
-                            slowprint('Tomten Heyjafjej är i Stugan\n'+
-                                  'Heyjafjej: Den Snälla häxan har försvunnit, och den Elaka också.\n'+
-                                  'Och nu är alla monster starkare och fursten Gurgen gömmer sig.\n'+
-                                  'Jag tror att den Elaka häxan har hittat på något otyg...\n'+
-                                  'Jag vet att ni är den Snälla häxans vänner. Försök att hitta henne!\n')
-                        dialogval[4] = d4 #fråga om snälla häxan
-
+                            slowprint('En underlig kvinna är i Stugan\n')
+                        slowprint('Alri: Den Snälla häxan har försvunnit, och den Elaka också.\n'+
+                              'Och nu är alla monster starkare och fursten Gurgen gömmer sig.\n'+
+                              'Jag tror att den Elaka häxan har hittat på något otyg...\n')
+                        time.sleep(0.5)
+                        slowprint('Vilka är ni?\n')
+                        time.sleep(0.5)
+                        slowprint('Jaså ni är vänner till den Snälla häxan.'+
+                              'Då följer jag med er så ställer vi det här till rätta tillsammans\n'+
+                              'Alri ansluter sig till ditt sällskap!\n')
+                        spelarlista.append(alri)
+                        alri.exp = int(sp1.exp*0.8)
+                        if ('Tillkvicknande',2) in sp1.magier:
+                            alri.magier.append(('Tillkvicknande',2))
+                        if 'Hemlig lära' in [u[0] for u in sp1.utveckling]:
+                            alri.utveckling.append(['Hemlig lära',0])
+                        lvlup(spelarlista)
                     else:
-                        print('Det är ingen i Stugan')
+                        slowprint('Tomten Heyjafjej är i Stugan\n'+
+                              'Heyjafjej: Den Snälla häxan har försvunnit, och den Elaka också.\n'+
+                              'Och nu är alla monster starkare och fursten Gurgen gömmer sig.\n'+
+                              'Jag tror att den Elaka häxan har hittat på något otyg...\n'+
+                              'Jag vet att ni är den Snälla häxans vänner. Försök att hitta henne!\n')
+                    dialogval[4] = d4 #fråga om snälla häxan
+
+                elif progress['main'] < 5:
+                    print('Det är ingen i Stugan')
+
+                if 1 < progress['main'] < 5:
                     #oavsett
                     print('Den snälla häxans magi finns fortfarande kvar.\n'+
                           'Ni kan vila och återhämta er.')
                     for s in spelarlista:
                         s.hp=s.liv
                     print('(Ni fick full hp)')
-                    nyplats = False
+
+                elif progress['main'] == 5 and 'Shäxan' not in progress['hittade_skatter']:
+                    slowprint('Ulon: Här har jag byggt en hemlig källare\nUlon: ')
+                    slowprint('LONME\n',2)
+                    time.sleep(1)
+                    slowprint('Golvet blir till en trappa ned!\n'+
+                              'I källaren träffar ni den snälla häxan igen\n'+
+                              'Snälla häxan: Det verkar som ni kom ut ur Skuggvärlden och\n'+
+                              'har blivit mycket starkare. Bra gjort!\n'+
+                              'Den elaka häxans inflytande blev mycket starkt så jag har\n'+
+                              'varit tvungen att gömma mig och bida min tid.\n'+
+                              'Men nu är det dags att konfrontera henne!\n')
+                    time.sleep(1.5)
+                    slowprint('Ni beger er till Slottet.\n')
+                    time.sleep(1.5)
+                    slowprint('Snälla häxan: Låt mig träffa Gurgen!\n'+
+                              'Soldat: Men... Gurgen håller inga audienser mer.\n'+
+                              'Snälla häxan: Ur vägen, ditt fån.\n'+
+                              'Tillsammans med den snälla häxan går ni upp till Gurgen.\n'+
+                              'Tronrummet är tomt, Gurgen sitter istället i en liten sidokammare.\n'+
+                              'Snälla häxan: Det är dags för dig att återta ditt styre,\n'+
+                              'och vakna upp: den som kallar sig Amuno som du lånat ditt öra,\n'+
+                              'är ingen mindre än den Elaka häxan!\n')
+                    time.sleep(1.5)
+                    slowprint('Furste Gurgen vaknar ur sitt handlingsförlamade tillstånd\n'+
+                              'Tillsammans går ni alla för att leta rätt på "Amuno".\n'+
+                              'Men han finns ingenstans i Slottet.\n')
+                    time.sleep(1)
+                    slowprint('Snälla häxan: Amuno, eller snarare den elaka häxan,\n'+
+                              'vågar inte visa sig här nu.\n'+
+                              'Hon är försiktig...\n'+
+                              'Hon måste ha flytt från slottet tillbaka till sitt Torn redan!')
+                    time.sleep(1.5)
+                    slowprint('Resten lämnar jag till er, äventyrare.\n'+
+                              'Besegra elaka häxan i tornet och bringa frid till landet!')
+                    position = 14
+                    progress['hittade_skatter'].add('Shäxan')
+                    
+                nyplats = False
                     
             elif plats == 'Templet':
                 entre = 'Tempelbrosch' in [f.namn for f in inventory]
