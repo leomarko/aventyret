@@ -26,7 +26,7 @@ def alva(spelare):
     spelare.vilande={'stats':spelare.stats,'formagor':spelare.formagor,'magier':spelare.magier,'liv':spelare.liv, 'namn':spelare.namn}
     spelare.vilande['hpdif']=0.50
     spelare.formagor=['Tillbakaförvandling','Mystisk kraft'] 
-    spelare.magier=[('Upplyftning',1),('Trollsmäll',3),('Livskraft',4)]
+    spelare.magier=[('Upplyftning',2),('Trollsmäll',3),('Livskraft',4)]
     spelare.stats['str']=int(spelare.stats['str']*0.4)
     spelare.stats['smi']=spelare.stats['smi']*1.5
     spelare.liv=int(spelare.liv*0.50)
@@ -37,7 +37,7 @@ def alva(spelare):
 def tiger(spelare):
     spelare.vilande={'stats':spelare.stats,'formagor':spelare.formagor,'magier':spelare.magier,'liv':spelare.liv, 'namn':spelare.namn}
     spelare.vilande['hpdif']=1
-    spelare.formagor=['Tillbakaförvandling'] 
+    spelare.formagor=['Tillbakaförvandling', 'Mystisk kraft'] 
     spelare.magier=[('Helning',1),('Mystisk attack',3)]
     spelare.stats['str']=int(spelare.stats['str']*1.5)
     spelare.stats['smi']+=2
