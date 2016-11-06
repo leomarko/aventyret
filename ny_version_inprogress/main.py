@@ -81,13 +81,25 @@ def spara(kopia=False):
                 +'\n'+'___'.join([str(dialogval.index(i)) for i in dialogval if isinstance(i,str)]) #39
                 +'\n'+'___'.join([i for i in dialogval if isinstance(i,str)]) #40
                 +'\n'+'___'.join([f.namn for f in inventory[1:]])+'\n') #41
-        if alri in spelarlista:
-            f.write('a\n') #42
+        if dvargen in spelarlista: #42
+            f.write('d\n')
+        elif alri in spelarlista:
+            f.write('a\n')
         else:
-            f.write('x\n') #43
-        f.write(str(position)) #44
-
-    
+            f.write('x\n')
+        f.write(str(position)+'\n') #43
+        #av kompatibilitetsskäl läggs dvärgen in sist
+        f.write(str(dvargen.liv)+'___'+str(dvargen.hp) 
+                +'\n'+str(dvargen.stats['str'])+'___'+str(dvargen.stats['smi'])+'___'+str(dvargen.stats['mkr']) 
+                +'\n'+'___'.join([str(m) for m in dvargen.mods]) 
+                +'\n'+dvargen.utrust['vapen'].namn+'___'+dvargen.utrust['rustning'].namn+'___'+dvargen.utrust['ovrigt'].namn
+                +'\n'+'___'.join([u[0] for u in dvargen.utveckling]) 
+                +'\n'+'___'.join([str(u[1]) for u in dvargen.utveckling]) 
+                +'\n'+str(dvargen.exp)+'___'+str(dvargen.lvl)
+                +'\n'+'___'.join(dvargen.formagor)
+                +'\n'+'___'.join([m[0] for m in dvargen.magier]) 
+                +'\n'+'___'.join([str(m[1]) for m in dvargen.magier]) 
+                +'\n'+'___'.join(dvargen.special)) #54
     
 #laddfunktion
 def ladda():
@@ -127,7 +139,7 @@ def ladda():
             sp1.formagor = line.split('___')                   #9
         magier_1 = f.readline().strip('\n').split('___')                       #10
         try:
-            magier_2 = list(map(int,f.readline().strip('\n').split('___')))        #11
+            magier_2 = list(map(int,f.readline().strip('\n').split('___')))        
             sp1.magier = []
             for m, k in zip(magier_1,magier_2):
                 sp1.magier.append((m,k))
@@ -159,7 +171,7 @@ def ladda():
             svan.formagor = line.split('___')                   
         magier_1 = f.readline().strip('\n').split('___')
         try:
-            magier_2 = list(map(int,f.readline().strip('\n').split('___')))        #11
+            magier_2 = list(map(int,f.readline().strip('\n').split('___')))        
             svan.magier = []
             for m, k in zip(magier_1,magier_2):
                 svan.magier.append((m,k))
@@ -191,7 +203,7 @@ def ladda():
             alri.formagor = line.split('___')                   
         magier_1 = f.readline().strip('\n').split('___')
         try:
-            magier_2 = list(map(int,f.readline().strip('\n').split('___')))        #11
+            magier_2 = list(map(int,f.readline().strip('\n').split('___')))        
             alri.magier = []
             for m, k in zip(magier_1,magier_2):
                 alri.magier.append((m,k))
@@ -232,10 +244,45 @@ def ladda():
 
         spelarlista = [sp1, svan]
         special = f.readline().strip()
-        if special == 'a':                              #42
+        if special == 'd':                                  #42
+            spelarlista += [alri,dvargen]
+        elif special == 'a':                                
             spelarlista.append(alri)
 
         position = int(f.readline().strip())                        #43
+
+        #dvargen
+        if special == 'd':
+            liv_hp = list(map(int,f.readline().strip('\n').split('___')))
+            dvargen.liv, dvargen.hp = liv_hp
+            stats = list(map(int,f.readline().strip('\n').split('___')))           
+            dvargen.stats['str'], dvargen.stats['smi'], dvargen.stats['mkr'] = stats
+            mods = list(map(int,f.readline().strip('\n').split('___')))            
+            dvargen.mods = mods
+            utr = f.readline().strip('\n').split('___')                            
+            utr = [FDICT[utr[0]],FDICT[utr[1]],FDICT[utr[2]]]
+            dvargen.utrust['vapen'], dvargen.utrust['rustning'], dvargen.utrust['ovrigt'] = utr
+            utv_1 =  f.readline().strip('\n').split('___')                         
+            utv_2 = list(map(int,f.readline().strip('\n').split('___')))           
+            dvargen.utveckling = []
+            for u,v in zip(utv_1,utv_2):
+                dvargen.utveckling.append([u,v])
+            exp_lvl = list(map(int,f.readline().strip('\n').split('___')))         
+            dvargen.exp, dvargen.lvl = exp_lvl
+            line = f.readline().strip('\n')
+            if len(line) > 1:
+                dvargen.formagor = line.split('___')                   
+            magier_1 = f.readline().strip('\n').split('___')
+            try:
+                magier_2 = list(map(int,f.readline().strip('\n').split('___')))        
+                dvargen.magier = []
+                for m, k in zip(magier_1,magier_2):
+                    dvargen.magier.append((m,k))
+            except(ValueError):
+                dvargen.magier = []
+            line = f.readline().strip('\n')
+            if len(line) > 1:
+                dvargen.special = line.split('___')                    #54
 
 
 def classhierarchy(obj):
@@ -453,7 +500,7 @@ def meny():
 
             elif plats == 'En boning':
                 print('En gammal dvärg bor här\nGråskägge: Mitt namn är Gråskägge, vad är ert ärende?')
-                fraga = dialog(0,7)
+                fraga = dialog([0,7])
                 if fraga == 'Fråga om äventyr':
                     print('Den rika dvärgen i byn har ett öga för värde,\n'+
                           'men hon ser inte skillnad på unika mästerverk och ting av allmän kvalitet')
@@ -475,6 +522,7 @@ def meny():
                         foremaloverallt('Tand',tabort=True)
                         foremaloverallt('Älvstoft',tabort=True)
                         inventory.append(FDICT['Mästarsvärdet'])
+                nyplats = False
                         
 
             elif plats == 'En glänta':
@@ -845,7 +893,7 @@ def meny():
                               'vem vet var hon tog vägen.')
                     elif fraga == 'Fråga om Mästarsmeden':
                         print('På mina resor har jag hört att det en gång bodde en smed vars like\n'+
-                              'inte skådats, något västerom där Slottet nu står.')
+                              'inte skådats, söderom där Templet nu står.')
                     elif fraga == 'Fråga om böcker':
                         print('Det fanns många böcker här, men de beslagtogs alla av prästerna.\n'+
                               'Jag tror att de har ett mäktigt bibliotek i Templet.')
@@ -881,7 +929,7 @@ def meny():
                               'Trollet: Vad gör ni människor här?!\n'+
                               'Kom med mig, ni ska föras inför kungen.\n')
                     time.sleep(3)
-                    slowprint('Trollkungen: Ser man på, några människor har hittat hit.')
+                    slowprint('Trollkungen: Ser man på, några människor har hittat hit.\n')
                     fraga = dialog([0,1])
                     if fraga == 'Fråga om äventyr':
                         slowprint('Jag har nog hört om dina äventyr från trollen i skogen,\n'+
@@ -890,8 +938,8 @@ def meny():
                         slowprint('JASÅ DET TROR DU!!', 3)
                     else:
                         slowprint('Inte så fort! Idag ska vi festa på mänskostuvning!')
-                    time.sleep(2)
-                    fight(['Trollkungen',True])
+                    time.sleep(1.5)
+                    fight(['Trollkungen'],True)
                     time.sleep(2)
                     slowprint('Trollkungen: Nåd! Om du skonar mig lovar jag att vi ska vara till hjälp för er framöver.\n')
                     time.sleep(2)
@@ -1399,8 +1447,12 @@ def meny():
                 else:
                     print('En präst: Du får inte komma in här, detta är en helig plats')
                 while True:
-                    fraga = dialog([2,6,8])
-                    if fraga == 'Fråga om Elaka häxan' and entre:
+                    fraga = dialog([0,2,6,8])
+                    if fraga == 'Fråga om äventyr':
+                        print('Här ägnar vi oss inte åt sådant, utan åt Amunos lära.\n'+
+                              'Vi är de magiska ordens beskyddare.')
+                        dialogval[8] = d8
+                    elif fraga == 'Fråga om Elaka häxan' and entre:
                         print('Amuno?\nTemplets innersta är skyddat av mäktig magi, det går inte att komma in.\n'+
                               'Men det talas om att Han ibland ger sig tillkänna på Slottet...\n'+
                               'Endast konungen är värdig att personligen möta Amuno, sägs det.')
@@ -1556,16 +1608,19 @@ def meny():
                         slowprint('Där ser ni någon komma springande.\n'+
                                   'Han vinkar till er, det verkar vara rätt person!\n')
                         time.sleep(1.5)
-                        slowprint('Dvärgen: Akta! Ni har väckt den fruktansvärda draken!\n'+
+                        slowprint('Dvärgen Ulon: Akta! Ni har väckt den fruktansvärda draken!\n'+
                                   'Titta bakom er....!!\n', 2)
                         spelarlista.append(dvargen)
+                        if ('Tillkvicknande',2) in sp1.magier:
+                            dvargen.magier.append(('Tillkvicknande',2))
+                        if 'Hemlig lära' in [u[0] for u in sp1.utveckling]:
+                            dvargen.utveckling.append(['Hemlig lära',0])
                         fight(['Draken'], True)
                         if not foremaloverallt('Drakfjällsrustning'):
                             print('Ni hittade Drakfjällsrustning')
-                            inventory.append(FDICT['Drakjällsrustning'])
-                        spelarlista.remove(dvargen)
+                            inventory.append(FDICT['Drakfjällsrustning'])
                         time.sleep(2)
-                        slowprint('Dvärgen: Vi klarade det! Vilken strid!\n'+
+                        slowprint('Ulon: Vi klarade det! Vilken strid!\n'+
                                   'kom in i min boning och vila upp er.\n')
                         for s in spelarlista:
                             s.hp = s.liv
@@ -1578,11 +1633,9 @@ def meny():
                                   'som jag byggde i hennes stuga.\n'+
                                   'Den öppnade sig bara för den som sa "Lonme"...\n'+
                                   'Men nu är stugan förstörd, och kvar är bara ett ödsligt fält.\n')
-                        time.sleep(2)
-                        slowprint('Jag är ledsen att jag inte kan vara till mer hjälp.\n'+
-                                  'Men låt mig ge er den här magiska manteln.\n'+
-                                  'Ni fick Dvärgens mantel!')
-                        inventory.append(FDICT['Dvärgens mantel'])
+                        time.sleep(1.5)
+                        slowprint('Om er avsikt är att bistå den snälla häxan, låt mig hjälpa till.\n'+
+                                  'Ulon anluter sig till ditt sällskap!\n')
                         progress['main'] = 5  
                 else:
                     print('Det är för farligt att ge sig längre ut i vildmarken utan att veta vägen.')
@@ -1887,7 +1940,7 @@ FDICT = {
     'Grön mantel': kls.Ovrigt('Grön mantel','+40 liv','liv',40),
     'Zaumakots ring': kls.Ovrigt('Zaumakots ring','+100 liv','liv',100),
     'Blå mantel': kls.Ovrigt('Blå mantel','+2 snabbhet',0,-2),
-    'Dvärgens mantel': kls.Ovrigt('Dvärgens mantel', '+3 smidighet, Lyckoträff', 'smi',3,(3,'Lyckoträff')),
+    'Dvärgens mantel': kls.Ovrigt('Dvärgens mantel', '+3 styrka, Lyckoträff', 'str',3,(3,'Lyckoträff')),
     'Guldlänk': kls.Ovrigt('Guldlänk','+2 magikraft','mkr',2),
     'Magisk ring': kls.Ovrigt('Magisk ring','+3 magikraft','mkr',3),
     'Trollring': kls.Ovrigt('Trollring','+4 magikraft','mkr',4),
@@ -2087,11 +2140,14 @@ inventory=list()
 #vänner
 svan = kls.Spelare('Svan',30,3,2,3,[['Kamp',0],['Dunkel konst',0]])
 alri = kls.Spelare('Alri',25,3,3,4,[['Skicklighet',0],['Själskunskap',0]])
-dvargen = kls.Spelare('Dvärgen',100,14,12,13,['Inget'])
+dvargen = kls.Spelare('Dvärgen',121,11,10,10,[['Trolldom',20],['Uthållighet',0]])
 dvargen.utrust['vapen'] = FDICT['Förtrollad hammare']
-dvargen.utrust['rustning'] = FDICT['Megarustning']
-dvargen.lvl = 50
-dvargen.magier = [('Helning',1),('Beskydd',3),('Upplyftning',3),('Mystisk attack',3)]
+dvargen.utrust['rustning'] = FDICT['Mitrilbrynja']
+dvargen.utrust['ovrigt'] = FDICT['Dvärgens mantel']
+dvargen.lvl = 40
+dvargen.exp = 20738
+dvargen.formagor = ['Mystisk kraft']
+dvargen.magier = [('Hypnos',1),('Lindring',1),('Kyla',2),('Trollstyrka',1),('Helning',1),('Sömnighet',3),('Upplyftning',3)]
 dvargen.special = ['Lyckoträff']
 
 

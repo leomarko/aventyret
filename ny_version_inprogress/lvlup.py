@@ -108,9 +108,9 @@ TROLLDOMSLISTA=[PLUSMKR,
                 PLUSMKR,
                 PLUSHP,
                 Bonus('Magi-Kyla',plusformaga,(2,'Kyla',2)),
-                PLUSSKY,
                 PLUSHP,
                 Bonus('Förmåga-Mystisk kraft',plusformaga,(1,'Mystisk kraft')),
+                PLUSHP,
                 Bonus('Magi-Trollstyrka',plusformaga,(2,'Trollstyrka',1)),
                 PLUSMKR,
                 PLUSSMI,
@@ -234,13 +234,35 @@ HEMLIGLISTA=[Bonus('Förmåga-Mystisk kraft',plusformaga,(1,'Mystisk kraft')),
              PLUSMKR,
              Bonus('Magi-Livskraft', plusformaga,(2,'Livskraft',4)),
              Bonus('Förmåga-Urkraft',plusformaga,(1,'Urkraft'))]
-             
-#Av tomten 200 år tillbaka i tiden lär man sig tre hemliga utvecklingsvägar,
-#som man får fördela på sina figurer:
-#Eller alla får alla tre, varje innehåller bara typ två förmågor
-STRIDSKONST=[Bonus('Trippel attack',plusformaga,(3,'Trippel attack'))] #t.ex. (ska komma senare)
-KUNNIGHET=[Bonus('Taktik',plusformaga,(3,'Taktik'))] #t.ex. (ska komma senare)
-MAGI=[Bonus('Magi-Kvävning', plusformaga,(2,('Kvävning',6)))] #t.ex.
+UTLISTA=[Bonus('Förmåga-Uthållighet',plusformaga,(1,'Uthållighet')),
+        PLUSSTR,
+        PLUSHP,
+        PLUSSMI,
+        PLUSHP,
+        PLUSMKR,
+        Bonus('Förmåga-Djärv attack',plusformaga,(1,'Djärv attack')),
+        PLUSHP,
+        PLUSSTR,
+        PLUSHP,
+        PLUSSMI,
+        PLUSSTR,
+        PLUSMKR,
+        PLUSHP,
+        PLUSSTR,
+        Bonus('Magi-Återställning',plusformaga,(2,'Återställning',2)),
+        PLUSHP,
+        PLUSSMI,
+        PLUSHP,
+        PLUSMKR,
+        PLUSHP,
+        PLUSSTR,
+        PLUSHP,
+        PLUSSMI,
+        PLUSSTR,
+        PLUSMKR,
+        PLUSHP,
+        Bonus('Lura döden',plusformaga,(3,'Lura döden'))]
+        
 
-LEVELUP={'Kamp':KAMPLISTA, 'Trolldom':TROLLDOMSLISTA, 'Dunkel konst':DUNKELLISTA,
+LEVELUP={'Kamp':KAMPLISTA, 'Trolldom':TROLLDOMSLISTA, 'Dunkel konst':DUNKELLISTA, 'Uthållighet': UTLISTA,
          'Skicklighet':SKICKLIGLISTA, 'Själskunskap':SJALLISTA, 'Hemlig lära':HEMLIGLISTA}
