@@ -126,9 +126,9 @@ class Ovrigt(Utrustning): #kan ge förmåga och/eller ändra stat
     
     def equip(self,spelare,on=True):
         if on:
-            difstat(spelare,self.stat,self.plus)
+            difstat(spelare,self.stat,self.plus,mini=-10)
         else:
-            difstat(spelare,self.stat,-self.plus)
+            difstat(spelare,self.stat,-self.plus,mini=-10)
         if on and self.formaga:
             plusformaga(spelare, *self.formaga)
         elif self.formaga:

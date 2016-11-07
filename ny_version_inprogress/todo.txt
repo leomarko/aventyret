@@ -1,6 +1,36 @@
-ändra bedömning
-förbättra smärta
+ändra bedömning---
+förbättra smärta---
 fixa decimal på attackskada?
-minska mängden rustning man kan få av str
+minska mängden rustning man kan få av str---
+Fixat bugg med blå mantel---
 
 Tornets väktare (hålla ut tills snälla häxan kommer?), Elaka häxan.
+mer efp för dåtiden---
+minska smidighet för många---
+försvåra trollkungen ngt---
+
+Gurgens mantel---
+Skräck---
+
+Dvärgens namn---
+Decimalfel---
+
+slottet efter shäxan hittad---
+templet efter shäxan hittad---
+
+förläng varaktighet på förbjuden makt ytterligare något---
+ändra mystisk kraft så den är lite mindre random---
+ändra älva manakostnad på upplyftning---
+minska långsamhetsgrejen på smärta---
+gör väktaren snabbare---
+gör trollkungen bättre---
+gör elaka häxan bättre---
+nerfa tiger något?---
+lägg till tillkvicknande på tiger---
+gör så man inte möter fiender i vanliga världen efter trollkungen---
+fixa dvärgens hemlig lära och sista förmågorna---
+
+kontring---
+uthållighet---
+lura döden---
+återställning---

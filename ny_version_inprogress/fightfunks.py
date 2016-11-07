@@ -270,19 +270,19 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 #slutskada
                 if 'critical' in nyckelord:
                     if not spelare or randint(0,4) == 4:
-                        skada = int(skada*(2.5 + random() + random()))
+                        skada *= 2.5 + random() + random()
                         if spelare:
                             print('Lyckoträff!')
                         else:
                             print('Förödande attack...!')
                 elif nyckelord == 'mystisk':
-                    skada = int(skada*(0.4 + random() + random()))
+                    skada *= 0.4 + random() + random()
                 elif nyckelord == 'djärv':
-                    skada = int(skada*(2 + random() + random()))
+                    skada *= 2 + random() + random()
                 elif nyckelord == 'svans':
-                    skada = int(skada*(1 + random()*0.8))
+                    skada *= 1 + random()*0.8
                 else:
-                    skada = int(skada*(1.5 + random()))
+                    skada *= 1.5 + random()
 
                 #rustning    
                 skada -= b.mods[2]
@@ -294,6 +294,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     except(AttributeError,NameError):
                         skada=skada
 
+                #int    
+                skada = int(skada)
                 #minimi
                 if skada < 1:
                     skada = 1
@@ -315,7 +317,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                 if nyckelord == 'djärv':
                     taskada(a, int(a.stats['str']*random()))
 
-            if not spelare and 'Kontring' in b.special:
+            if not spelare and 'Kontring' in b.special and random()>0.5:
                 print(b.namn+' kontrar!')
                 attack(b,a)
                     
@@ -410,7 +412,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Förgöra':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        attackmagi(figur, target, 5+random())
+                        attackmagi(figur, target, 6+random())
 
                     elif mode == 'Förgöra verkligheten':
                         slowprint('Världen tynar bort',3)
@@ -463,13 +465,18 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         for f in aktiva_f:
                             e=Effekt('Förutbestämmande',difstat,f,(3,2),(3,-2),int(figur.stats['mkr']*(0.3+random()*0.5)) + randint(8,13) )
                             uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=s.namn+' manipulerar redan tiden')
+
+                    elif mode == 'Skräck':
+                        target = aktiva_s[randint(0,len(aktiva_s)-1)]
+                        e=Effekt('Skräck',difstat,target,(0,60),(0,-60),randint(15,40))
+                        uppdatera_effekter(e)
                             
                     elif mode == 'Smärta':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 2.25, plus=target.liv*(0.03+random()*0.02))
                         if target in aktiva_s:
-                            if target.mods[0] < 2:
-                                difstat(target,0,1)
+                            e=Effekt('Smärta',difstat,target,(0,2),(0,-2), randint(5,12))
+                            uppdatera_effekter(e)
 
                     elif mode == 'Stank':
                         for s in aktiva_s:
@@ -491,12 +498,12 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Sömnighet':
                         for s in aktiva_s:
-                            e=Effekt('Sömnighet',difstat,s,(0,2,10,-4),(0,-2,10,-4),int(figur.stats['mkr']*random()) + 9 )
+                            e=Effekt('Sömnighet',difstat,s,(0,2),(0,-2),int(figur.stats['mkr']*random()) + 9 )
                             uppdatera_effekter(e)
                 
                     elif mode == 'Trollsmäll':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        attackmagi(figur, target, 8, 40*random())
+                        attackmagi(figur, target, 7, 50*random())
 
                     elif mode == 'Trollstoft':
                         helning(figur, aktiva_f, 1, mod2=0.1)
@@ -701,7 +708,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Förgöra':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 5+random())
+                                    attackmagi(figur, target, 6+random())
 
                                 elif spell[0] == 'Förtärande mörker':
                                     target=aktiva_f[listval([f.namn for f in aktiva_f])]
@@ -783,19 +790,19 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     attackmagi(figur, target, 2.25, plus=target.liv*(0.03+random()*0.02))
                                     if target in aktiva_f:
-                                        if target.mods[0] < 2:
-                                            difstat(target,0,1)
+                                        e=Effekt('Smärta',difstat,target,(0,2),(0,-2), randint(5,12))
+                                        uppdatera_effekter(e)
 
                                 elif spell[0] == 'Snabbhet':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for s in aktiva_s:
-                                        e=Effekt('Snabbhet',difstat,s,(0,-2,10,-4),(0,2,10,-4), randint(8,22) )
+                                        e=Effekt('Snabbhet',difstat,s,(0,-2),(0,2), randint(10,20) )
                                         uppdatera_effekter(e)
 
                                 elif spell[0] == 'Sömnighet':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for f in aktiva_f:
-                                        e=Effekt('Sömnighet',difstat,f,(0,2,10,-4),(0,-2,10,-4),int(figur.stats['mkr']*random()) + 9 )
+                                        e=Effekt('Sömnighet',difstat,f,(0,2),(0,-2),int(figur.stats['mkr']*random()) + 9 )
                                         uppdatera_effekter(e)
 
                                 elif spell[0] == 'Tillkvicknande':
@@ -823,7 +830,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Trollsmäll':
                                     target = aktiva_f[listval([f.namn for f in aktiva_f])]
                                     print(figur.namn+' använder '+spell[0]+'...')
-                                    attackmagi(figur, target, 8, plus=40*random())
+                                    attackmagi(figur, target, 7, plus=50*random())
 
                                 elif spell[0] == 'Trollstoft':
                                     print(figur.namn+' använder '+spell[0]+'...')
@@ -1023,7 +1030,7 @@ PDICT = {
     ],
     'trollskog':[
     ['Ett gammeltroll', fi.Gammeltroll()],
-    ['Ett skogsväsen och ett gammeltroll',fi.Gammeltroll(),fi.Skogsvasen],
+    ['Ett skogsväsen och ett gammeltroll',fi.Gammeltroll(),fi.Skogsvasen()],
     ['Tre olyckskorpar', fi.Olyckskorp(), fi.Olyckskorp('B'), fi.Olyckskorp('C')],
     ['En vitvarg, en olyckskorp och ett skogsväsen', fi.Vitvarg(), fi.Olyckskorp(), fi.Skogsvasen()],
     ['Två vitvargar', fi.Vitvarg(), fi.Vitvarg('B')]
@@ -1045,6 +1052,8 @@ MDICT = {'Elaka häxan': fi.ElakaHaxan1(),
          'Joshki2': fi.Joshki2(),
          'Kolskägg': fi.Kolskagg(),
          'Draken': fi.Draken(),
+         'Tornets väktare': fi.ToVaktare(),
+         'Elaka häxan2': fi.ElakaHaxan2(),
          'Gaurghus': fi.Gaurghus(),
          'Entrios': fi.Entrios(),
          'Trollkungen': fi.Trollkungen(),

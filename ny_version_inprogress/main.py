@@ -38,6 +38,10 @@ def spara(kopia=False):
                 continue
             break
         aktuell_sparfil=namn
+
+    #kompatibilitet med äldre filer
+    if inventory[0].namn == 'Gå tillbaka':
+        inventory.remove(inventory[0])
         
     with open(namn,'w') as f:
         f.write(sp1.namn
@@ -80,7 +84,7 @@ def spara(kopia=False):
                 +'\n'+'___'.join(progress['döda_fiender']) #38
                 +'\n'+'___'.join([str(dialogval.index(i)) for i in dialogval if isinstance(i,str)]) #39
                 +'\n'+'___'.join([i for i in dialogval if isinstance(i,str)]) #40
-                +'\n'+'___'.join([f.namn for f in inventory[1:]])+'\n') #41
+                +'\n'+'___'.join([f.namn for f in inventory])+'\n') #41
         if dvargen in spelarlista: #42
             f.write('d\n')
         elif alri in spelarlista:
@@ -237,7 +241,7 @@ def ladda():
         for index, line in zip(d_index, d_line):
             dialogval[index] = line
 
-        inventory=list()  #föremål 0 är bara ett menyval
+        inventory=list()
         for s in f.readline().strip('\n').split('___'):                        #41
             if s != '':
                 inventory.append(FDICT[s])
@@ -382,7 +386,7 @@ def meny():
                     slowprint('Du hittar en Skyddande ädelsten!')
                     inventory.append(FDICT['Skyddande ädelsten'])
                     progress['hittade_skatter'].add('berg')
-                elif randint(0,4) > 1:
+                elif randint(0,4) > 1 and 'Trollkungen' not in progress['döda_fiender']:
                     if progress['main'] < 2:
                         fight()
                     else:
@@ -513,7 +517,7 @@ def meny():
                               'Det är inte dåligt gjort, men det är ännu mycket kvar att önska\n')
                     time.sleep(1)
                     slowprint('Om du hittar ett antal monstertänder och en del älvstoft\n'+
-                              'kan jag fullända verket')
+                              'kan jag fullända verket\n')
                     if inventory.count(FDICT['Tand']) > 2 and inventory.count(FDICT['Älvstoft']) > 1:
                         slowprint('Du har det? Mycket bra. Vänta då.\n')
                         slowprint('...\n...\n...\n',3)
@@ -522,6 +526,7 @@ def meny():
                         foremaloverallt('Tand',tabort=True)
                         foremaloverallt('Älvstoft',tabort=True)
                         inventory.append(FDICT['Mästarsvärdet'])
+                        progress['hittade_skatter'].add('boning')
                 nyplats = False
                         
 
@@ -941,7 +946,8 @@ def meny():
                     time.sleep(1.5)
                     fight(['Trollkungen'],True)
                     time.sleep(2)
-                    slowprint('Trollkungen: Nåd! Om du skonar mig lovar jag att vi ska vara till hjälp för er framöver.\n')
+                    slowprint('Trollkungen: Nåd! Om du skonar mig lovar jag att vi ska vara till hjälp för er framöver.\n'+
+                              'Och ni kommer inte bli anfallna mer i skogar och berg.\n')
                     time.sleep(2)
                     slowprint('Ni skonar trollkungen.\n')
                     progress['döda_fiender'].add('Trollkungen')
@@ -1138,7 +1144,7 @@ def meny():
                         for s in spelarlista:
                             s.magier.append(('Tillkvicknande',2))
                         progress['hittade_skatter'].add('skog')
-                elif randint(0,4) > 1:
+                elif randint(0,4) > 1 and 'Trollkungen' not in progress['döda_fiender']:
                     if progress['main'] < 2:
                         fight()
                     else:
@@ -1250,9 +1256,22 @@ def meny():
                             print('Farväl')
                             break
 
-                elif progress['main'] == 4 and position == 14:
-                    print('Slottet är väl bevakat, ni kan inte närma er utan att bli upptäckta\n'+
+                elif progress['main'] > 3 and position == 14:
+                    if 'Shäxan' not in progress['hittade_skatter']:
+                        print('Slottet är väl bevakat, ni kan inte närma er utan att bli upptäckta\n'+
                           'och ni har ingen chans att ta er in med våld.')
+                    else:
+                        print('En soldat: Var hälsade, fursten träffar er gärna.')
+                        time.sleep(1)
+                        print('Gurgen: Välkomna äventyrare. Det är en skam att jag lät\n'+
+                              'mig förblindas av den elaka häxans trollkonst.')
+                        if 'gurgens' not in progress['hittade_skatter']:
+                            progress['hittade_skatter'].add('gurgens')
+                            time.sleep(1.5)
+                            slowprint('Mottag denna magiska mantel, den kan hjälpa er besegra henne\n')
+                            inventory.append(FDICT['Gurgens mantel'])
+                        else:
+                            print('Må godheten nu segra.')
 
                 elif position == 214:
                     print('En soldat: Hell kung Kolskägg! Signat vare prästerskapet!')
@@ -1393,7 +1412,7 @@ def meny():
                             break
 
                 #senare
-                elif progress['main'] == 3 and d4 not in dialogval::
+                elif progress['main'] == 3 and d4 not in dialogval:
                 #första gången tillbaks i vanliga världen 
                     if alri not in spelarlista:
                         if 9 in progress['upptäckta platser']:
@@ -1413,7 +1432,7 @@ def meny():
                         alri.exp = int(sp1.exp*0.8)
                         if ('Tillkvicknande',2) in sp1.magier:
                             alri.magier.append(('Tillkvicknande',2))
-                        if 'Hemlig lära' in [u[0] for u in sp1.utveckling]:
+                        if 'skugglandskap' in progress['hittade_skatter']:
                             alri.utveckling.append(['Hemlig lära',0])
                         lvlup(spelarlista)
                     else:
@@ -1465,13 +1484,17 @@ def meny():
                     slowprint('Snälla häxan: Amuno, eller snarare den elaka häxan,\n'+
                               'vågar inte visa sig här nu.\n'+
                               'Hon är försiktig...\n'+
-                              'Hon måste ha flytt från slottet tillbaka till sitt Torn redan!')
+                              'Hon måste ha flytt från slottet tillbaka till sitt Torn redan!\n')
                     time.sleep(1.5)
                     slowprint('Resten lämnar jag till er, äventyrare.\n'+
-                              'Besegra elaka häxan i tornet och bringa frid till landet!')
+                              'Besegra elaka häxan i tornet och bringa frid till landet!\n')
                     position = 14
                     progress['hittade_skatter'].add('Shäxan')
-                    
+                else:
+                    print('Snälla häxan: Hej äventyrare, vila en stund och återhämta er')
+                    for s in spelarlista:
+                        s.hp=s.liv
+                    print('(Ni fick full hp)')
                 nyplats = False
                     
             elif plats == 'Templet':
@@ -1582,9 +1605,52 @@ def meny():
                         else:
                             print('Farväl då')
                             break
-                else:
+                elif 'Shäxan' not in progress['hittade_skatter']:
                     slowprint('Tornet är fullt av monster')
                     fight()
+                else:
+                    if 'tsv' not in progress['döda_fiender']:
+                        print('En fruktansvärd tvåhövdad best vaktar ingången till tornet.\n'+
+                              'Vill ni fortsätta?')
+                        if listval(['Ja','Inte nu']) == 0:
+                            fight(['Tornets väktare'],True)
+                            progress['döda_fiender'].add('tsv')
+                    if 'tsv' in progress['döda_fiender']:
+                        print('Vill du fortsätta upp till elaka häxan?')
+                        if listval(['Ja','Inte nu']) == 0:
+                            slowprint('Ni går upp för trapporna till tornet...\n')
+                            slowprint('Och ni går och går...........\n'+
+                                      'Trapporna verkar inte ta slut?\n',2.5)
+                            slowprint('Då hör ni ljud nedifrån, någon verkar vara på väg upp.\n'+
+                                      'De är snart ikapp er\n')
+                            time.sleep(1)
+                            slowprint('Ni gör er redo för strid!\n')
+                            time.sleep(1)
+                            slowprint('Men upp kommer snälla häxan och unghäxan!\n'+
+                                      '-Du kan inte skydda dig längre, Elaka häxa.\n'+
+                                      'En vägg och dörr uppenbarar sig där trappan nyss fortsatte\n'+
+                                      '-Gå nu äventyrare.\n'+
+                                      'Jag och den elaka häxan är sammanbundna av gammal magi,\n'+
+                                      'och kan aldrig strida mot varandra\n')
+                            slowprint('Du stiger in till tornets högsta kammare\n',2)
+                            slowprint('Elaka häxan: Ni har övervunnit många hinder, äventyrare.\n'+
+                                      'Men har ni verkligen makt som kan mätas med min?\n')
+                            time.sleep(1)
+                            fight(['Elaka häxan2'],True)
+                            time.sleep(2)
+                            slowprint('Häxan blir till en skugga och försvinner från er syn.\n'+
+                                      'Snälla häxan: Ni gjorde det...!\n'+
+                                      'Då är det också dags för mig att blekna bort,\n'+
+                                      'och återkomma i en annan tid...\n'+
+                                      'Nu kommer det råda frid i landet, ni har gjort gott.\n'+
+                                      'Må lyckan le mot er i framtida äventyr.\n')
+                            time.sleep(2)
+                            slowprint('Äventyret är slut.')
+                            time.sleep(5)
+                            raise SystemExit
+                                      
+                            
+                            
                 nyplats = False
 
             elif plats == 'trollskog':
@@ -1651,7 +1717,7 @@ def meny():
                         spelarlista.append(dvargen)
                         if ('Tillkvicknande',2) in sp1.magier:
                             dvargen.magier.append(('Tillkvicknande',2))
-                        if 'Hemlig lära' in [u[0] for u in sp1.utveckling]:
+                        if 'skugglandskap' in progress['hittade_skatter']:
                             dvargen.utveckling.append(['Hemlig lära',0])
                         fight(['Draken'], True)
                         if not foremaloverallt('Drakfjällsrustning'):
@@ -1707,7 +1773,7 @@ def meny():
                         slowprint('Lejonet tycks vilja något, men ni kan inte få kontakt med det.\n')
                     slowprint('Lejonet går sin väg.\n')
                     del godkand
-                elif random() > 7.5 and 'Zaumakot' not in progress['döda_fiender']:
+                elif random() > 0.7 and 'Zaumakot' not in progress['döda_fiender']:
                     print('En demon dyker upp...!\n'+
                           'Vill du strida mot demonen?')
                     if listval(['Ja','Nej']) == 0:
@@ -1944,10 +2010,10 @@ FDICT = {
     'Mystiskt spjut': kls.Vapen('Mystiskt spjut',4.5,7,'mkr',magi=1.5),
     'Tungt svärd': kls.Vapen('Tungt svärd',5,9,'str'),
     'Förhäxad spira': kls.Vapen('Förhäxad spira',2.5,9,'mkr',magi=3.5),
-    'Dödlig kniv': kls.Vapen('Dödlig kniv',5.5,10,'smi'),
+    'Dödlig kniv': kls.Vapen('Dödlig kniv',6,11,'smi'),
     'Förtrollad hammare': kls.Vapen('Förtrollad hammare',5.5,9,'mkr',magi=1.5),
     'Konungasvärd': kls.Vapen('Konungasvärd',6,9,'str',magi=2),
-    'Skuggsvärd': kls.Vapen('Skuggsvärd',4,magi=4),
+    'Skuggsvärd': kls.Vapen('Skuggsvärd',5,magi=4),
     'Mäktig hammare': kls.Vapen('Mäktig hammare',7.5,12,'str',magi=2),
     'Alvbåge': kls.Vapen('Alvbåge',6.5,14,'smi',magi=4.5),
     'Silvertunga': kls.Vapen('Silvertunga',7.5,11,'mkr',magi=3),
@@ -1979,6 +2045,7 @@ FDICT = {
     'Zaumakots ring': kls.Ovrigt('Zaumakots ring','+100 liv','liv',100),
     'Blå mantel': kls.Ovrigt('Blå mantel','+2 snabbhet',0,-2),
     'Dvärgens mantel': kls.Ovrigt('Dvärgens mantel', '+3 styrka, Lyckoträff', 'str',3,(3,'Lyckoträff')),
+    'Gurgens mantel': kls.Ovrigt('Gurgens mantel', '+1 smidighet, Lura döden', 'smi',1,(3,'Lura döden')),
     'Guldlänk': kls.Ovrigt('Guldlänk','+2 magikraft','mkr',2),
     'Magisk ring': kls.Ovrigt('Magisk ring','+3 magikraft','mkr',3),
     'Trollring': kls.Ovrigt('Trollring','+4 magikraft','mkr',4),
@@ -1999,7 +2066,7 @@ FDICT = {
     'Tapperhetsmedalj': kls.Ovrigt('Tapperhetsmedalj','+15 liv, Stridsinsikt','liv',15,(3,'Stridsinsikt')),
     'Förbannad juvel': kls.Ovrigt('Förbannad juvel','+2 magikraft, Magi-Förtärande mörker','mkr',2,(2,'Förtärande mörker',5)),
     'Trädgrenskrona': kls.Ovrigt('Trädgrenskrona','+3 magikraft, Förmåga-Urkraft','mkr',3,(1,'Urkraft')),
-    'De gamlas ring': kls.Ovrigt('De gamlas ring','+60 liv, Magi-Helning','liv',60,(2,'Helning',1)),
+    'De gamlas ring': kls.Ovrigt('De gamlas ring','+60 liv, Magi-Lindring','liv',60,(2,'Lindring',1)),
     'Uråldrig kristall': kls.Ovrigt('Uråldrig kristall','+3 magikraft, Magi-Livskraft','mkr',3,(2,'Livskraft',5)),
     'De vises sten': kls.Ovrigt('De vises sten','+2 magikraft, Dubbel magi','mkr',2,(3,'Dubbel magi')),
     'Salva': kls.EngangsForemal('Salva','Läkande',difstat,('hp',15),fight=True),
@@ -2178,7 +2245,7 @@ inventory=list()
 #vänner
 svan = kls.Spelare('Svan',30,3,2,3,[['Kamp',0],['Dunkel konst',0]])
 alri = kls.Spelare('Alri',25,3,3,4,[['Skicklighet',0],['Själskunskap',0]])
-dvargen = kls.Spelare('Dvärgen',121,11,10,10,[['Trolldom',20],['Uthållighet',0]])
+dvargen = kls.Spelare('Ulon',121,11,10,10,[['Trolldom',20],['Uthållighet',0]])
 dvargen.utrust['vapen'] = FDICT['Förtrollad hammare']
 dvargen.utrust['rustning'] = FDICT['Mitrilbrynja']
 dvargen.utrust['ovrigt'] = FDICT['Dvärgens mantel']

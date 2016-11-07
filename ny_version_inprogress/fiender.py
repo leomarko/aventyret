@@ -612,9 +612,9 @@ class Otroll(Varelse):
         if nr!=0:
             self.namn+=' '+nr
         self.exp=420
-        self.liv=240
+        self.liv=260
         self.hp=self.liv
-        self.stats={'str':17,'smi':12,'mkr':15}
+        self.stats={'str':17,'smi':11,'mkr':15}
         self.mods=[0,1,3,0]
         self.rustning=6
 
@@ -650,7 +650,7 @@ class Jarnkrokodil(Varelse):
         self.exp=550
         self.liv=200
         self.hp=self.liv
-        self.stats={'str':15,'smi':15,'mkr':7}
+        self.stats={'str':16,'smi':14,'mkr':7}
         self.mods=[0,0,7,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=12
     
@@ -679,7 +679,7 @@ class Traskdvarg(Varelse):
         self.exp=200
         self.liv=110
         self.hp=self.liv
-        self.stats={'str':12,'smi':15,'mkr':12}
+        self.stats={'str':13,'smi':15,'mkr':12}
         self.mods=[-1,0,8,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=0
     
@@ -741,7 +741,7 @@ class Vitvarg(Varelse):
         self.exp=500
         self.liv=250
         self.hp=self.liv
-        self.stats={'str':19,'smi':16,'mkr':7}
+        self.stats={'str':20,'smi':16,'mkr':7}
         self.mods=[0,0,6,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=6
     
@@ -794,7 +794,7 @@ class Skogsvasen(Varelse):
         self.exp=600
         self.liv=200
         self.hp=self.liv
-        self.stats={'str':5,'smi':18,'mkr':19}
+        self.stats={'str':5,'smi':19,'mkr':19}
         self.mods=[0,0,14,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=0
     
@@ -855,7 +855,7 @@ class Dimdvarg(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=400
+        self.exp=450
         self.liv=210
         self.hp=self.liv
         self.stats={'str':15,'smi':17,'mkr':14}
@@ -884,17 +884,17 @@ class Sfinx(Varelse):
     def __init__(self, nr=0):
         if nr!=0:
             self.namn+=' '+nr
-        self.exp=1700
-        self.liv=800
+        self.exp=1800
+        self.liv=1000
         self.hp=self.liv
-        self.stats={'str':23,'smi':17,'mkr':23}
+        self.stats={'str':23,'smi':18,'mkr':23}
         self.mods=[0,0,7,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=5
         self.modes = ['Förgöra','attack','dubbel','Eld','Helning',
-                      'Sömnighet','Kvävning','other']
+                      'Sömnighet','Kvävning','Skräck','other']
     
     def mode(self):
-        return self.modes[randint(0,7)]
+        return self.modes[randint(0,8)]
         
     def other(self):
         slowprint('Sfinxen är stilla\n')
@@ -997,10 +997,10 @@ class Gaurghus(Varelse):
         return 'Ormdräkt'
 
 class Entrios(Varelse):
-    exp=800
-    liv=450
+    exp=900
+    liv=550
     hp=liv
-    stats={'str':18,'smi':14,'mkr':18}
+    stats={'str':19,'smi':14,'mkr':18}
     mods=[-1,0,5,4]
     rustning=5
     fly=False
@@ -1067,9 +1067,9 @@ class Joshki(Varelse):
 
 class Joshki2(Varelse):
     exp=200
-    liv=160
+    liv=170
     hp=liv
-    stats={'str':12,'smi':11,'mkr':10}
+    stats={'str':13,'smi':11,'mkr':10}
     mods=[0,0,4,0]
     rustning=4
     fly=False
@@ -1092,9 +1092,9 @@ class Joshki2(Varelse):
 
 class Kolskagg(Varelse):
     exp=1200
-    liv=450
+    liv=500
     hp=liv
-    stats={'str':20,'smi':15,'mkr':10}
+    stats={'str':20,'smi':15,'mkr':12}
     mods=[-1,0,6,1]
     rustning=6
     fly=False
@@ -1125,13 +1125,13 @@ class Draken(Varelse):
         self.exp=1600
         self.liv=900
         self.hp=self.liv
-        self.stats={'str':25,'smi':12,'mkr':18}
-        self.mods=[-1,0,7,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
-        self.rustning=9
-        self.modes = ['critical','attack','Eld','Svansattack']
+        self.stats={'str':25,'smi':13,'mkr':17}
+        self.mods=[-1,0,8,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.rustning=8
+        self.modes = ['critical','attack','attack','Eld','Eld','Svansattack']
     
     def mode(self):
-        return self.modes[randint(0,3)]
+        return self.modes[randint(0,5)]
         
     def drop(self, plus, progress, OP):
         n = randint(0,15)+plus
@@ -1140,31 +1140,72 @@ class Draken(Varelse):
         return False
 
 class Trollkungen(Varelse):
-    exp=1800
-    liv=1000
+    exp=2000
+    liv=1200
     hp=liv
-    stats={'str':22,'smi':17,'mkr':19}
-    mods=[0,0,7,0]
+    stats={'str':25,'smi':18,'mkr':20}
+    mods=[-1,0,7,0]
     rustning=7
     fly=False
     namn='Trollkungen'
     namnB=namn
-    modes = ['critical','attack','Trollstoft','Trollsmäll',
-                  'Sömnighet','attack','Se framtiden']
+    modes = ['critical','attack','attack','attack','Trollstoft',
+             'Trollsmäll','Trollsmäll','Sömnighet','Se framtiden']
     
     def mode(self):
-        return self.modes[randint(0,6)]
+        return self.modes[randint(0,8)]
 
     def drop(self, plus, progress, OP):
         return 'Silvertunga'
 
+class ToVaktare(Varelse):
+    namn = 'Tornets väktare'
+    namnB = namn
+    exp=2000
+    liv=1500
+    hp=liv
+    stats={'str':30,'smi':17,'mkr':17}
+    mods=[-1,0,8,-1]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+    rustning=8
+    
+    def mode(self):
+        n = randint(0,6)
+        if n == 0:
+            return 'Skräck'
+        elif n == 1:
+            return 'dubbel'
+        elif n < 4:
+            return 'Svansattack'
+        return 'attack'
+        
+    def drop(self, plus, progress, OP):
+        return 'Kraftdryck'
+
+class ElakaHaxan2(Varelse):
+    exp=0
+    liv=1700
+    hp=liv
+    stats={'str':24,'smi':19,'mkr':24}
+    mods=[-1,0,10,0]
+    rustning=7
+    fly=False
+    namn='Elaka häxan'
+    namnB=namn
+    modes = ['Eld','Eld','attack','attack','Förgöra',
+             'Ändra framtiden','Smärta','Smärta']
+    
+    def mode(self):
+        return self.modes[randint(0,7)]
+
+    def drop(self, plus, progress, OP):
+        return False
 
 #----------------------------------------------------------------------
 #DEMONER
 
 class DemonenZl(Varelse):
     exp=800
-    liv=2000
+    liv=1900
     hp=liv
     stats={'str':32,'smi':40,'mkr':20}
     mods=[0,0,10,0]
@@ -1174,9 +1215,11 @@ class DemonenZl(Varelse):
     namnB=namn
 
     def mode(self):
-        mode = randint(0,5)
-        if mode > 1:
+        mode = randint(0,6)
+        if mode > 2:
             return 'attack'
+        elif mode == 2:
+            return 'critical'
         elif mode == 1:
             return 'Förvrida framtiden'
         else:
@@ -1190,9 +1233,9 @@ class DemonenZl(Varelse):
 
 class DemonenZa(Varelse):
     exp=1200
-    liv=3000
+    liv=3200
     hp=liv
-    stats={'str':45,'smi':10,'mkr':2}
+    stats={'str':55,'smi':15,'mkr':2}
     mods=[-1,0,0,0]
     rustning=10
     fly=True
@@ -1202,9 +1245,9 @@ class DemonenZa(Varelse):
 
     def mode(self):
         self.ordning += 1
-        if self.ordning > 19:
+        if self.ordning > 13:
             return 'Förgöra verkligheten'
-        elif self.ordning == 5 | 15:
+        elif self.ordning == 5 or self.ordning == 12:
             return 'other'
         mode = randint(0,9)
         if mode > 0:
@@ -1213,7 +1256,7 @@ class DemonenZa(Varelse):
             return 'Stank'
 
     def other(self):
-        if self.ordning == 15:
+        if self.ordning == 5:
             slowprint('Zaumakots ögon svartnar\n',3)
         else:
             slowprint('Zaumakot börjar glöda och skaka\n',3)
@@ -1223,9 +1266,9 @@ class DemonenZa(Varelse):
 
 class DemonenZi(Varelse):
     exp=4000
-    liv=2000
+    liv=2400
     hp=liv
-    stats={'str':25,'smi':25,'mkr':25}
+    stats={'str':27,'smi':27,'mkr':27}
     mods=[0,0,10,0]
     rustning=10
     fly=True
@@ -1261,7 +1304,7 @@ class Zeoidodh(Varelse):
         if self.stats['mkr'] > 30:
             return 'Eld'
         mode = randint(0,6)
-        if mode > 4:
+        if mode < 4:
             return 'attack'
         elif mode == 4:
             return 'Naturkraft'
@@ -1275,7 +1318,7 @@ class Djurframlingen(Varelse):
     exp=6000
     liv=6000
     hp=liv
-    stats={'str':55,'smi':35,'mkr':20}
+    stats={'str':60,'smi':35,'mkr':20}
     mods=[-1,0,8,0]
     rustning=10
     fly=False
