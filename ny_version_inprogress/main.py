@@ -394,7 +394,6 @@ def meny():
                         fight()
                     else:
                         fight(OP=1)           
-                nyplats = False
 
             elif plats == 'Buren':
                 if 'Zeoidodh' not in progress['döda_fiender']:
@@ -411,7 +410,6 @@ def meny():
                     else:
                         fight(['Djurfrämlingen'],True)
                     progress['döda_fiender'].add('Zeoidodh')
-                nyplats = False
                 
             elif plats == 'djup skog' and 'djup skog' not in progress['hittade_skatter']:
                 slowprint('Skogen blir mycket tät här.\n')
@@ -421,7 +419,6 @@ def meny():
                     slowprint('Ni fortsätter in, och i en glänta hittar ni en alvbåge!\n')
                     inventory.append(FDICT['Alvbåge'])
                     progress['hittade_skatter'].add('djup skog')
-                nyplats = False
                 
             elif plats == 'Djupa dalen':
                 demon = None
@@ -444,7 +441,6 @@ def meny():
                     else:
                         fight(OP=2)
                 del demon
-                nyplats = False
 
             elif plats == 'Dvärgbyn':
                 print('Det finns många att prata med i dvärgbyn')
@@ -503,7 +499,6 @@ def meny():
                                 break
                     else:
                         break
-                nyplats = False
 
             elif plats == 'En boning':
                 print('En gammal dvärg bor här\nGråskägge: Mitt namn är Gråskägge, vad är ert ärende?')
@@ -530,7 +525,6 @@ def meny():
                         foremaloverallt('Älvstoft',tabort=True)
                         inventory.append(FDICT['Mästarsvärdet'])
                         progress['hittade_skatter'].add('boning')
-                nyplats = False
                         
 
             elif plats == 'En glänta':
@@ -545,7 +539,6 @@ def meny():
                 print('Ni återhämtar kraft, och får full hp.')
                 for s in spelarlista:
                     s.hp = s.liv
-                nyplats = False
 
             elif plats == 'En grotta': #lägg till bossar och bonusar
                 if listval(['Gå in i grottan','Stanna utanför']) == 0:
@@ -576,7 +569,6 @@ def meny():
                     else:
                         print('Grottan verkar vara tom, men ni känner av\n'+
                               'en obehaglig närvaro')
-                nyplats = False
 
             elif plats == 'En källare': #här får man en uppgradering till Djurfrämlingens bok
                 if 'Jotun' in progress['hittade_skatter']:
@@ -602,14 +594,11 @@ def meny():
                     inventory.append(FDICT['Jotuns hammare'])
                     progress['hittade_skatter'].add('källare')
 
-                nyplats=False
-
             elif plats == 'En äng':
                 print('Det känns skönt att vara här!\n'+
                       'Ni fick full hp.')
                 for s in spelarlista:
                     s.hp = s.liv
-                nyplats = False
                           
             elif plats == 'Ett fort':
                 if not 'fort' in progress['hittade_skatter']: 
@@ -654,7 +643,6 @@ def meny():
                                 break
                 else:
                     print('Det är ingen här')
-                nyplats = False
 
             elif plats == 'Ett hus':
                 if progress['main'] < 2:
@@ -751,8 +739,6 @@ def meny():
                         else:
                             print('På återseende!')
                             break
-                            
-                nyplats = False
 
             elif plats == 'Gamla smeden':
                 if 'Gamla smeden' not in progress['hittade_skatter']:
@@ -788,7 +774,6 @@ def meny():
                     else:
                         print('Farväl')
                         break
-                nyplats = False
 
             elif plats == 'Gården':
                 if progress['main'] == 2:
@@ -869,7 +854,6 @@ def meny():
                                 inventory.remove(f)
                             except(IndexError,ValueError):
                                 print('Grisen: Ni är töntar')
-                nyplats = False
 
             elif plats == 'Huset':
                 print('Huset som låg här är kvar men är väldigt nedgånget.\n'+
@@ -908,7 +892,6 @@ def meny():
                     else:
                         print('Må lyckans Gudar le mot er.')
                         break
-                nyplats=False
                             
                 
             elif plats == 'Höga berget' and 200 < position < 300:
@@ -928,7 +911,6 @@ def meny():
                         progress['hittade_skatter'].add('Höga berget')
                     else:
                         print('Sirkafirk: Den som kan besegra en demon är min vän')
-                nyplats = False
 
             elif plats == 'Höga berget' and position < 100:
                 if 'Trollkungen' not in progress['döda_fiender']:
@@ -976,7 +958,6 @@ def meny():
                             print('Jag ser inga imponerande föremål här...')
                     else:
                         print('Hur gillar ni Guldbågen? Höhöhö')
-                nyplats = False
 
             elif plats == 'Höga berget' and position > 300:
                 if random() > 0.4:
@@ -1040,13 +1021,10 @@ def meny():
                     else:
                         print('Vad ett monster är beror på vem som betraktar vem')
                     del lurat
-
-                nyplats = False
                         
             elif plats == 'landsväg':
                 if randint(0,4) > 1:
                     fight()
-                nyplats = False
                                     
             elif plats == 'mörkt vatten':
                 if 'mörkt vatten' not in progress['hittade_skatter'] and randint(0,6) == 6:
@@ -1055,7 +1033,6 @@ def meny():
                     progress['hittade_skatter'].add('mörkt vatten')
                 elif randint(0,4) > 1:
                     fight()                   
-                nyplats = False
 
             elif plats == 'Smeden':
                 print('Du har kommit till Smeden')
@@ -1113,7 +1090,6 @@ def meny():
                             inventory.append(FDICT['Häxans ring'])
                     else:
                         print('Hejdå')
-                        nyplats=False
                         break
                 
             elif plats == 'skugglandskap':
@@ -1133,7 +1109,6 @@ def meny():
                         progress['hittade_skatter'].add('skugglandskap')
                 elif randint(0,4) > 1:
                     fight()                           
-                nyplats = False
 
             elif plats == 'skog':
                 if 'skog' not in progress['hittade_skatter'] and randint(0,4) == 4:
@@ -1152,7 +1127,6 @@ def meny():
                         fight()
                     else:
                         fight(OP=1)
-                nyplats = False
 
             elif plats == 'Slottet':
                 if progress['main'] < 2:
@@ -1362,8 +1336,7 @@ def meny():
                                     print('Den snälla häxan har övergivit oss. Vi måste klara oss själva nu')
                                 else:
                                     print('Var försiktig')
-                                    break                 
-                nyplats = False                           
+                                    break                                       
                                 
             elif plats == 'Stugan' and progress['main']>0:
                 if progress['main']<2:
@@ -1449,14 +1422,6 @@ def meny():
                 elif progress['main'] < 5:
                     print('Det är ingen i Stugan')
 
-                if 1 < progress['main'] < 5:
-                    #oavsett
-                    print('Den snälla häxans magi finns fortfarande kvar.\n'+
-                          'Ni kan vila och återhämta er.')
-                    for s in spelarlista:
-                        s.hp=s.liv
-                    print('(Ni fick full hp)')
-
                 elif progress['main'] == 5 and 'Shäxan' not in progress['hittade_skatter']:
                     slowprint('Ulon: Här har jag byggt en hemlig källare\nUlon: ')
                     slowprint('LONME\n',2)
@@ -1498,7 +1463,13 @@ def meny():
                     for s in spelarlista:
                         s.hp=s.liv
                     print('(Ni fick full hp)')
-                nyplats = False
+                if 1 < progress['main'] < 5:
+                    #(finns två olika fal då detta stämmer)
+                    print('Den snälla häxans magi finns fortfarande kvar.\n'+
+                          'Ni kan vila och återhämta er.')
+                    for s in spelarlista:
+                        s.hp=s.liv
+                    print('(Ni fick full hp)')
                     
             elif plats == 'Templet':
                 entre = 'Tempelbrosch' in [f.namn for f in inventory]
@@ -1571,7 +1542,6 @@ def meny():
                     else:
                         print('Adjö. Prisa Amuno.')
                         break
-                nyplats = False
                            
             elif plats == 'Tornet':
                 if progress['main'] < 2:
@@ -1651,10 +1621,6 @@ def meny():
                             slowprint('Äventyret är slut.')
                             time.sleep(5)
                             raise SystemExit
-                                      
-                            
-                            
-                nyplats = False
 
             elif plats == 'trollskog':
                 if 'trollskog' not in progress['hittade_skatter'] and random() > 0.8:
@@ -1672,7 +1638,6 @@ def meny():
                         print('Gurtaburt: De som har de bästa vapnen är mina vänner.')
                 elif randint(0,3) > 0:
                     fight()
-                nyplats = False
 
             elif plats == 'träsk':
                 if 'skog' in progress['hittade_skatter'] and 'Höga berget' not in progress['hittade_skatter'] and random() > 0.9:
@@ -1682,7 +1647,6 @@ def meny():
                           'som håller till på Höga berget.\nDet är bra att vara hans vän.')
                 elif randint(0,4) > 1:
                     fight()
-                nyplats = False
 
             elif plats == 'vilda berg':
                 if random() > 0.9 and 'bergstrakter' not in progress['hittade_skatter']:
@@ -1691,7 +1655,6 @@ def meny():
                     progress['hittade_skatter'].add('bergstrakter')
                 elif randint(0,3) > 0:
                     fight()
-                nyplats = False
 
             elif plats == 'vildmark':
                 if random() > 0.9:
@@ -1746,7 +1709,6 @@ def meny():
                         progress['main'] = 5  
                 else:
                     print('Det är för farligt att ge sig längre ut i vildmarken utan att veta vägen.')
-                nyplats = False
 
             elif plats == 'ödemark':
                 if 'ödemark' not in progress['hittade_skatter'] and random() > 0.9:
@@ -1758,7 +1720,6 @@ def meny():
                     inventory.append(FDICT['Häxbrygd'])
                 elif random() > 0.6:
                     fight()
-                nyplats = False
                                      
             elif plats == 'Ödsliga fältet':
                 if random() > 0.7 and 'Ödsliga fältet' not in progress['hittade_skatter']:
@@ -1784,8 +1745,8 @@ def meny():
                         progress['döda_fiender'].add('Zaumakot')
                 else:
                     print('Det är väldigt ödsligt.')
-                nyplats = False
-                
+
+        nyplats = False        
         print('\nMENY')
         val = ['Utforska','Föremål','Stats','Karta','Spara','Ladda','Avsluta']
         if 'Z' in progress['hittade_skatter']:
