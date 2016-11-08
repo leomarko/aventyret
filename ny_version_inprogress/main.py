@@ -40,8 +40,11 @@ def spara(kopia=False):
         aktuell_sparfil=namn
 
     #kompatibilitet med äldre filer
-    if inventory[0].namn == 'Gå tillbaka':
-        inventory.remove(inventory[0])
+    try:
+        if inventory[0].namn == 'Gå tillbaka':
+            inventory.remove(inventory[0])
+    except(IndexError):
+        pass
         
     with open(namn,'w') as f:
         f.write(sp1.namn
@@ -1817,11 +1820,11 @@ def meny():
                 print('\n'+s.namn+':\n'+
                       'nivå '+str(s.lvl)+'  '+s.hpstr()+'\n'+
                       'Styrka: '+str(s.stats['str'])+'  Smidighet: '+str(s.stats['smi'])+'  Magikraft: '+str(s.stats['mkr'])+'\n'+
-                      'Vapen: '+s.utrust['vapen'].namn+' (S+'+str(int(s.utrust['vapen'].skada*2))+
-                      ' M+'+str(int(s.utrust['vapen'].magi*2))+')'+
-                      '  Rustning: '+s.utrust['rustning'].namn+' (S+'+str(s.utrust['rustning'].skydd)+
-                      ' M+'+str(int(s.utrust['rustning'].mskydd))+')'+
-                      '\nÖvrigt: '+s.utrust['ovrigt'].namn+' ('+s.utrust['ovrigt'].kortbs+')')
+                      'Vapen: '+s.utrust['vapen'].namn+' (S+'+str(int(getattr(s.utrust['vapen'],'skada',0)*2))+
+                      ' M+'+str(int(getattr(s.utrust['vapen'],'magi',0)*2))+')'+
+                      '  Rustning: '+s.utrust['rustning'].namn+' (S+'+str(getattr(s.utrust['rustning'],'skydd',0))+
+                      ' M+'+str(getattr(s.utrust['rustning'],'mskydd',0))+')'+
+                      '\nÖvrigt: '+s.utrust['ovrigt'].namn+' ('+getattr(s.utrust['ovrigt'],'kortbs','')+')')
                 if len(s.formagor) > 0:
                     print('Förmågor: '+', '.join(set(s.formagor)))
                 if len(s.magier) > 0:
