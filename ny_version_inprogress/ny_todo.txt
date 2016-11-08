@@ -1,0 +1,8 @@
+nyplats false i stugan efter dialog
+se framtiden för kort varaktighet för låg lvl.
+newline efter gråstensgrejen, läkört
+Fixa bugg på stats---
+Fixa sparningsbugg---
+Strategi kan öka pricksäkerhet istället?
+difstat mkr på stank mini=0
+ta bort en del plussky
