@@ -1365,7 +1365,7 @@ def meny():
                         print('-Om du hittar en vacker grå sten på dina äventyr får du gärna komma med den till mig...')
                     elif 'Gråsten' in [f.namn for f in inventory]:
                         slowprint('-Åh! En gråsten! Tack, den kommer till användning\n'+
-                                  'Ta den här fjädern som tack, och en läkört')
+                                  'Ta den här fjädern som tack, och en läkört.\n')
                         inventory.append(kls.Foremal('Mystisk fjäder'))
                         inventory.append(FDICT['Läkört'])
                         progress['häxan']+=1
