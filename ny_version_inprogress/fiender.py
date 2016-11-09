@@ -515,14 +515,8 @@ class Soldat(Varelse):
         self.stats={'str':10,'smi':10,'mkr':5}
         self.mods=[0,0,3,0]
         self.rustning=3
-        self.ordning=0
 
     def mode(self):
-        self.ordning += 1
-        if self.ordning == 1 and self.namn == 'Soldat':
-            return 'Strategi'
-        elif self.ordning == 5:
-            self.ordning = 0
         if randint(0,1) > 0 and self.hp < 30:
             return 'Återhämtning 2'
         else:
