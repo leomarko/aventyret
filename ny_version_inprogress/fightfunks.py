@@ -479,14 +479,14 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Skräck':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
-                        e=Effekt('Skräck',difstat,target,(0,60),(0,-60),vrk(aktiva_f,randint(3,6))
+                        e=Effekt('Skräck',difstat,target,(0,60),(0,-60),vrk(aktiva_f,randint(3,6)))
                         uppdatera_effekter(e)
                             
                     elif mode == 'Smärta':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 2.25, plus=target.liv*(0.03+random()*0.02))
                         if target in aktiva_s:
-                            e=Effekt('Smärta',difstat,target,(0,2),(0,-2), varak = vrk(aktiva_f,1.5)
+                            e=Effekt('Smärta',difstat,target,(0,2),(0,-2), varak = vrk(aktiva_f,1.5))
                             uppdatera_effekter(e)
 
                     elif mode == 'Stank':
@@ -655,7 +655,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                             elif namn == 'Uthållighet':
                                 print(figur.namn+' använder '+namn+'...')
-                                e=Effekt('Uthållighet',difstat,s,(2,2),(2,-2),vrk(aktiva_s,2.7+random())                                        
+                                e=Effekt('Uthållighet',difstat,s,(2,2),(2,-2),vrk(aktiva_s,2.7+random()))                                        
                                 uppdatera_effekter(e)
 
                             elif namn == 'Återhämtning':
@@ -797,7 +797,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     attackmagi(figur, target, 2.25, plus=target.liv*(0.03+random()*0.02))
                                     if target in aktiva_f:
-                                        e=Effekt('Smärta',difstat,target,(0,2),(0,-2), vrk(aktiva_s,1.5)
+                                        e=Effekt('Smärta',difstat,target,(0,2),(0,-2), vrk(aktiva_s,1.5))
                                         uppdatera_effekter(e)
 
                                 elif spell[0] == 'Snabbhet':
