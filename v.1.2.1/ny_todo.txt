@@ -1,0 +1,31 @@
+testa byt utrustningsalternativet!---
+fixa till stats så man måste trycka för att fortsätta, och ta bort dubbelt radbyte efter sp1---
+ändra trollsländsvinge vargblod själsstoft
+tillbaka från biblioteket tillbaka
+
+
+fixa uthållighet på statusraden-
+kvävnings-iteration
+lägg till procentskydd på skydd och m-skydd
+
+
+gör evasion lite bättre i förhållande till smidighet?
+
+DONE
+Fixa bugg på smärta---
+Fixa bugg på stats---
+Fixa sparningsbugg---
+nyplats false i stugan efter dialog---
+newline efter gråstensgrejen, läkört---
+Nytt system med balanserad varaktighet---
+Strategi kan öka pricksäkerhet istället---
+difstat mkr på stank mini=0---
+ta bort mods från lvlup---
+ändra strategi-fel mod!---
+proj. själ. borta() got an unexpected keyword argument: noprint---
+minska smi på soldater och på flera?
+framtiden för svår?
+öka smi på hjorten
+Lättare hitta mystiska stenar?
+joshkis förtärande mörker väl mäktig
+kolskägg har för bra evasion
