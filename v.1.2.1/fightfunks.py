@@ -209,7 +209,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
             else:
                 i += 1
 
-    def borta(figur,bort=True):
+    def borta(figur,bort=True,noprint=True):
+        #noprint behövs bara för att undvika error ifall den passas
         lista = aktivlista(figur)
         if bort:
             borteffekter(figur)
@@ -486,7 +487,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         attackmagi(figur, target, 2.25, plus=target.liv*(0.03+random()*0.02))
                         if target in aktiva_s:
-                            e=Effekt('Smärta',difstat,target,(0,2),(0,-2), varak = vrk(aktiva_f,1.5))
+                            e=Effekt('Smärta',difstat,target,(0,2),(0,-2), vrk(aktiva_f,1.5))
                             uppdatera_effekter(e)
 
                     elif mode == 'Stank':
@@ -637,7 +638,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             elif namn == 'Strategi':
                                 print(figur.namn+' använder '+namn+'...')
                                 for s in aktiva_s:
-                                    e=Effekt('Strategi',difstat,s,(3,2),(3,-2),vrk(aktiva_s,2))
+                                    e=Effekt('Strategi',difstat,s,(1,2),(1,-2),vrk(aktiva_s,2))
                                     uppdatera_effekter(e)
                                 
                             elif namn == 'Tiger':
@@ -860,7 +861,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for f in aktiva_f:
                                         varak = vrk(aktiva_s,1+random())
-                                        e=Effekt('Ute ur tiden',difstat,f,(0,30),(0,-30),randint(5,7)+int(figur.stats['mkr']*(0.2+random()*0.3)))
+                                        e=Effekt('Ute ur tiden',difstat,f,(0,30),(0,-30),varak)
                                         uppdatera_effekter(e)
 
                                 else:

@@ -64,7 +64,7 @@ class Stentiger(Varelse):
         n=randint(0,7)+plus
         if n > 7:
             return 'Läkört'
-        elif n > 6:
+        elif n > 5:
             return 'Mystisk sten'
         else:
             return False
@@ -336,9 +336,9 @@ class Fiskmonster(Varelse):
     def drop(self, plus, progress, OP):
         n = randint(0,10)+plus
         if n > 9:
-            return 'Fiskspjut'
-        elif n == 9:
             return 'Fiskstål'
+        elif n > 8:
+            return 'Fiskspjut'
         return False
 
 class Hjort(Varelse):
@@ -351,7 +351,7 @@ class Hjort(Varelse):
         self.exp=350
         self.liv=40
         self.hp=self.liv
-        self.stats={'str':5,'smi':8,'mkr':10}
+        self.stats={'str':5,'smi':10,'mkr':10}
         self.mods=[1,0,6,3]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=0
     
@@ -365,7 +365,7 @@ class Hjort(Varelse):
             return 'fly'
         
     def drop(self, plus, progress, OP):
-        if randint(0,100)+plus > 99:
+        if randint(0,90)+plus > 89:
             return 'Uråldrig kristall'
         return False
 
@@ -483,7 +483,7 @@ class Riddare(Varelse):
         self.liv=140
         self.hp=self.liv
         self.stats={'str':12,'smi':9,'mkr':5}
-        self.mods=[0,0,4,0]
+        self.mods=[0,0,3,0]
         self.rustning=6
 
     def mode(self):
@@ -510,9 +510,9 @@ class Soldat(Varelse):
         if nr!=0:
             self.namn+=' '+nr
         self.exp=110
-        self.liv=100
+        self.liv=90
         self.hp=self.liv
-        self.stats={'str':10,'smi':10,'mkr':5}
+        self.stats={'str':10,'smi':9,'mkr':5}
         self.mods=[0,0,3,0]
         self.rustning=3
 
@@ -539,7 +539,7 @@ class Tempelprefekt(Varelse):
         self.exp=140
         self.liv=100
         self.hp=self.liv
-        self.stats={'str':5,'smi':9,'mkr':12}
+        self.stats={'str':5,'smi':8,'mkr':13}
         self.mods=[0,0,9,2]
         self.rustning=0
         self.ordning = randint(0,4)
@@ -573,7 +573,7 @@ class Bandit(Varelse):
         self.liv=90
         self.hp=self.liv
         self.stats={'str':11,'smi':14,'mkr':5}
-        self.mods=[0,1,1,1]
+        self.mods=[0,0,1,0]
         self.rustning=4
         self.ordning=0
 
@@ -606,10 +606,10 @@ class Otroll(Varelse):
         if nr!=0:
             self.namn+=' '+nr
         self.exp=420
-        self.liv=260
+        self.liv=240
         self.hp=self.liv
-        self.stats={'str':17,'smi':11,'mkr':15}
-        self.mods=[0,1,3,0]
+        self.stats={'str':17,'smi':10,'mkr':15}
+        self.mods=[0,0,3,0]
         self.rustning=6
 
     def mode(self):
@@ -642,9 +642,9 @@ class Jarnkrokodil(Varelse):
         if nr!=0:
             self.namn+=' '+nr
         self.exp=550
-        self.liv=200
+        self.liv=180
         self.hp=self.liv
-        self.stats={'str':16,'smi':14,'mkr':7}
+        self.stats={'str':16,'smi':13,'mkr':7}
         self.mods=[0,0,7,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=12
     
@@ -671,9 +671,9 @@ class Traskdvarg(Varelse):
         if nr!=0:
             self.namn+=' '+nr
         self.exp=200
-        self.liv=110
+        self.liv=100
         self.hp=self.liv
-        self.stats={'str':13,'smi':15,'mkr':12}
+        self.stats={'str':13,'smi':13,'mkr':12}
         self.mods=[-1,0,8,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=0
     
@@ -705,7 +705,7 @@ class Fantom(Varelse):
         self.liv=55
         self.hp=self.liv
         self.stats={'str':40,'smi':10,'mkr':3}
-        self.mods=[1,0,12,8]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.mods=[1,0,13,7]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=0
 
     def other(self):
@@ -735,7 +735,7 @@ class Vitvarg(Varelse):
         self.exp=500
         self.liv=250
         self.hp=self.liv
-        self.stats={'str':20,'smi':16,'mkr':7}
+        self.stats={'str':19,'smi':16,'mkr':7}
         self.mods=[0,0,6,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=6
     
@@ -762,8 +762,8 @@ class Olyckskorp(Varelse):
         self.exp=350
         self.liv=100
         self.hp=self.liv
-        self.stats={'str':14,'smi':25,'mkr':7}
-        self.mods=[0,0,5,1]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
+        self.stats={'str':14,'smi':23,'mkr':7}
+        self.mods=[0,0,5,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=3
     
     def mode(self):
@@ -788,7 +788,7 @@ class Skogsvasen(Varelse):
         self.exp=600
         self.liv=200
         self.hp=self.liv
-        self.stats={'str':5,'smi':19,'mkr':19}
+        self.stats={'str':5,'smi':18,'mkr':19}
         self.mods=[0,0,14,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=0
     
@@ -994,8 +994,8 @@ class Entrios(Varelse):
     exp=900
     liv=550
     hp=liv
-    stats={'str':19,'smi':14,'mkr':18}
-    mods=[-1,0,5,4]
+    stats={'str':18,'smi':13,'mkr':17}
+    mods=[-1,0,5,3]
     rustning=5
     fly=False
     namn='Entrios'
@@ -1063,7 +1063,7 @@ class Joshki2(Varelse):
     exp=200
     liv=170
     hp=liv
-    stats={'str':13,'smi':11,'mkr':10}
+    stats={'str':13,'smi':11,'mkr':9}
     mods=[0,0,4,0]
     rustning=4
     fly=False
@@ -1088,8 +1088,8 @@ class Kolskagg(Varelse):
     exp=1200
     liv=500
     hp=liv
-    stats={'str':20,'smi':15,'mkr':12}
-    mods=[-1,0,6,1]
+    stats={'str':20,'smi':14,'mkr':9}
+    mods=[-1,0,6,0]
     rustning=6
     fly=False
     namn='Kung Kolskägg'
@@ -1119,7 +1119,7 @@ class Draken(Varelse):
         self.exp=1600
         self.liv=900
         self.hp=self.liv
-        self.stats={'str':25,'smi':13,'mkr':17}
+        self.stats={'str':24,'smi':12,'mkr':17}
         self.mods=[-1,0,8,0]   #0:snabbhet,1:pricksäkerhet,2:magiskt skydd(skyddar mot allt men dubbelt mot magi),3:evasion
         self.rustning=8
         self.modes = ['critical','attack','attack','Eld','Eld','Svansattack']
@@ -1137,7 +1137,7 @@ class Trollkungen(Varelse):
     exp=2000
     liv=1200
     hp=liv
-    stats={'str':25,'smi':18,'mkr':20}
+    stats={'str':24,'smi':17,'mkr':19}
     mods=[-1,0,7,0]
     rustning=7
     fly=False
