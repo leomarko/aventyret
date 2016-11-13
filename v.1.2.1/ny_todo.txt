@@ -6,7 +6,8 @@ tillbaka från biblioteket tillbaka
 
 fixa uthållighet på statusraden-
 kvävnings-iteration
-lägg till procentskydd på skydd och m-skydd
+lägg till procentskydd på skydd och m-skydd---
+testa och utvärdera procentskyddet
 
 
 gör evasion lite bättre i förhållande till smidighet?
