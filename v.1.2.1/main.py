@@ -5,7 +5,7 @@ import time
 import klasser as kls
 from fightfunks import fight as fightfunc
 from lvlup import lvlup
-from funktioner import difstat, plusformaga, listval, slowprint, uniquelist, overgang3till4
+from funktioner import difstat, plusformaga, listval, slowprint, uniquelist, nollutrustning, overgang3till4
 from collections import OrderedDict
 
 #lägg till / testa:
@@ -322,9 +322,13 @@ def foremalsmeny():
             if antal[ordered[i].namn] > 1:
                 display[i] += ' ('+str(antal[ordered[i].namn])+'st)'
             
-        obj = listval(['Gå tillbaka']+display) - 1
-        if obj == -1: #gå tillbaka
+        obj = listval(['Gå tillbaka','Byt utrustning']+display) - 2
+        if obj == -2: #gå tillbaka
             break
+        elif obj == -1:
+            inventory += nollutrustning(spelarlista)
+            print('Ni la ned all utrustning i packningen')
+            continue
         obj = ordered[obj]
         if isinstance(obj,kls.Utrustning):
             print('Välj vem som ska använda '+obj.namn)
