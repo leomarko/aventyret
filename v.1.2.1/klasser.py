@@ -86,6 +86,18 @@ class Spelare(Varelse):
         print('du kan inte använda det')
         return False
 
+    def unequip(self):
+        gamla = list()
+        if self.utrust['vapen'].namn != '-':
+            gamla.append(self.utrust['vapen'])
+        if self.utrust['rustning'].namn != '-':
+            gamla.append(self.utrust['rustning'])
+        if self.utrust['ovrigt'].namn != '-':
+            gamla.append(self.utrust['ovrigt'])
+            self.utrust['ovrigt'].equip(self, False, noprint=True)
+        self.utrust={'vapen':Foremal('-'),'rustning':Foremal('-'), 'ovrigt':Foremal('-')}
+        return gamla
+
 class Foremal:
     def __init__(self,namn):
         self.namn=namn
@@ -124,11 +136,11 @@ class Ovrigt(Utrustning): #kan ge förmåga och/eller ändra stat
         self.plus=plus
         self.formaga=formaga #tupel med 3 element        
     
-    def equip(self,spelare,on=True):
+    def equip(self,spelare,on=True,noprint=False):
         if on:
-            difstat(spelare,self.stat,self.plus,mini=-10)
+            difstat(spelare,self.stat,self.plus,mini=-10,noprint=noprint)
         else:
-            difstat(spelare,self.stat,-self.plus,mini=-10)
+            difstat(spelare,self.stat,-self.plus,mini=-10,noprint=noprint)
         if on and self.formaga:
             plusformaga(spelare, *self.formaga)
         elif self.formaga:
@@ -145,7 +157,7 @@ class Ovrigt(Utrustning): #kan ge förmåga och/eller ändra stat
                 spelare.special.remove(self.formaga[1])
                 if self.formaga[1] in spelare.special:
                     borta = False
-            if borta:
+            if borta and not noprint:
                 print(spelare.namn+' kan inte längre använda '+self.formaga[1])
                 
 class Vapen(Utrustning):

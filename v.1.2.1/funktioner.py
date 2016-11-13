@@ -133,6 +133,12 @@ def slowprint(string, extraslow=1):
         sys.stdout.flush()
         time.sleep(0.045*extraslow)
 
+def nollutrustning(spelare):
+    foremal = list()
+    for s in spelare:
+        foremal += s.unequip()
+    return foremal
+
 #funktion för att ladda gamla filer med ny version
 def overgang3till4():
     slowprint('I fängelsehålan möter ni Unghäxan.\n')

@@ -1791,7 +1791,8 @@ def meny():
                 if len(s.magier) > 0:
                     print('Magier: '+', '.join(set(spell[0] for spell in s.magier)))
                 if len(s.special) > 0:
-                    print('Specialförmågor: '+', '.join(set(s.special))+'\n')
+                    print('Specialförmågor: '+', '.join(set(s.special)))
+            input('\n(tryck enter för att fortsätta)')
             continue
 
         elif val[mode]=='Karta':
