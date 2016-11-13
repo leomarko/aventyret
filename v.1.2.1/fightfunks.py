@@ -227,11 +227,15 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
     def attackmagi(figur,target,mod,plus=0):
         def _mskada(bas,target,mod,plus):
-            skada = int(bas*(mod+random()) + plus - target.mods[2]*2)
+            skada = bas*(mod+random()) + plus
+            skada *= (1 - target.mods[2]*0.02)
             try:
+                skada *= (1 - target.utrust['rustning'].mskydd*0.01)
                 skada -= target.utrust['rustning'].mskydd
             except(AttributeError):
-                skada = skada
+                pass
+            skada -= target.mods[2]*1.5
+            skada = int(skada)
             taskada(target,skada)
 
         bas = figur.stats['mkr']
@@ -293,14 +297,16 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     skada *= 1.5 + random()
 
                 #rustning    
-                skada -= b.mods[2]
                 if spelare:
-                    skada -= b.rustning
+                    skada *= (1 - (b.rustning+b.mods[2])*0.01)
+                    skada -= b.rustning*0.75
                 else:
                     try:
-                        skada -= b.utrust['rustning'].skydd
+                        skada *= (1 - (b.utrust['rustning'].skydd+b.mods[2])*0.01)
+                        skada -= b.utrust['rustning'].skydd*0.75
                     except(AttributeError,NameError):
                         skada=skada
+                skada -= b.mods[2]*0.75
 
                 #int    
                 skada = int(skada)
