@@ -1,4 +1,0 @@
-Utrustningen har ändrats på så vis att 
-om du har en attiralj som ger en förmåga måste du ta av den först och spara 
-i den gamla versionen innan du går vidare och laddar i den här
-annars kommer du förlora i stats.

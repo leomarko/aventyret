@@ -5,7 +5,7 @@ import time
 import klasser as kls
 from fightfunks import fight as fightfunc
 from lvlup import lvlup
-from funktioner import difstat, plusformaga, listval, slowprint, uniquelist, overgang3till4
+from funktioner import difstat, plusformaga, listval, slowprint, uniquelist, nollutrustning, overgang3till4
 from collections import OrderedDict
 
 #lägg till / testa:
@@ -322,9 +322,13 @@ def foremalsmeny():
             if antal[ordered[i].namn] > 1:
                 display[i] += ' ('+str(antal[ordered[i].namn])+'st)'
             
-        obj = listval(['Gå tillbaka']+display) - 1
-        if obj == -1: #gå tillbaka
+        obj = listval(['Gå tillbaka','Byt utrustning']+display) - 2
+        if obj == -2: #gå tillbaka
             break
+        elif obj == -1:
+            inventory += nollutrustning(spelarlista)
+            print('Ni la ned all utrustning i packningen')
+            continue
         obj = ordered[obj]
         if isinstance(obj,kls.Utrustning):
             print('Välj vem som ska använda '+obj.namn)
@@ -1353,7 +1357,7 @@ def meny():
                         slowprint('-Har du hittat en häxrot säger du? Dåså...\n'+
                               'Den snälla häxan lagar till en häxbrygd...\n'+
                               'Du dricker av den, och sedan uttalar hon mystiska trollformler\n'+
-                              'Du fick 50 exp, och kan nu lära dig trolldom!')
+                              'Du fick 50 exp, och kan nu lära dig trolldom!\n')
                         sp1.utveckling.append(['Trolldom',0])
                         sp1.exp += 50
                         lvlup(spelarlista)
@@ -1535,7 +1539,7 @@ def meny():
                                 progress['hittade_skatter'].add('lärdom')
                             else:
                                 print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
-                        print('Ni går tillbaka från biblioteket tillbaka till prästen ni pratade med.')
+                        print('Ni går tillbaka från biblioteket till prästen ni pratade med.')
                     elif fraga == 'Fråga om böcker':
                         print('Vi har ett fantastiskt bibliotek och en otroligt kunnig bibliotekarie.\n'+
                               'Men det är inte något som sådana som ni ska ta del av.')
@@ -1791,7 +1795,8 @@ def meny():
                 if len(s.magier) > 0:
                     print('Magier: '+', '.join(set(spell[0] for spell in s.magier)))
                 if len(s.special) > 0:
-                    print('Specialförmågor: '+', '.join(set(s.special))+'\n')
+                    print('Specialförmågor: '+', '.join(set(s.special)))
+            input('\n(tryck enter för att fortsätta)')
             continue
 
         elif val[mode]=='Karta':
@@ -2260,14 +2265,14 @@ else:
     #startforemål
     startforemal = set()
     while True:
-        x = ['Svärd','Kniv','Lätt rustning','Salva','Salva','Salva','Trollsländsvinge','Vargblod'][randint(0,7)]
+        x = ['Svärd','Kniv','Lätt rustning','Salva','Salva','Salva','Trollsländsvinge','Vargblod','Själsstoft','Skyddande ädelsten'][randint(0,9)]
         startforemal.add(x)
-        if len(startforemal) == 3:
+        if len(startforemal) == 4:
             break
     startforemal = list(startforemal)
     for f in startforemal:
         inventory.append(FDICT[f])
-    slowprint('Den snälla häxan gav dig '+startforemal[0]+', '+startforemal[1]+' och '+startforemal[2]+'\n')
+    slowprint('Den snälla häxan gav dig '+startforemal[0]+', '+startforemal[1]+', '+startforemal[2]+' och '+startforemal[3]+'\n')
     del startforemal
     del x
 

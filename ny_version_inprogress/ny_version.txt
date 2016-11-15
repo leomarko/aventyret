@@ -1,0 +1,13 @@
+använd colorama biblioteket:
+grönt: helningshp, positiva effekter, exp
+rött: skada hp, negativa effekter
+blått: poäng, vapen, etc på stats. Föremål man får.
+clear screen, innan och efter varje meny.
+lägg funktion för att avsluta spelet, som också kallar colorama.deinit()
+
+Stats och utrustning blir en ny meny. Man kan ta av utrustning
+Snyggare sortering på alkemi-menyn
+
+Lyckoträff på skicklighet
+
+Även procentskydd på skydd och m-skydd. skyddet blir 2/3 och sen dras av procent.

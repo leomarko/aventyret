@@ -2,8 +2,8 @@ def fagel(spelare):
     spelare.vilande={'stats':spelare.stats,'formagor':spelare.formagor,'magier':spelare.magier,'liv':spelare.liv, 'namn':spelare.namn}
     spelare.vilande['hpdif']=0.75
     spelare.formagor=['Tillbakaförvandling'] 
-    spelare.magier=[('Trollstoft',1)]
-    spelare.stats['str']=int(spelare.stats['str']*0.7)
+    spelare.magier=[('Trollstoft',1),('Tillkvicknande',2)]
+    spelare.stats['str']=int(spelare.stats['str']*0.75)
     spelare.stats['smi']=int(spelare.stats['smi']*1.2+3)
     spelare.liv=int(spelare.liv*0.75)
     spelare.hp=int(spelare.hp*0.75)
