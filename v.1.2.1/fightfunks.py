@@ -614,7 +614,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     bonus = 3 + int(figur.liv*0.02)
                                     print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
                                     figur.stats['mkr'] += bonus
-                                    e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), vrk([svan],2.5+random()))
+                                    e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), vrk([figur],2.5+random()))
                                     uppdatera_effekter(e)
 
                             elif namn == 'Gorilla':
