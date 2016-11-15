@@ -287,6 +287,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             print('Lyckoträff!')
                         else:
                             print('Förödande attack...!')
+                    else:
+                        skada *= 1.5 + random()
                 elif nyckelord == 'mystisk':
                     skada *= 0.4 + random() + random()
                 elif nyckelord == 'djärv':
@@ -449,7 +451,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                     
                     elif mode == 'Förvrida framtiden':
                         for f in aktiva_f:
-                            varak = vrk(aktiva_f,1.8+random())
+                            varak = vrk(aktiva_f,1.5+random())
                             e=Effekt('Förutbestämmande',difstat,f,(3,4),(3,-4),varak )
                             uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=f.namn+' manipulerar redan tiden')
 
@@ -467,8 +469,13 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                             print('...men hypnosen misslyckas.')
 
                     elif mode == 'Kvävning':
-                        for s in aktiva_s:
-                            taskada(s, int(s.liv*0.2))
+                        i = 0
+                        while i < len(aktiva_s):
+                            target = aktiva_s[i]
+                            taskada(target, int(target.liv*0.2))
+                            if target in aktiva_s:
+                                i += 1
+                        del i
                             
                     elif mode == 'Kyla':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
@@ -480,9 +487,9 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Se framtiden':
                         for f in aktiva_f:
-                            varak = vrk(aktiva_f,2.5+random())
+                            varak = vrk(aktiva_f,2.2+random())
                             e=Effekt('Förutbestämmande',difstat,f,(3,2),(3,-2),varak)
-                            uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=s.namn+' manipulerar redan tiden')
+                            uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=f.namn+' manipulerar redan tiden')
 
                     elif mode == 'Skräck':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
@@ -498,7 +505,10 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                     elif mode == 'Stank':
                         for s in aktiva_s:
-                            difstat(s,'mkr',-3,mini=0)
+                            s.stats['mkr'] -= 3
+                            if s.stats['mkr'] < 0:
+                                s.stats['mkr'] = 0
+                            print(s.namn+' förlorade 3 magikraft.\n')
                             e = Effekt('Illamående',difstat,s,('smi',-3),('smi',+3),vrk(aktiva_f,1.5))
                             uppdatera_effekter(e)
                             e = Effekt('Utmattning',difstat,s,('str',-3),('str',+3),vrk(aktiva_f,1.5))
@@ -535,7 +545,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                         
                     elif mode == 'Ändra framtiden':
                         for s in aktiva_s:
-                            varak = vrk(aktiva_f,1+random())
+                            varak = vrk(aktiva_f,0.7+random())
                             e=Effekt('Ute ur tiden',difstat,s,(0,30),(0,-30),varak)
                             uppdatera_effekter(e)
 
@@ -737,7 +747,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Förvrida framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for s in aktiva_s:
-                                        varak = vrk(aktiva_s,1.8+random())
+                                        varak = vrk(aktiva_s,1.5+random())
                                         e=Effekt('Förutbestämmande',difstat,s,(3,4),(3,-4),varak)
                                         uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=s.namn+' manipulerar redan tiden')
 
@@ -795,7 +805,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Se framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for s in aktiva_s:
-                                        varak = vrk(aktiva_s,2.5+random())
+                                        varak = vrk(aktiva_s,2.2+random())
                                         e=Effekt('Förutbestämmande',difstat,s,(3,2),(3,-2),varak)
                                         uppdatera_effekter(e, annan_ekvivalent=True, ifmsg=s.namn+' manipulerar redan tiden')
 
@@ -866,7 +876,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 elif spell[0] == 'Ändra framtiden':
                                     print(figur.namn+' använder '+spell[0]+'...')
                                     for f in aktiva_f:
-                                        varak = vrk(aktiva_s,1+random())
+                                        varak = vrk(aktiva_s,0.7+random())
                                         e=Effekt('Ute ur tiden',difstat,f,(0,30),(0,-30),varak)
                                         uppdatera_effekter(e)
 

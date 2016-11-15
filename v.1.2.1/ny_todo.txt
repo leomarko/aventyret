@@ -1,18 +1,11 @@
-testa byt utrustningsalternativet!---
-fixa till stats så man måste trycka för att fortsätta, och ta bort dubbelt radbyte efter sp1---
-ändra trollsländsvinge vargblod själsstoft
-tillbaka från biblioteket tillbaka
 
 
-fixa uthållighet på statusraden-
-kvävnings-iteration
-lägg till procentskydd på skydd och m-skydd---
-testa och utvärdera procentskyddet
 
 
-gör evasion lite bättre i förhållande till smidighet?
+
 
 DONE
+Fixat fel med skada på lyckoträff---
 Fixa bugg på smärta---
 Fixa bugg på stats---
 Fixa sparningsbugg---
@@ -30,3 +23,16 @@ framtiden för svår?
 Lättare hitta mystiska stenar?
 joshkis förtärande mörker väl mäktig
 kolskägg har för bra evasion
+testa byt utrustningsalternativet!---
+fixa till stats så man måste trycka för att fortsätta, och ta bort dubbelt radbyte efter sp1---
+ifmsg se framtiden
+difstat mini 0 på stank---
+fixa uthållighet på statusraden---
+kvävnings-iteration---
+lägg till procentskydd på skydd och m-skydd---
+testa och utvärdera procentskyddet-
+något konstigt med uthållghet?
+lite kortare varaktighet på alla framtidsgrejer?---
+ändra trollsländsvinge vargblod själsstoft
+för svåra fiender i skogen i början
+fågeln lite bättre

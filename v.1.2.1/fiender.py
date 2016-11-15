@@ -159,10 +159,7 @@ class Trollslanda(Varelse):
         print('Trollsländan svävar i luften')
 
     def drop(self, plus, progress, OP):
-        if randint(0,9) + plus >= 9:
-            return 'Trollsländsvinge'
-        else:
-            return False
+        return False
 
 class Varg(Varelse):
     namn='Varg'
@@ -186,10 +183,7 @@ class Varg(Varelse):
             return 'critical'
 
     def drop(self, plus, progress, OP):
-        if randint(0,9) + plus >= 9:
-            return 'Vargblod'
-        else:
-            return False
+        return False
 
 class Valnad(Varelse):
     namn='Vålnad'
@@ -216,10 +210,7 @@ class Valnad(Varelse):
             return 'other'
 
     def drop(self, plus, progress, OP):
-        if randint(0,9) + plus >= 9:
-            return 'Själsstoft'
-        else:
-            return False
+        return False
 
 class Vatte(Varelse):
     namn='Vätte'
@@ -433,8 +424,6 @@ class Skuggkatt(Varelse):
             return 'Elixir'
         elif n == 9:
             return 'Magisk ring'
-        elif n == 8:
-            return 'Själsstoft'
         else:
             return False
 

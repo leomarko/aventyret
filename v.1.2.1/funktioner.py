@@ -66,7 +66,10 @@ def difstat(vem,stat,plus,tak=100,mini=0,noprint=False):
             vem.stats[stat]=tak
             maxad=True
         if vem.stats[stat]<=mini:
-            vem.stats[stat]=1
+            if stat == 'mkr':
+                vem.stats[stat]=0
+            else:
+                vem.stats[stat]=1
             maxad=True
     else:
         if vem.mods[stat] >= tak and plus > 0:

@@ -1357,7 +1357,7 @@ def meny():
                         slowprint('-Har du hittat en häxrot säger du? Dåså...\n'+
                               'Den snälla häxan lagar till en häxbrygd...\n'+
                               'Du dricker av den, och sedan uttalar hon mystiska trollformler\n'+
-                              'Du fick 50 exp, och kan nu lära dig trolldom!')
+                              'Du fick 50 exp, och kan nu lära dig trolldom!\n')
                         sp1.utveckling.append(['Trolldom',0])
                         sp1.exp += 50
                         lvlup(spelarlista)
@@ -1539,7 +1539,7 @@ def meny():
                                 progress['hittade_skatter'].add('lärdom')
                             else:
                                 print('Ni tittar bland böckerna men har redan läst allt ni kunde ta till er.')
-                        print('Ni går tillbaka från biblioteket tillbaka till prästen ni pratade med.')
+                        print('Ni går tillbaka från biblioteket till prästen ni pratade med.')
                     elif fraga == 'Fråga om böcker':
                         print('Vi har ett fantastiskt bibliotek och en otroligt kunnig bibliotekarie.\n'+
                               'Men det är inte något som sådana som ni ska ta del av.')
@@ -2265,14 +2265,14 @@ else:
     #startforemål
     startforemal = set()
     while True:
-        x = ['Svärd','Kniv','Lätt rustning','Salva','Salva','Salva','Trollsländsvinge','Vargblod'][randint(0,7)]
+        x = ['Svärd','Kniv','Lätt rustning','Salva','Salva','Salva','Trollsländsvinge','Vargblod','Själsstoft','Skyddande ädelsten'][randint(0,9)]
         startforemal.add(x)
-        if len(startforemal) == 3:
+        if len(startforemal) == 4:
             break
     startforemal = list(startforemal)
     for f in startforemal:
         inventory.append(FDICT[f])
-    slowprint('Den snälla häxan gav dig '+startforemal[0]+', '+startforemal[1]+' och '+startforemal[2]+'\n')
+    slowprint('Den snälla häxan gav dig '+startforemal[0]+', '+startforemal[1]+', '+startforemal[2]+' och '+startforemal[3]+'\n')
     del startforemal
     del x
 
