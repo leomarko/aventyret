@@ -4,6 +4,7 @@
 
 import time
 import sys
+import colorama
 
 def listval(lista):
     string=''
@@ -92,9 +93,12 @@ def difstat(vem,stat,plus,tak=100,mini=0,noprint=False):
     if stat==0:
         if not noprint:
             if plus>0:
-                print(vem.namn+' blev långsammare\n')
+                print(vem.namn+colorama.Fore.MAGENTA+colorama.Style.BRIGHT
+                      +' blev långsammare\n')
             if plus<0:
-                print(vem.namn+' blev snabbare\n')
+                print(vem.namn+colorama.Fore.CYAN+colorama.Style.BRIGHT
+                      +' blev snabbare\n')
+        print(colorama.Style.RESET_ALL)
         return True
     if stat==1:
         word='pricksäkerhet'
@@ -106,17 +110,41 @@ def difstat(vem,stat,plus,tak=100,mini=0,noprint=False):
     if not noprint:
         if maxad:
             if stat == 'hp':
-                print(vem.namn+' fick full hp\n')
+                print(vem.namn+' fick '+colorama.Fore.GREEN+colorama.Style.BRIGHT
+                      +'full hp\n')
             elif isinstance(stat,str):
-                print(vem.namn+' har nu '+str(vem.stats[stat])+' i '+word+'\n')
+                print(vem+namn+' har nu ',end='')
+                if plus > 0:
+                    print(colorama.Fore.GREEN+colorama.Style.BRIGHT,end='')
+                else:
+                    print(colorama.Fore.RED+colorama.Style.BRIGHT,end='')
+                print(str(vem.stats[stat])+' i '+word+'\n')
             else:
-                print(vem.namn+' har nu '+str(vem.mods[stat])+' i '+word+'\n')
+                print(vem.namn+' har nu ',end='')
+                if plus > 0:
+                    print(colorama.Fore.CYAN+colorama.Style.BRIGHT,end='')
+                else:
+                    print(colorama.Fore.MAGENTA+colorama.Style.BRIGHT,end='')
+                print(str(vem.mods[stat])+' i '+word+'\n')
         elif plus != 0:
             if stat == 'hp':
-                print(vem.namn+' återhämtade '+str(plus)+' hp\n')
+                print(vem.namn+' återhämtade '+
+                      colorama.Fore.GREEN+colorama.Style.BRIGHT+str(plus)+' hp\n')
+            elif isinstance(stat,str):
+                if plus > 0:
+                    print(vem.namn+' fick '+colorama.Fore.GREEN+colorama.Style.BRIGHT
+                          +str(plus)+' i '+word+'\n')
+                else:
+                    print(vem.namn+' fick '+colorama.Fore.RED+colorama.Style.BRIGHT
+                          +str(plus)+' i '+word+'\n')
             else:
-                print(vem.namn+' fick '+str(plus)+' i '+word+'\n')
-
+                if plus > 0:
+                    print(vem.namn+' fick '+colorama.Fore.CYAN+colorama.Style.BRIGHT
+                          +str(plus)+' i '+word+'\n')
+                else:
+                    print(vem.namn+' fick '+colorama.Fore.MAGENTA+colorama.Style.BRIGHT
+                          +str(plus)+' i '+word+'\n')
+    print(colorama.Style.RESET_ALL)
     return True
 
 def plusformaga(vem,typ,namn,mp=0,tabort=False):
@@ -128,7 +156,8 @@ def plusformaga(vem,typ,namn,mp=0,tabort=False):
         vem.special.append(namn)
     if tabort: #uppgradering på förmågor
         vem.formagor.remove(tabort)
-    print(vem.namn+' lärde sig '+namn+'\n')
+    print(colorama.Fore.GREEN+colorama.Style.BRIGHT+
+          vem.namn+' lärde sig '+namn+'\n'+colorama.Style.RESET_ALL)
 
 def slowprint(string, extraslow=1):
     for c in string:

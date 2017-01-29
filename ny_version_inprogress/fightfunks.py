@@ -1,3 +1,6 @@
+#testar att lägga till lite färger
+
+
 from funktioner import difstat, listval, slowprint, uniquelist
 from random import random, randint
 from copy import copy, deepcopy
@@ -5,7 +8,7 @@ from collections import OrderedDict
 from klasser import EngangsForemal, Spelare
 import forvandling as fv
 import fiender as fi
-
+import colorama
 
 #------------------------------------------------------------------------------
 #KLASSER
@@ -169,9 +172,12 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
     def taskada(figur,skada):
         if isinstance(figur,Spelare):
-            print(figur.namn+' förlorar '+str(skada)+' hp')
+            print(figur.namn+colorama.Fore.RED+colorama.Style.BRIGHT+
+                  ' förlorar '+str(skada)+' hp')
         else:
-            print(figur.namnB+' förlorar '+str(skada)+' hp')
+            print(figur.namnB+colorama.Fore.RED+colorama.Style.BRIGHT+
+                  ' förlorar '+str(skada)+' hp')
+        print(colorama.Style.RESET_ALL)
         figur.hp-=skada
         k_o(figur)
         
@@ -180,14 +186,15 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
             if figur.hp<1:
                 figur.hp=0
                 if isinstance(figur,Spelare):
-                    print(figur.namn+' är medvetslös.')
+                    print(colorama.Fore.RED+colorama.Style.BRIGHT+figur.namn+' är medvetslös.')
                     if 'Lura döden' in figur.special:
-                        slowprint(figur.namn+' lurade döden...!\n')
+                        slowprint(colorama.Fore.GREEN+figur.namn+' lurade döden...!\n')
                         figur.special.remove('Lura döden')
                         figur.hp = int(figur.liv*0.25)
                         return False
                 else:
-                    print(figur.namnB+' är medvetslös.')
+                    print(colorama.Fore.RED+colorama.Style.BRIGHT+figur.namnB+' är medvetslös.')
+                print(colorama.Style.RESET_ALL)
                 borta(figur)
                 return True
             else:
@@ -319,9 +326,12 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
 
                 #resultat    
                 if spelare:
-                    print(a.namn+' attackerar '+b.namnB+' och gör '+str(skada)+' skada.')
+                    print(a.namn+' attackerar '+b.namnB+' och gör '+
+                          colorama.Fore.RED+colorama.Style.BRIGHT+str(skada)+' skada.')
                 else:
-                    print(a.namnB+' attackerar '+b.namn+' och gör '+str(skada)+' skada.')
+                    print(a.namnB+' attackerar '+b.namn+' och gör '+
+                          colorama.Fore.RED + colorama.Style.BRIGHT+str(skada)+' skada.')
+                print(colorama.Style.RESET_ALL)
                 if nyckelord == 'djärv':
                     taskada(a, int(skada*(0.1+random()*0.3)))
                     
@@ -344,6 +354,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
         k_o(b)
     
     #-----------------Upplägg och variabler-----------------------
+    colorama.init()
     tick=1
     effekter=[]
     slowprint('!!!!!!!!!!!!!!!!!!!!!!!\n')
@@ -444,8 +455,10 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     elif mode == 'Förbjuden makt': #Svans specialare, annorlunda för fienden
                         taskada(figur, int(figur.liv*0.3))
                         bonus = 3 + int(figur.liv*0.01)
-                        print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
-                        print(figur.namn+' fick '+str(bonus)+' styrka.\n')
+                        print(figur.namn+' fick '+colorama.Fore.GREEN + colorama.Style.BRIGHT
+                              +str(bonus)+' magikraft.\n'+colorama.Style.RESET_ALL)
+                        print(figur.namn+' fick '+colorama.Fore.GREEN + colorama.Style.BRIGHT
+                              +str(bonus)+' styrka.\n'+colorama.Style.RESET_ALL)
                         figur.stats['mkr'] += bonus
                         figur.stats['str'] += bonus
                                     
@@ -494,6 +507,9 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                     elif mode == 'Skräck':
                         target = aktiva_s[randint(0,len(aktiva_s)-1)]
                         e=Effekt('Skräck',difstat,target,(0,60),(0,-60),vrk(aktiva_f,randint(3,6)))
+                        print(target.namn+' förlorade '+colorama.Fore.RED+colorama.Style.BRIGHT+
+                              str(int(target.stats['mkr']*0.7))+' magikraft'+colorama.Style.RESET_ALL)
+                        target.stats['mkr'] -= int(target.stats['mkr']*0.7)
                         uppdatera_effekter(e)
                             
                     elif mode == 'Smärta':
@@ -612,7 +628,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                 taskada(figur, int(figur.liv*0.5))
                                 if figur in aktiva_s:
                                     bonus = 3 + int(figur.liv*0.02)
-                                    print(figur.namn+' fick '+str(bonus)+' magikraft.\n')
+                                    print(figur.namn+' fick '+colorama.Fore.GREEN + colorama.Style.BRIGHT
+                                          +str(bonus)+' magikraft.\n'+colorama.Style.RESET_ALL)
                                     figur.stats['mkr'] += bonus
                                     e=Effekt(namn,difstat,figur,('str',bonus),('str',-bonus), vrk([figur],2.5+random()))
                                     uppdatera_effekter(e)
@@ -782,6 +799,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                             done = False #om det är ens första magi får man välja om från början
                                         break
                                     print(figur.namn+' använder '+spell[0]+'...')
+                                    print(colorama.Fore.GREEN+colorama.Style.BRIGHT)
                                     if n == 1:
                                         target = [s for s in s_lista if s.hp < 1][0]
                                         target.hp = target.liv
@@ -792,6 +810,7 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                             s.hp = int(s.liv*0.5)
                                             print(s.namn+' fick nya krafter!\n'+s.namn+' återfick halva sin hp.')
                                             aktiva_s.append(s)
+                                    print(colorama.Style.RESET_ALL)
 
                                 elif spell[0] == 'Mystisk attack':
                                     target = aktiva_f[listval([f.namn for f in aktiva_f])]
@@ -839,7 +858,8 @@ def fight(spelarlista, inventory, progress, plats, specifik=False, OP=0):
                                         target = [s for s in s_lista if s.hp < 1][listval([s.namn for s in s_lista if s.hp < 1])]
                                         print(figur.namn+' använder '+spell[0]+'...')
                                         target.hp = int(target.liv*0.2 + figur.stats['mkr']*0.5)
-                                        print(target.namn+' fick nya krafter!\n'+target.namn+' återfick '+str(target.hp)+' hp.')
+                                        print(colorama.Fore.GREEN+colorama.Style.BRIGHT+target.namn+' fick nya krafter!\n'
+                                              +target.namn+' återfick '+str(target.hp)+' hp.'+colorama.Style.RESET_ALL)
                                         aktiva_s.append(target)
 
                                 elif spell[0] == 'Trollstyrka':

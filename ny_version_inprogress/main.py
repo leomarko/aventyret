@@ -1,6 +1,7 @@
 from random import randint, random, shuffle
 import os
 import time
+import colorama
 
 import klasser as kls
 from fightfunks import fight as fightfunc
@@ -2227,6 +2228,7 @@ dvargen.special = ['Lyckoträff']
 
 
 #början av spelet
+colorama.init()
 print('\nVälkommen till Sagan om äventyret\n')
 
 if listval(['Nytt äventyr','Ladda']) == 1:
@@ -2279,3 +2281,4 @@ else:
 meny()
 
 print('Äventyret är slut')
+colorama.deinit()
