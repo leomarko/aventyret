@@ -156,8 +156,8 @@ def plusformaga(vem,typ,namn,mp=0,tabort=False):
         vem.special.append(namn)
     if tabort: #uppgradering på förmågor
         vem.formagor.remove(tabort)
-    print(colorama.Fore.GREEN+colorama.Style.BRIGHT+
-          vem.namn+' lärde sig '+namn+'\n'+colorama.Style.RESET_ALL)
+    print(vem.namn+' lärde sig '+colorama.Fore.GREEN+colorama.Style.BRIGHT+
+          namn+colorama.Style.RESET_ALL+'\n')
 
 def slowprint(string, extraslow=1):
     for c in string:

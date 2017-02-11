@@ -1,0 +1,50 @@
+Finslipa färgkoder på inventorymenyn
+Färgkoder till statsmenyn
+
+Djurfrämlingen på berget fel på dialog()
+Förbannad juvel, Förtärande mörker ska bara kosta 4
+Järnskinnsdräkt saknas i Aldict?
+
+ändra framtiden bör bara funka en gång per fight, men bli mäktigare. 
+Även mäktigare fast mer sällsynt för fender
+Mystisk attack ska inte ge självskada? Kanske helning ist?
+
+Key error Zaumakots armband -> Zaumakots ring
+Sfinxens helning är sjuk
+
+Fler förmågor och magier till tigern
+Urkraft till älvan. 
+
+DONE
+Inte hela raden grön på plusförmåga---
+Fixat fel med skada på lyckoträff---
+Fixa bugg på smärta---
+Fixa bugg på stats---
+Fixa sparningsbugg---
+nyplats false i stugan efter dialog---
+newline efter gråstensgrejen, läkört---
+Nytt system med balanserad varaktighet---
+Strategi kan öka pricksäkerhet istället---
+difstat mkr på stank mini=0---
+ta bort mods från lvlup---
+ändra strategi-fel mod!---
+proj. själ. borta() got an unexpected keyword argument: noprint---
+minska smi på soldater och på flera?
+framtiden för svår?
+öka smi på hjorten
+Lättare hitta mystiska stenar?
+joshkis förtärande mörker väl mäktig
+kolskägg har för bra evasion
+testa byt utrustningsalternativet!---
+fixa till stats så man måste trycka för att fortsätta, och ta bort dubbelt radbyte efter sp1---
+ifmsg se framtiden
+difstat mini 0 på stank---
+fixa uthållighet på statusraden---
+kvävnings-iteration---
+lägg till procentskydd på skydd och m-skydd---
+testa och utvärdera procentskyddet-
+något konstigt med uthållghet?
+lite kortare varaktighet på alla framtidsgrejer?---
+ändra trollsländsvinge vargblod själsstoft
+för svåra fiender i skogen i början
+fågeln lite bättre

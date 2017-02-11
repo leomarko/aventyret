@@ -314,7 +314,7 @@ def foremalsmeny():
         antal = OrderedDict()
         for f in ordered:
             antal[f.namn] = inventory.count(f)
-        display = [f.namn for f in ordered]
+        display = [f.farg + f.namn + colorama.Fore.RESET for f in ordered]
         for i in range(len(display)):
             try:
                 display[i] += ' ('+ordered[i].bs+')'

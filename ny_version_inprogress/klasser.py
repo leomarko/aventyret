@@ -3,6 +3,7 @@
 
 from funktioner import difstat, plusformaga
 from random import random, randint
+import colorama
 
 ##########KLASSER
 
@@ -101,6 +102,7 @@ class Spelare(Varelse):
 class Foremal:
     def __init__(self,namn):
         self.namn=namn
+        self.farg='' #färgkod till menyval
         
 class EngangsForemal:
     def __init__(self,namn,bs,funktion=None, args=None, fight=False, target=False):
@@ -110,6 +112,7 @@ class EngangsForemal:
         self.args=args
         self.fight=fight
         self.target=target
+        self.farg=colorama.Fore.CYAN
 
     def use(self,target):
         res = self.funktion(target,*self.args)
@@ -134,7 +137,8 @@ class Ovrigt(Utrustning): #kan ge förmåga och/eller ändra stat
         self.bs = 'Attiralj: '+bs
         self.stat=stat
         self.plus=plus
-        self.formaga=formaga #tupel med 3 element        
+        self.formaga=formaga #tupel med 3 element
+        self.farg=colorama.Fore.MAGENTA
     
     def equip(self,spelare,on=True,noprint=False):
         if on:
@@ -168,6 +172,7 @@ class Vapen(Utrustning):
         self.bs = 'Vapen: +'+str(int(skada*2))
         if magi != 0:
             self.bs += ', magi +'+str(int(magi*2))
+        self.farg=colorama.Fore.RED
 
 class Rustning(Utrustning):
     def __init__(self,namn,skydd,krav=False, attribut='',mskydd=0):
@@ -177,6 +182,7 @@ class Rustning(Utrustning):
         self.bs = 'Rustning: +'+str(skydd)
         if mskydd != 0:
             self.bs += ', m-skydd +'+str(mskydd)
+        colorama.Fore.GREEN
 
 class Kartdict:
     def __init__(self,dictionary,u):
